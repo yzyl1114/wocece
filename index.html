@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>我测测 - 心理测试平台</title>
+    <title>我测测 - 趣味心理测试</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
 </head>
@@ -15,19 +15,47 @@
             <div class="nav-icon" onclick="app.navigateTo('feedback.html')">⚙️</div>
         </nav>
 
+        <!-- 欢迎横幅 -->
+        <section class="welcome-banner">
+            <div class="welcome-text">发现真实的自己</div>
+            <div class="welcome-subtext">通过有趣的测试了解内心世界</div>
+        </section>
+
         <!-- 搜索区域 -->
         <section class="search-section">
             <div class="search-box">
-                <input type="text" id="searchInput" class="search-input" placeholder="Q. 请输入产品关键词">
+                <input type="text" id="searchInput" class="search-input" placeholder="请输入产品关键词">
                 <button id="searchBtn" class="search-btn">搜索</button>
             </div>
         </section>
 
         <!-- 趣味精选 -->
         <section>
-            <div class="section-title">趣味精选</div>
+            <div class="section-title">
+                <span>趣味精选</span>
+            </div>
             <div class="featured-tests">
-                <!-- 动态生成 -->
+                <div class="test-card" data-test-id="1">
+                    <div class="test-image"></div>
+                    <div class="test-content">
+                        <div class="test-title">性格色彩测试</div>
+                        <button class="test-btn">前往 →</button>
+                    </div>
+                </div>
+                <div class="test-card" data-test-id="2">
+                    <div class="test-image"></div>
+                    <div class="test-content">
+                        <div class="test-title">心理年龄测试</div>
+                        <button class="test-btn">前往 →</button>
+                    </div>
+                </div>
+                <div class="test-card" data-test-id="3">
+                    <div class="test-image"></div>
+                    <div class="test-content">
+                        <div class="test-title">情绪管理测试</div>
+                        <button class="test-btn">前往 →</button>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -42,15 +70,37 @@
 
         <!-- 更多好玩 -->
         <section>
-            <div class="section-title">更多好玩</div>
+            <div class="section-title">
+                <span>更多好玩</span>
+            </div>
             <div class="test-list">
-                <!-- 动态生成 -->
+                <div class="test-list-item" data-test-id="4" data-category="standard">
+                    <div class="test-info">
+                        <div class="test-title">职业倾向测试</div>
+                        <div class="test-desc">发现最适合你的职业方向和发展路径</div>
+                    </div>
+                    <button class="test-btn">前往 →</button>
+                </div>
+                <div class="test-list-item" data-test-id="5" data-category="fun">
+                    <div class="test-info">
+                        <div class="test-title">爱情观测试</div>
+                        <div class="test-desc">了解你在感情中的态度和价值观</div>
+                    </div>
+                    <button class="test-btn">前往 →</button>
+                </div>
+                <div class="test-list-item" data-test-id="6" data-category="standard">
+                    <div class="test-info">
+                        <div class="test-title">压力承受测试</div>
+                        <div class="test-desc">评估你在压力环境下的应对能力</div>
+                    </div>
+                    <button class="test-btn">前往 →</button>
+                </div>
             </div>
         </section>
 
         <!-- 页脚 -->
-        <footer style="text-align: center; padding: 20px; color: #666; font-size: 12px;">
-            *本小程序仅供娱乐*
+        <footer style="text-align: center; padding: 30px 20px 80px 20px; color: #BBB; font-size: 13px; line-height: 1.6;">
+            本测试结果仅供娱乐参考
         </footer>
     </div>
 
