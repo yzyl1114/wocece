@@ -140,6 +140,77 @@
                 }
             }
 
+            // 新增：SCL-90结果渲染
+            renderSCL90Result() {
+                const result = this.resultData;
+                
+                // 隐藏趣味分析，显示标准分析
+                document.getElementById('funAnalysis').style.display = 'none';
+                document.getElementById('standardAnalysis').style.display = 'block';
+                
+                // 更新标题
+                document.querySelector('.result-title').textContent = 'SCL-90测评完成';
+                
+                // 更新总分显示
+                document.getElementById('totalScore').textContent = result.totalScore;
+                document.querySelector('.score-label').textContent = '总分';
+
+                // 渲染各维度分数
+                const dimensionsList = document.getElementById('dimensionsList');
+                dimensionsList.innerHTML = Object.keys(result.dimensions).map(dimKey => {
+                    const dim = result.dimensions[dimKey];
+                    const percentage = (dim.averageScore / 5) * 100;
+                    return `
+                        <div class="dimension-item ${dim.isHigh ? 'high-score' : ''}">
+                            <div class="dimension-header">
+                                <span class="dimension-name">${dim.name}</span>
+                                <span class="dimension-score">${dim.averageScore.toFixed(2)}分</span>
+                            </div>
+                            <div class="dimension-bar">
+                                <div class="dimension-progress" style="width: ${percentage}%"></div>
+                            </div>
+                            <div class="dimension-analysis">
+                                <div class="dim-desc">${dim.description}</div>
+                                <div class="dim-result ${dim.isHigh ? 'high-text' : ''}">
+                                    ${dim.isHigh ? dim.highDescription : dim.lowDescription}
+                                </div>
+                                <div class="dim-range">分数范围：${dim.scoreRange[0]} - ${dim.scoreRange[1]}分</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                // 渲染总体评估
+                const assessment = result.overallAssessment;
+                document.getElementById('summaryText').innerHTML = `
+                    <div class="scl90-summary">
+                        <div class="assessment-level ${assessment.level}">
+                            <strong>评估等级：</strong>${assessment.level}
+                        </div>
+                        <div class="assessment-desc">
+                            <strong>总体描述：</strong>${assessment.description}
+                        </div>
+                        <div class="assessment-suggestion">
+                            <strong>建议：</strong>${assessment.suggestion}
+                        </div>
+                        ${assessment.hasHighFactors ? `
+                            <div class="high-factors">
+                                <strong>重点关注维度：</strong>${assessment.highFactors.join('、')}
+                            </div>
+                            <div class="factor-suggestion">
+                                ${assessment.factorSuggestion}
+                            </div>
+                        ` : ''}
+                        <div class="scl90-note">
+                            <em>注：总分超过160分或任一因子分超过2分建议进一步检查</em>
+                        </div>
+                    </div>
+                `;
+
+                // 隐藏雷达图
+                document.querySelector('.radar-chart-container').style.display = 'none';
+            }
+
             renderFunResult() {
                 // 显示趣味测试报告
                 document.getElementById('funAnalysis').style.display = 'block';
@@ -544,6 +615,106 @@
                 flex-direction: column;
             }
         }
+
+        /* SCL-90专用样式 */
+        .high-score {
+            border-left: 4px solid #ff4757;
+            background: #fff5f5;
+        }
+
+        .high-text {
+            color: #ff4757;
+            font-weight: bold;
+        }
+
+        .dim-desc {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 5px;
+        }
+
+        .dim-range {
+            font-size: 11px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .scl90-summary {
+            line-height: 1.6;
+        }
+
+        .assessment-level {
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .assessment-level.严重 {
+            background: #fff5f5;
+            color: #ff4757;
+            border: 1px solid #ff4757;
+        }
+
+        .assessment-level.明显 {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .assessment-level.关注 {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .assessment-level.正常 {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .assessment-desc, .assessment-suggestion {
+            margin-bottom: 10px;
+            padding: 8px 0;
+        }
+
+        .high-factors {
+            background: #fff5f5;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+            border-left: 3px solid #ff4757;
+        }
+
+        .factor-suggestion {
+            color: #ff4757;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .scl90-note {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #666;
+            margin-top: 15px;
+            border-left: 3px solid #667eea;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 480px) {
+            .dim-desc {
+                font-size: 11px;
+            }
+            
+            .assessment-level {
+                padding: 6px 10px;
+                font-size: 14px;
+            }
+        }
+
     </style>
 </body>
 </html>

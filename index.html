@@ -3,17 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>我测测 - 心理测试平台</title>
+    <title>我测测 - 趣味心理测试</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
     <div class="container">
-        <!-- 顶部导航 -->
-        <nav class="navbar">
-            <div class="logo">我测测</div>
-            <div class="nav-icon" onclick="app.navigateTo('feedback.html')">⚙️</div>
-        </nav>
+        <!-- 头部横幅 -->
+        <header class="header-banner">
+            <div class="header-content">
+                <h1 class="header-title">我测测</h1>
+                <p class="header-subtitle">发现有趣的测评</p>
+            </div>
+            <div class="feedback-icon" onclick="app.navigateTo('feedback.html')">💬</div>
+        </header>
 
         <!-- 搜索区域 -->
         <section class="search-section">
@@ -24,50 +26,48 @@
         </section>
 
         <!-- 趣味精选 -->
-        <section>
-            <div class="section-title">趣味精选</div>
-            <div class="featured-tests">
+        <section class="featured-section">
+            <h2 class="section-title">趣味精选</h2>
+            <div class="featured-tests" id="featuredTests">
                 <!-- 动态生成 -->
             </div>
         </section>
 
-        <!-- 分类标签 -->
-        <section>
-            <div class="tabs">
-                <div class="tab active" data-category="all">全部</div>
-                <div class="tab" data-category="fun">趣味</div>
-                <div class="tab" data-category="standard">标准</div>
-            </div>
-        </section>
-
         <!-- 更多好玩 -->
-        <section>
-            <div class="section-title">更多好玩</div>
-            <div class="test-list">
+        <section class="more-tests-section">
+            <h2 class="section-title">更多好玩</h2>
+            
+            <!-- 分类标签 - 放在更多好玩标题下方 -->
+            <div class="tabs-section">
+                <div class="tabs">
+                    <div class="tab active" data-category="all">全部</div>
+                    <div class="tab" data-category="fun">趣味</div>
+                    <div class="tab" data-category="standard">标准</div>
+                </div>
+            </div>
+
+            <div class="test-list" id="testList">
                 <!-- 动态生成 -->
             </div>
         </section>
 
         <!-- 页脚 -->
-        <footer style="text-align: center; padding: 20px; color: #666; font-size: 12px;">
+        <footer class="global-footer">
             *本小程序仅供娱乐*
         </footer>
     </div>
 
     <!-- 底部导航 -->
-    <div class="bottom-nav">
-        <div class="nav-item active" data-target="index.html">
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="app.navigateTo('index.html')">
             <div class="nav-icon">🏠</div>
             <div>首页</div>
         </div>
-        <div class="nav-item" data-target="discover.html">
+        <div class="nav-item" onclick="app.navigateTo('discover.html')">
             <div class="nav-icon">🔍</div>
             <div>发现</div>
         </div>
-    </div>
-
-    <!-- Toast提示 -->
-    <div class="toast"></div>
+    </nav>
 
     <script src="js/app.js"></script>
     <script src="js/storage.js"></script>

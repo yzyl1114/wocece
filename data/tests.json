@@ -1,88 +1,1301 @@
 {
-  "tests": [
-    {
+  "tests": {
+    "scl90": {
+      "id": "scl90",
+      "title": "SCL-90症状自查量表",
+      "description": "专业心理健康筛查，评估9大心理症状维度",
+      "category": "standard",
+      "price": 0,
+      "image": "images/scl90.jpg",
+      "coverImage": "images/scl90-cover.jpg",
+      "tags": ["专业", "心理健康", "筛查"],
+      "questions": [
+        {
+          "id": 1,
+          "text": "头痛",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 2,
+          "text": "神经过敏，心中不踏实",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 3,
+          "text": "头脑中有不必要的想法或字句盘旋",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 4,
+          "text": "头晕或晕倒",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 5,
+          "text": "对异性的兴趣减退",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 6,
+          "text": "对旁人责备求全",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 7,
+          "text": "感到别人能控制您的思想",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 8,
+          "text": "责怪别人制造麻烦",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 9,
+          "text": "忘性大",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 10,
+          "text": "担心自己的衣饰整齐及仪态的端正",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 11,
+          "text": "容易烦恼和激动",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 12,
+          "text": "胸痛",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 13,
+          "text": "害怕空旷的场所或街道",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 14,
+          "text": "感到自己的精力下降，活动减慢",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 15,
+          "text": "想结束自己的生命",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 16,
+          "text": "听到旁人听不到的声音",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 17,
+          "text": "发抖",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 18,
+          "text": "感到大多数人都不可信任",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 19,
+          "text": "胃口不好",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 20,
+          "text": "容易哭泣",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 21,
+          "text": "同异性相处时感到害羞不自在",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 22,
+          "text": "感到受骗，中了圈套或有人想抓住您",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 23,
+          "text": "无缘无故地突然感到害怕",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 24,
+          "text": "自己不能控制地大发脾气",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 25,
+          "text": "怕单独出门",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 26,
+          "text": "经常责怪自己",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 27,
+          "text": "腰痛",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 28,
+          "text": "感到难以完成任务",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 29,
+          "text": "感到孤独",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 30,
+          "text": "感到苦闷",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 31,
+          "text": "过分担忧",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 32,
+          "text": "对事物不感兴趣",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 33,
+          "text": "感到害怕",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 34,
+          "text": "您的感情容易受到伤害",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 35,
+          "text": "旁人能知道您的私下想法",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 36,
+          "text": "感到别人不理解您、不同情您",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 37,
+          "text": "感到人们对您不友好，不喜欢您",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 38,
+          "text": "做事必须做得很慢以保证做得正确",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 39,
+          "text": "心跳得很厉害",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 40,
+          "text": "恶心或胃部不舒服",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 41,
+          "text": "感到比不上他人",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 42,
+          "text": "肌肉酸痛",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 43,
+          "text": "感到有人在监视您、谈论您",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 44,
+          "text": "难以入睡",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 45,
+          "text": "做事必须反复检查",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 46,
+          "text": "难以做出决定",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 47,
+          "text": "怕乘电车、公共汽车、地铁或火车",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 48,
+          "text": "呼吸有困难",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 49,
+          "text": "一阵阵发冷或发热",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 50,
+          "text": "因为感到害怕而避开某些东西、场合或活动",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 51,
+          "text": "脑子变空了",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 52,
+          "text": "身体发麻或刺痛",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 53,
+          "text": "喉咙有梗塞感",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 54,
+          "text": "感到前途没有希望",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 55,
+          "text": "不能集中注意力",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 56,
+          "text": "感到身体的某一部分软弱无力",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 57,
+          "text": "感到紧张或容易紧张",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 58,
+          "text": "感到手或脚发重",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 59,
+          "text": "想到死亡的事",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 60,
+          "text": "吃得太多",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 61,
+          "text": "当别人看着您或谈论您时感到不自在",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 62,
+          "text": "有一些不属于您自己的想法",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 63,
+          "text": "有想打人或伤害他人的冲动",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 64,
+          "text": "醒得太早",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 65,
+          "text": "必须反复洗手、点数目或触摸某些东西",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 66,
+          "text": "睡得不稳不深",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 67,
+          "text": "有想摔坏或破坏东西的冲动",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 68,
+          "text": "有一些别人没有的想法或念头",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 69,
+          "text": "感到对别人神经过敏",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 70,
+          "text": "在商店或电影院等人多的地方感到不自在",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 71,
+          "text": "感到任何事情都很困难",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 72,
+          "text": "一阵阵恐惧或惊恐",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 73,
+          "text": "感到在公共场合吃东西很不舒服",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 74,
+          "text": "经常与人争论",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 75,
+          "text": "单独一人时神经很紧张",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 76,
+          "text": "别人对您的成绩没有作出恰当的评价",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 77,
+          "text": "即使和别人在一起也感到孤单",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 78,
+          "text": "感到坐立不安心神不定",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 79,
+          "text": "感到自己没有什么价值",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 80,
+          "text": "感到熟悉的东西变成陌生或不象是真的",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 81,
+          "text": "大叫或摔东西",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 82,
+          "text": "害怕会在公共场合昏倒",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 83,
+          "text": "感到别人想占您的便宜",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 84,
+          "text": "为一些有关“性”的想法而很苦恼",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 85,
+          "text": "您认为应该因为自己的过错而受到惩罚",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 86,
+          "text": "感到要赶快把事情做完",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 87,
+          "text": "感到自己的身体有严重问题",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 88,
+          "text": "从未感到和其他人很亲近",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 89,
+          "text": "感到自己有罪",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        },
+        {
+          "id": 90,
+          "text": "感到自己的脑子有毛病",
+          "image": null,
+          "options": [
+            {"id": "1", "text": "没有", "score": 1},
+            {"id": "2", "text": "很轻", "score": 2},
+            {"id": "3", "text": "中度", "score": 3},
+            {"id": "4", "text": "偏重", "score": 4},
+            {"id": "5", "text": "严重", "score": 5}
+          ]
+        }
+      ],
+      "dimensions": {
+        "somatization": {
+          "name": "躯体化",
+          "items": [1, 4, 12, 27, 40, 42, 48, 49, 52, 53, 56, 58],
+          "description": "主要反映主观的身体不适感",
+          "scoreRange": [12, 60],
+          "threshold": 36,
+          "lowDescription": "躯体症状表现不明显",
+          "highDescription": "个体在身体上有较明显的不适感"
+        },
+        "obsessive_compulsive": {
+          "name": "强迫症状",
+          "items": [3, 9, 10, 28, 38, 45, 46, 51, 55, 65],
+          "description": "反映临床上的强迫症状群",
+          "scoreRange": [10, 50],
+          "threshold": 30,
+          "lowDescription": "强迫症状不明显",
+          "highDescription": "强迫症状较明显"
+        },
+        "interpersonal_sensitivity": {
+          "name": "人际关系敏感",
+          "items": [6, 21, 34, 36, 37, 41, 61, 69, 73],
+          "description": "主要指某些个人不自在感和自卑感",
+          "scoreRange": [9, 45],
+          "threshold": 27,
+          "lowDescription": "个体在人际关系上较为正常",
+          "highDescription": "个体人际关系较为敏感，人际交往中自卑感较强"
+        },
+        "depression": {
+          "name": "抑郁",
+          "items": [5, 14, 15, 20, 22, 26, 29, 30, 31, 32, 54, 71, 79],
+          "description": "反映与临床上抑郁症状群相联系的广泛概念",
+          "scoreRange": [13, 65],
+          "threshold": 39,
+          "lowDescription": "个体抑郁程度较弱，生活态度乐观积极",
+          "highDescription": "个体的抑郁程度较强，生活缺乏足够的兴趣"
+        },
+        "anxiety": {
+          "name": "焦虑",
+          "items": [2, 17, 23, 33, 39, 57, 72, 78, 80, 86],
+          "description": "指在临床上明显与焦虑症状群相联系的精神症状",
+          "scoreRange": [10, 50],
+          "threshold": 30,
+          "lowDescription": "个体不易焦虑，易表现出安定的状态",
+          "highDescription": "个体较易焦虑，易表现出烦躁、不安静"
+        },
+        "hostility": {
+          "name": "敌对",
+          "items": [11, 24, 63, 67, 74, 81],
+          "description": "主要从思维、情感及行为三方面反映敌对表现",
+          "scoreRange": [6, 30],
+          "threshold": 18,
+          "lowDescription": "个体容易表现出友好的思想、情感和行为",
+          "highDescription": "个体易表现出敌对的思想、情感和行为"
+        },
+        "phobic_anxiety": {
+          "name": "恐怖",
+          "items": [13, 25, 47, 50, 70, 75, 82],
+          "description": "反映恐怖状态或广场恐怖所反映的内容",
+          "scoreRange": [7, 35],
+          "threshold": 21,
+          "lowDescription": "个体的恐怖症状不明显，能正常交往和活动",
+          "highDescription": "个体恐怖症状较为明显，常表现出社交、广场恐惧"
+        },
+        "paranoid_ideation": {
+          "name": "偏执",
+          "items": [8, 18, 43, 68, 76, 83],
+          "description": "主要是指猜疑和关系妄想等",
+          "scoreRange": [6, 30],
+          "threshold": 18,
+          "lowDescription": "个体的偏执症状不明显，思维不易走极端",
+          "highDescription": "个体的偏执症状明显，较易猜疑和敌对"
+        },
+        "psychoticism": {
+          "name": "精神病性",
+          "items": [7, 16, 35, 62, 77, 84, 85, 87, 88, 90],
+          "description": "反映各式各样的急性症状和行为",
+          "scoreRange": [10, 50],
+          "threshold": 30,
+          "lowDescription": "个体的精神病性症状不明显",
+          "highDescription": "个体的精神病性症状较为明显"
+        },
+        "additional": {
+          "name": "其他项目",
+          "items": [19, 44, 59, 60, 64, 66, 89],
+          "description": "主要反映睡眠及饮食情况",
+          "scoreRange": [7, 35],
+          "threshold": 21,
+          "lowDescription": "个体无明显不适",
+          "highDescription": "个体可能存在睡眠障碍、饮食不规律"
+        }
+      },
+      "results": {
+        "totalScore": {
+          "thresholds": [
+            {"score": 160, "description": "应作进一步检查"},
+            {"score": 200, "description": "有明显心理问题的可能性，可求助于心理咨询"},
+            {"score": 250, "description": "比较严重，需要作医学上的详细检查"}
+          ],
+          "normalRange": "160分以下"
+        },
+        "factorScore": {
+          "threshold": 2,
+          "description": "任一因子分超过2分就应作进一步检查"
+        }
+      }
+    },
+    "1": {
       "id": "1",
       "title": "性格色彩测试",
-      "description": "通过色彩心理学分析你的性格特点和行为模式",
+      "description": "了解你的性格色彩，发现真实的自己",
       "category": "standard",
       "price": 1,
-      "questions": 10,
       "image": "images/test1.jpg",
       "coverImage": "images/test-detail-1.jpg",
-      "tags": ["性格", "心理", "专业"]
+      "tags": ["性格", "心理", "专业"],
+      "questions": [
+        {
+          "id": 1,
+          "text": "当你遇到困难时，你通常会？",
+          "image": null,
+          "options": [
+            {"id": "A", "text": "独自思考解决方案"},
+            {"id": "B", "text": "寻求朋友帮助"},
+            {"id": "C", "text": "暂时逃避问题"},
+            {"id": "D", "text": "立即采取行动"}
+          ]
+        }
+      ],
+      "results": {
+        "A": {
+          "title": "红色性格",
+          "score": 85,
+          "analysis": "你是一个行动派，充满活力和热情，善于在压力下保持冷静思考。",
+          "dimensions": [
+            {"name": "行动力", "score": 90},
+            {"name": "决策力", "score": 85}
+          ]
+        }
+      }
     },
-    {
-      "id": "2", 
-      "title": "心理年龄测试",
-      "description": "测测你的心理年龄与实际年龄是否匹配",
+    "2": {
+      "id": "2",
+      "title": "心理年龄测试", 
+      "description": "测测你的心理年龄是多少",
       "category": "fun",
       "price": 1,
-      "questions": 8,
       "image": "images/test2.jpg",
       "coverImage": "images/test-detail-2.jpg",
-      "tags": ["年龄", "趣味", "心理"]
+      "tags": ["年龄", "趣味", "心理"],
+      "questions": [
+        {
+          "id": 1,
+          "text": "周末你更喜欢？",
+          "image": null,
+          "options": [
+            {"id": "A", "text": "宅在家里休息"},
+            {"id": "B", "text": "和朋友聚会"},
+            {"id": "C", "text": "学习新技能"},
+            {"id": "D", "text": "户外运动"}
+          ]
+        }
+      ],
+      "results": {
+        "A": {
+          "title": "成熟稳重",
+          "score": 35,
+          "analysis": "你的心理年龄比较成熟，喜欢安静和思考。",
+          "dimensions": []
+        }
+      }
     },
-    {
-      "id": "3",
-      "title": "情绪管理测试",
-      "description": "评估你的情绪管理能力和情商水平",
-      "category": "standard", 
+    "3": {
+      "id": "3", 
+      "title": "焦虑水平测试",
+      "description": "评估你的焦虑程度和应对方式",
+      "category": "standard",
       "price": 1,
-      "questions": 12,
       "image": "images/test3.jpg",
-      "coverImage": "images/test-detail-3.jpg",
-      "tags": ["情绪", "情商", "专业"]
-    },
-    {
-      "id": "4",
-      "title": "职业倾向测试",
-      "description": "发现最适合你的职业方向和发展路径",
-      "category": "standard",
-      "price": 1, 
-      "questions": 15,
-      "image": "images/test4.jpg",
-      "coverImage": "images/test-detail-4.jpg",
-      "tags": ["职业", "规划", "专业"]
-    },
-    {
-      "id": "5",
-      "title": "爱情观测试",
-      "description": "了解你在感情中的态度和价值观",
-      "category": "fun",
-      "price": 1,
-      "questions": 8,
-      "image": "images/test5.jpg", 
-      "coverImage": "images/test-detail-5.jpg",
-      "tags": ["爱情", "情感", "趣味"]
-    },
-    {
-      "id": "6",
-      "title": "压力承受测试",
-      "description": "评估你在压力环境下的应对能力",
-      "category": "standard",
-      "price": 1,
-      "questions": 10,
-      "image": "images/test6.jpg",
-      "coverImage": "images/test-detail-6.jpg", 
-      "tags": ["压力", "心理", "专业"]
+      "coverImage": "images/test-detail-3.jpg", 
+      "tags": ["焦虑", "情绪", "专业"],
+      "questions": [
+        {
+          "id": 1,
+          "text": "面对压力时，你的反应是？",
+          "image": null, 
+          "options": [
+            {"id": "A", "text": "保持冷静"},
+            {"id": "B", "text": "有些紧张"},
+            {"id": "C", "text": "非常焦虑"},
+            {"id": "D", "text": "逃避问题"}
+          ]
+        }
+      ],
+      "results": {
+        "A": {
+          "title": "低焦虑水平",
+          "score": 20,
+          "analysis": "你能够很好地应对压力，情绪稳定。",
+          "dimensions": [
+            {"name": "情绪稳定", "score": 85},
+            {"name": "压力应对", "score": 80}
+          ]
+        }
+      }
     }
-  ],
-  "wallpapers": [
-    {
-      "zodiac": "aries",
-      "name": "白羊座",
-      "images": [
-        {"url": "images/wallpapers/aries/1.jpg", "thumbnail": "images/wallpapers/aries/1-thumb.jpg"},
-        {"url": "images/wallpapers/aries/2.jpg", "thumbnail": "images/wallpapers/aries/2-thumb.jpg"}
-      ]
-    },
-    {
-      "zodiac": "taurus", 
-      "name": "金牛座",
-      "images": [
-        {"url": "images/wallpapers/taurus/1.jpg", "thumbnail": "images/wallpapers/taurus/1-thumb.jpg"},
-        {"url": "images/wallpapers/taurus/2.jpg", "thumbnail": "images/wallpapers/taurus/2-thumb.jpg"}
-      ]
-    }
-  ]
+  }
 }

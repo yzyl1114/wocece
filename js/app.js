@@ -2,12 +2,14 @@ class PsychTestApp {
     constructor() {
         this.currentTest = null;
         this.currentAnswers = [];
+        this.tests = [];
         this.init();
     }
 
     init() {
         this.bindEvents();
         this.loadTestData();
+        this.renderTestLists();
         this.initNavigation();
     }
 
@@ -22,11 +24,120 @@ class PsychTestApp {
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', (e) => this.handleTabClick(e));
         });
+    }
 
-        // 测试卡片点击
-        document.querySelectorAll('.test-card, .test-list-item').forEach(card => {
-            card.addEventListener('click', (e) => this.handleTestClick(e));
-        });
+    loadTestData() {
+        // 测试数据 - 包含3个测试
+        this.tests = [
+            {
+                id: '1',
+                title: '性格色彩测试',
+                description: '了解你的性格色彩，发现真实的自己',
+                category: 'standard',
+                price: 1,
+                questions: 10,
+                image: 'images/test1.jpg'
+            },
+            {
+                id: '2',
+                title: '心理年龄测试', 
+                description: '测测你的心理年龄是多少',
+                category: 'fun',
+                price: 1,
+                questions: 8,
+                image: 'images/test2.jpg'
+            },
+            {
+                id: '3',
+                title: '焦虑水平测试',
+                description: '评估你的焦虑程度和应对方式',
+                category: 'standard',
+                price: 1,
+                questions: 12,
+                image: 'images/test3.jpg'
+            },
+            {
+                id: '4',
+                title: '职业倾向测试',
+                description: '发现最适合你的职业方向',
+                category: 'standard',
+                price: 1,
+                questions: 15,
+                image: 'images/test4.jpg'
+            },
+            {
+                id: '5',
+                title: '情绪管理测试',
+                description: '了解你的情绪管理能力',
+                category: 'fun',
+                price: 1,
+                questions: 10,
+                image: 'images/test5.jpg'
+            }
+        ];
+    }
+
+    renderTestLists() {
+        this.renderFeaturedTests();
+        this.renderTestList();
+    }
+
+    renderFeaturedTests() {
+        const featuredContainer = document.getElementById('featuredTests');
+        if (featuredContainer) {
+            // 取前3个测试作为特色测试
+            const featuredTests = this.tests.slice(0, 3);
+            featuredContainer.innerHTML = featuredTests.map(test => `
+                <div class="test-card" data-test-id="${test.id}">
+                    <div class="test-image" style="background: linear-gradient(135deg, #667eea, #764ba2);"></div>
+                    <div class="test-content">
+                        <div class="test-title">${test.title}</div>
+                        <button class="test-btn" onclick="app.navigateToTest('${test.id}')">前往 →</button>
+                    </div>
+                </div>
+            `).join('');
+
+            // 绑定卡片点击事件
+            featuredContainer.querySelectorAll('.test-card').forEach(card => {
+                card.addEventListener('click', (e) => {
+                    if (!e.target.classList.contains('test-btn')) {
+                        const testId = card.dataset.testId;
+                        this.navigateToTest(testId);
+                    }
+                });
+            });
+        }
+    }
+
+    renderTestList() {
+        const testListContainer = document.getElementById('testList');
+        if (testListContainer) {
+            testListContainer.innerHTML = this.tests.map(test => `
+                <div class="test-list-item" data-test-id="${test.id}" data-category="${test.category}">
+                    <div class="test-thumb" style="background: linear-gradient(135deg, #667eea, #764ba2);"></div>
+                    <div class="test-info">
+                        <div class="test-title">${test.title}</div>
+                        <div class="test-desc">${test.description}</div>
+                    </div>
+                    <button class="small-btn" onclick="app.navigateToTest('${test.id}')">前往</button>
+                </div>
+            `).join('');
+
+            // 绑定列表项点击事件
+            testListContainer.querySelectorAll('.test-list-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    if (!e.target.classList.contains('small-btn')) {
+                        const testId = item.dataset.testId;
+                        this.navigateToTest(testId);
+                    }
+                });
+            });
+        }
+    }
+
+    // 跳转到测试详情
+    navigateToTest(testId) {
+        this.navigateTo(`detail.html?id=${testId}`);
     }
 
     handleSearch() {
@@ -51,25 +162,13 @@ class PsychTestApp {
         this.filterTestsByCategory(category);
     }
 
-    handleTestClick(event) {
-        const testCard = event.currentTarget.closest('[data-test-id]');
-        if (!testCard) return;
-        
-        const testId = testCard.dataset.testId;
-        const test = this.getTestById(testId);
-        
-        if (test) {
-            this.navigateTo(`detail.html?id=${testId}`);
-        }
-    }
-
     filterTestsByCategory(category) {
         const testItems = document.querySelectorAll('.test-list-item');
         
         testItems.forEach(item => {
             const testCategory = item.dataset.category;
             if (category === 'all' || testCategory === category) {
-                item.style.display = 'block';
+                item.style.display = 'flex';
             } else {
                 item.style.display = 'none';
             }
@@ -85,7 +184,7 @@ class PsychTestApp {
             const desc = item.querySelector('.test-desc').textContent.toLowerCase();
             
             if (title.includes(lowerKeyword) || desc.includes(lowerKeyword)) {
-                item.style.display = 'block';
+                item.style.display = 'flex';
             } else {
                 item.style.display = 'none';
             }
@@ -107,77 +206,8 @@ class PsychTestApp {
         }, 2000);
     }
 
-    loadTestData() {
-        // 模拟测试数据
-        const testData = [
-            {
-                id: '1',
-                title: '性格色彩测试',
-                description: '了解你的性格色彩，发现真实的自己',
-                category: 'standard',
-                price: 1,
-                questions: 10,
-                image: 'images/test1.jpg'
-            },
-            {
-                id: '2',
-                title: '心理年龄测试',
-                description: '测测你的心理年龄是多少',
-                category: 'fun',
-                price: 1,
-                questions: 8,
-                image: 'images/test2.jpg'
-            }
-        ];
-        
-        this.tests = testData;
-        this.renderTestList();
-    }
-
-    renderTestList() {
-        // 渲染特色测试
-        const featuredContainer = document.querySelector('.featured-tests');
-        if (featuredContainer) {
-            featuredContainer.innerHTML = this.tests.slice(0, 3).map(test => `
-                <div class="test-card" data-test-id="${test.id}">
-                    <img src="${test.image}" alt="${test.title}" class="test-image">
-                    <div class="test-content">
-                        <div class="test-title">${test.title}</div>
-                        <button class="test-btn">前往 →</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // 渲染测试列表
-        const testListContainer = document.querySelector('.test-list');
-        if (testListContainer) {
-            testListContainer.innerHTML = this.tests.map(test => `
-                <div class="test-list-item" data-test-id="${test.id}" data-category="${test.category}">
-                    <div class="test-info">
-                        <div class="test-title">${test.title}</div>
-                        <div class="test-desc">${test.description}</div>
-                    </div>
-                    <button class="test-btn">前往 →</button>
-                </div>
-            `).join('');
-        }
-    }
-
-    getTestById(id) {
-        return this.tests.find(test => test.id === id);
-    }
-
     initNavigation() {
-        // 底部导航
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', (e) => {
-                const target = e.currentTarget.dataset.target;
-                if (target) {
-                    this.navigateTo(target);
-                }
-            });
-        });
+        // 底部导航事件已在HTML中直接绑定
     }
 }
 
