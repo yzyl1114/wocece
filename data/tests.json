@@ -1,0 +1,88 @@
+{
+  "tests": [
+    {
+      "id": "1",
+      "title": "性格色彩测试",
+      "description": "通过色彩心理学分析你的性格特点和行为模式",
+      "category": "standard",
+      "price": 1,
+      "questions": 10,
+      "image": "images/test1.jpg",
+      "coverImage": "images/test-detail-1.jpg",
+      "tags": ["性格", "心理", "专业"]
+    },
+    {
+      "id": "2", 
+      "title": "心理年龄测试",
+      "description": "测测你的心理年龄与实际年龄是否匹配",
+      "category": "fun",
+      "price": 1,
+      "questions": 8,
+      "image": "images/test2.jpg",
+      "coverImage": "images/test-detail-2.jpg",
+      "tags": ["年龄", "趣味", "心理"]
+    },
+    {
+      "id": "3",
+      "title": "情绪管理测试",
+      "description": "评估你的情绪管理能力和情商水平",
+      "category": "standard", 
+      "price": 1,
+      "questions": 12,
+      "image": "images/test3.jpg",
+      "coverImage": "images/test-detail-3.jpg",
+      "tags": ["情绪", "情商", "专业"]
+    },
+    {
+      "id": "4",
+      "title": "职业倾向测试",
+      "description": "发现最适合你的职业方向和发展路径",
+      "category": "standard",
+      "price": 1, 
+      "questions": 15,
+      "image": "images/test4.jpg",
+      "coverImage": "images/test-detail-4.jpg",
+      "tags": ["职业", "规划", "专业"]
+    },
+    {
+      "id": "5",
+      "title": "爱情观测试",
+      "description": "了解你在感情中的态度和价值观",
+      "category": "fun",
+      "price": 1,
+      "questions": 8,
+      "image": "images/test5.jpg", 
+      "coverImage": "images/test-detail-5.jpg",
+      "tags": ["爱情", "情感", "趣味"]
+    },
+    {
+      "id": "6",
+      "title": "压力承受测试",
+      "description": "评估你在压力环境下的应对能力",
+      "category": "standard",
+      "price": 1,
+      "questions": 10,
+      "image": "images/test6.jpg",
+      "coverImage": "images/test-detail-6.jpg", 
+      "tags": ["压力", "心理", "专业"]
+    }
+  ],
+  "wallpapers": [
+    {
+      "zodiac": "aries",
+      "name": "白羊座",
+      "images": [
+        {"url": "images/wallpapers/aries/1.jpg", "thumbnail": "images/wallpapers/aries/1-thumb.jpg"},
+        {"url": "images/wallpapers/aries/2.jpg", "thumbnail": "images/wallpapers/aries/2-thumb.jpg"}
+      ]
+    },
+    {
+      "zodiac": "taurus", 
+      "name": "金牛座",
+      "images": [
+        {"url": "images/wallpapers/taurus/1.jpg", "thumbnail": "images/wallpapers/taurus/1-thumb.jpg"},
+        {"url": "images/wallpapers/taurus/2.jpg", "thumbnail": "images/wallpapers/taurus/2-thumb.jpg"}
+      ]
+    }
+  ]
+}

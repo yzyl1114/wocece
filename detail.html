@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>测试详情 - 我测测</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 顶部导航 -->
+        <nav class="navbar">
+            <div class="logo" onclick="window.history.back()">← 返回</div>
+            <div class="nav-icon" onclick="shareManager.triggerShare()">↗</div>
+        </nav>
+
+        <!-- 测试封面 -->
+        <div class="test-cover">
+            <img id="testCoverImage" src="" alt="测试封面" class="cover-image">
+            <h1 id="testTitle" class="test-title-main"></h1>
+        </div>
+
+        <!-- 测试描述 -->
+        <section class="test-description">
+            <div class="description-content">
+                <p id="testDescription"></p>
+            </div>
+        </section>
+
+        <!-- 立即测试按钮 -->
+        <section class="action-section">
+            <button id="startTestBtn" class="primary-btn">
+                ¥<span id="testPrice">1</span> 解锁测试
+            </button>
+            <div class="redeem-link">
+                <a href="#" id="redeemLink">已有兑换码/优惠码？点击这里</a>
+            </div>
+        </section>
+
+        <!-- 页脚 -->
+        <footer style="text-align: center; padding: 20px; color: #666; font-size: 12px;">
+            *本小程序仅供娱乐*
+        </footer>
+    </div>
+
+    <!-- 底部导航 -->
+    <div class="bottom-nav">
+        <div class="nav-item" data-target="index.html">
+            <div class="nav-icon">🏠</div>
+            <div>首页</div>
+        </div>
+        <div class="nav-item" data-target="discover.html">
+            <div class="nav-icon">🔍</div>
+            <div>发现</div>
+        </div>
+    </div>
+
+    <!-- Toast提示 -->
+    <div class="toast"></div>
+
+    <script src="js/app.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/payment.js"></script>
+    <script src="js/share.js"></script>
+    <script>
+        class DetailManager {
+            constructor() {
+                this.testId = null;
+                this.testData = null;
+                this.init();
+            }
+
+            async init() {
+                this.testId = new URLSearchParams(window.location.search).get('id');
+                await this.loadTestData();
+                this.renderTestDetail();
+                this.bindEvents();
+                
+                // 页面加载时显示分享提示
+                setTimeout(() => {
+                    if (window.shareManager) {
+                        window.shareManager.showShareTip();
+                    }
+                }, 1000);
+            }
+
+            async loadTestData() {
+                // 模拟API调用获取测试详情
+                this.testData = {
+                    id: this.testId,
+                    title: '性格色彩测试',
+                    description: '这是一个基于心理学原理的性格测试，通过10个问题深入分析你的性格特点、行为模式和潜在优势。测试结果将帮助你更好地了解自己，改善人际关系，提升个人成长。',
+                    price: 1,
+                    image: 'images/test-detail.jpg',
+                    questions: 10,
+                    category: 'standard'
+                };
+            }
+
+            renderTestDetail() {
+                document.getElementById('testCoverImage').src = this.testData.image;
+                document.getElementById('testTitle').textContent = this.testData.title;
+                document.getElementById('testDescription').textContent = this.testData.description;
+                document.getElementById('testPrice').textContent = this.testData.price;
+                
+                // 更新页面标题
+                document.title = `${this.testData.title} - 我测测`;
+            }
+
+            bindEvents() {
+                // 立即测试按钮
+                document.getElementById('startTestBtn').addEventListener('click', () => {
+                    this.handleStartTest();
+                });
+
+                // 兑换码链接
+                document.getElementById('redeemLink').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.goToRedeem();
+                });
+
+                // 分享按钮
+                document.querySelector('.nav-icon').addEventListener('click', () => {
+                    if (window.shareManager) {
+                        window.shareManager.triggerShare();
+                    }
+                });
+            }
+
+            handleStartTest() {
+                // 调用支付
+                if (window.paymentManager) {
+                    window.paymentManager.initializePayment(this.testId, this.testData.price);
+                } else {
+                    // 支付未就绪，直接跳转（测试用）
+                    window.location.href = `testing.html?id=${this.testId}`;
+                }
+            }
+
+            goToRedeem() {
+                window.location.href = `redeem.html?testId=${this.testId}`;
+            }
+        }
+
+        // 初始化详情页
+        document.addEventListener('DOMContentLoaded', () => {
+            window.detailManager = new DetailManager();
+        });
+    </script>
+
+    <style>
+        .test-cover {
+            position: relative;
+            margin: -15px -15px 20px -15px;
+        }
+
+        .cover-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .test-title-main {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            color: white;
+            padding: 60px 20px 20px 20px;
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .test-description {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .description-content {
+            line-height: 1.8;
+            color: #666;
+        }
+
+        .action-section {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            max-width: 280px;
+            margin-bottom: 15px;
+        }
+
+        .redeem-link {
+            margin-top: 10px;
+        }
+
+        .redeem-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+        }
+    </style>
+</body>
+</html>

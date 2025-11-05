@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>测试中 - 我测测</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 顶部进度条 -->
+        <div class="testing-header">
+            <div class="progress-text" id="progressText">第1题/共10题</div>
+            <div class="progress-bar">
+                <div class="progress" id="progressBar" style="width: 10%"></div>
+            </div>
+        </div>
+
+        <!-- 题目区域 -->
+        <section class="question-section">
+            <div class="question-text" id="questionText"></div>
+            <div class="question-image" id="questionImage"></div>
+        </section>
+
+        <!-- 选项区域 -->
+        <section class="options-section">
+            <div class="options" id="optionsContainer">
+                <!-- 动态生成选项 -->
+            </div>
+        </section>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script>
+        class TestingManager {
+            constructor() {
+                this.testId = null;
+                this.testData = null;
+                this.currentQuestionIndex = 0;
+                this.answers = [];
+                this.init();
+            }
+
+            async init() {
+                this.testId = new URLSearchParams(window.location.search).get('id');
+                await this.loadTestData();
+                this.loadProgress();
+                this.renderQuestion();
+                this.bindEvents();
+            }
+
+            async loadTestData() {
+                // 模拟测试数据
+                this.testData = {
+                    id: this.testId,
+                    title: '性格色彩测试',
+                    questions: [
+                        {
+                            id: 1,
+                            text: '当你遇到困难时，你通常会？',
+                            image: null,
+                            options: [
+                                { id: 'A', text: '独自思考解决方案' },
+                                { id: 'B', text: '寻求朋友帮助' },
+                                { id: 'C', text: '暂时逃避问题' },
+                                { id: 'D', text: '立即采取行动' }
+                            ]
+                        },
+                        {
+                            id: 2,
+                            text: '在社交场合中，你更倾向于？',
+                            image: null,
+                            options: [
+                                { id: 'A', text: '主动与人交流' },
+                                { id: 'B', text: '等待别人来找你' },
+                                { id: 'C', text: '观察周围环境' },
+                                { id: 'D', text: '尽快离开' }
+                            ]
+                        },
+                        {
+                            id: 3,
+                            text: '面对新的挑战，你的第一反应是？',
+                            image: 'images/question3.jpg',
+                            options: [
+                                { id: 'A', text: '兴奋和期待' },
+                                { id: 'B', text: '谨慎评估风险' },
+                                { id: 'C', text: '感到焦虑不安' },
+                                { id: 'D', text: '寻找他人意见' }
+                            ]
+                        }
+                        // 更多问题...
+                    ]
+                };
+            }
+
+            renderQuestion() {
+                if (!this.testData || !this.testData.questions[this.currentQuestionIndex]) {
+                    return;
+                }
+
+                const question = this.testData.questions[this.currentQuestionIndex];
+                const progress = ((this.currentQuestionIndex + 1) / this.testData.questions.length) * 100;
+
+                // 更新进度
+                document.getElementById('progressText').textContent = 
+                    `第${this.currentQuestionIndex + 1}题/共${this.testData.questions.length}题`;
+                document.getElementById('progressBar').style.width = `${progress}%`;
+
+                // 更新题目
+                document.getElementById('questionText').textContent = question.text;
+
+                // 更新图片
+                const imageContainer = document.getElementById('questionImage');
+                if (question.image) {
+                    imageContainer.innerHTML = `<img src="${question.image}" alt="题目图片" style="max-width: 100%; border-radius: 8px;">`;
+                    imageContainer.style.display = 'block';
+                } else {
+                    imageContainer.style.display = 'none';
+                }
+
+                // 更新选项
+                const optionsContainer = document.getElementById('optionsContainer');
+                optionsContainer.innerHTML = question.options.map(option => `
+                    <div class="option" data-option-id="${option.id}">
+                        <span class="option-label">${option.id}</span>
+                        <span class="option-text">${option.text}</span>
+                    </div>
+                `).join('');
+            }
+
+            bindEvents() {
+                document.getElementById('optionsContainer').addEventListener('click', (e) => {
+                    const option = e.target.closest('.option');
+                    if (option) {
+                        this.handleAnswer(option.dataset.optionId);
+                    }
+                });
+
+                // 防止页面刷新
+                window.addEventListener('beforeunload', (e) => {
+                    if (this.currentQuestionIndex > 0 && 
+                        this.currentQuestionIndex < this.testData.questions.length - 1) {
+                        e.preventDefault();
+                        e.returnValue = '测试进度将会丢失，确定要离开吗？';
+                    }
+                });
+            }
+
+            handleAnswer(optionId) {
+                // 记录答案
+                this.answers[this.currentQuestionIndex] = optionId;
+
+                // 保存进度
+                this.saveProgress();
+
+                // 自动下一题
+                if (this.currentQuestionIndex < this.testData.questions.length - 1) {
+                    this.currentQuestionIndex++;
+                    this.renderQuestion();
+                } else {
+                    this.completeTest();
+                }
+            }
+
+            saveProgress() {
+                const progress = {
+                    testId: this.testId,
+                    questionIndex: this.currentQuestionIndex,
+                    answers: this.answers,
+                    timestamp: Date.now()
+                };
+                storageManager.saveTestProgress(this.testId, progress);
+            }
+
+            loadProgress() {
+                const progress = storageManager.getTestProgress(this.testId);
+                if (progress) {
+                    this.currentQuestionIndex = progress.questionIndex;
+                    this.answers = progress.answers || [];
+                }
+            }
+
+            completeTest() {
+                // 计算结果
+                const result = this.calculateResult();
+                
+                // 清除进度
+                storageManager.clearTestProgress(this.testId);
+                
+                // 跳转到结果页
+                const resultStr = encodeURIComponent(JSON.stringify(result));
+                window.location.href = `result.html?id=${this.testId}&result=${resultStr}`;
+            }
+
+            calculateResult() {
+                // 简单的计分逻辑（实际应该更复杂）
+                const scores = {
+                    A: 0, B: 0, C: 0, D: 0
+                };
+
+                this.answers.forEach(answer => {
+                    if (scores.hasOwnProperty(answer)) {
+                        scores[answer]++;
+                    }
+                });
+
+                const total = this.answers.length;
+                const mainTrait = Object.keys(scores).reduce((a, b) => 
+                    scores[a] > scores[b] ? a : b
+                );
+
+                return {
+                    score: Math.floor((scores[mainTrait] / total) * 100),
+                    mainTrait: mainTrait,
+                    analysis: this.generateAnalysis(mainTrait),
+                    dimensions: [
+                        { name: '外向性', score: Math.floor(Math.random() * 40) + 60 },
+                        { name: '宜人性', score: Math.floor(Math.random() * 40) + 60 },
+                        { name: '尽责性', score: Math.floor(Math.random() * 40) + 60 },
+                        { name: '情绪稳定性', score: Math.floor(Math.random() * 40) + 60 },
+                        { name: '开放性', score: Math.floor(Math.random() * 40) + 60 }
+                    ]
+                };
+            }
+
+            generateAnalysis(trait) {
+                const analyses = {
+                    'A': '你是一个独立思考者，善于分析和解决问题。在压力下保持冷静，但有时可能过于独立。',
+                    'B': '你重视人际关系，善于合作。能够很好地理解他人感受，但需要注意保持个人边界。',
+                    'C': '你谨慎而敏感，善于观察细节。需要更多时间来适应变化，但思考问题很全面。',
+                    'D': '你行动力强，果断坚决。善于把握机会，但需要注意考虑周全再行动。'
+                };
+                return analyses[trait] || '基于你的选择，这是一个个性化的分析结果。';
+            }
+        }
+
+        // 初始化答题页面
+        document.addEventListener('DOMContentLoaded', () => {
+            window.testingManager = new TestingManager();
+        });
+    </script>
+
+    <style>
+        .testing-header {
+            background: white;
+            padding: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .progress-text {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .question-section {
+            background: white;
+            padding: 25px 20px;
+            margin: 10px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .question-image {
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .options-section {
+            margin-bottom: 20px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .option-label {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+
+        .option-text {
+            flex: 1;
+            font-size: 16px;
+        }
+
+        @media (max-width: 480px) {
+            .question-text {
+                font-size: 16px;
+            }
+            
+            .option {
+                padding: 12px;
+            }
+            
+            .option-text {
+                font-size: 14px;
+            }
+        }
+    </style>
+</body>
+</html>

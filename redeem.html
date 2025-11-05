@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>兑换码 - 我测测</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 顶部导航 -->
+        <nav class="navbar">
+            <div class="logo" onclick="window.history.back()">← 返回</div>
+            <div class="nav-icon">⚙️</div>
+        </nav>
+
+        <!-- 兑换码表单 -->
+        <section class="redeem-section">
+            <div class="redeem-header">
+                <h2>输入兑换码</h2>
+                <p>请输入12位兑换码解锁测试</p>
+            </div>
+
+            <div class="redeem-form">
+                <input type="text" id="redeemCode" class="redeem-input" placeholder="请输入12位兑换码" maxlength="12">
+                <button id="redeemBtn" class="redeem-btn">立即兑换</button>
+            </div>
+
+            <div class="redeem-tips">
+                <h4>兑换说明：</h4>
+                <ul>
+                    <li>兑换码为12位数字和字母组合</li>
+                    <li>每个兑换码仅限使用一次</li>
+                    <li>兑换成功后即可开始测试</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 页脚 -->
+        <footer style="text-align: center; padding: 20px; color: #666; font-size: 12px;">
+            *本小程序仅供娱乐*
+        </footer>
+    </div>
+
+    <!-- 底部导航 -->
+    <div class="bottom-nav">
+        <div class="nav-item" data-target="index.html">
+            <div class="nav-icon">🏠</div>
+            <div>首页</div>
+        </div>
+        <div class="nav-item" data-target="discover.html">
+            <div class="nav-icon">🔍</div>
+            <div>发现</div>
+        </div>
+    </div>
+
+    <!-- Toast提示 -->
+    <div class="toast"></div>
+
+    <script src="js/app.js"></script>
+    <script src="js/storage.js"></script>
+    <script>
+        class RedeemManager {
+            constructor() {
+                this.testId = null;
+                this.init();
+            }
+
+            init() {
+                this.testId = new URLSearchParams(window.location.search).get('testId');
+                this.bindEvents();
+            }
+
+            bindEvents() {
+                const redeemBtn = document.getElementById('redeemBtn');
+                const redeemInput = document.getElementById('redeemCode');
+
+                redeemBtn.addEventListener('click', () => {
+                    this.handleRedeem();
+                });
+
+                redeemInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.handleRedeem();
+                    }
+                });
+
+                // 实时验证输入格式
+                redeemInput.addEventListener('input', (e) => {
+                    this.validateCodeFormat(e.target.value);
+                });
+            }
+
+            validateCodeFormat(code) {
+                // 只允许字母和数字
+                const valid = /^[A-Za-z0-9]*$/.test(code);
+                if (!valid && code.length > 0) {
+                    this.showToast('兑换码只能包含字母和数字');
+                    document.getElementById('redeemCode').value = code.replace(/[^A-Za-z0-9]/g, '');
+                }
+            }
+
+            async handleRedeem() {
+                const code = document.getElementById('redeemCode').value.trim();
+                
+                if (!this.validateCode(code)) {
+                    return;
+                }
+
+                // 禁用按钮防止重复提交
+                const redeemBtn = document.getElementById('redeemBtn');
+                redeemBtn.disabled = true;
+                redeemBtn.textContent = '兑换中...';
+
+                try {
+                    const success = await this.verifyRedeemCode(code);
+                    
+                    if (success) {
+                        this.showToast('兑换成功！');
+                        // 保存兑换记录
+                        storageManager.saveRedeemRecord(code, this.testId);
+                        // 跳转到测试页面
+                        setTimeout(() => {
+                            window.location.href = `testing.html?id=${this.testId}`;
+                        }, 1500);
+                    } else {
+                        this.showToast('兑换码无效或已被使用');
+                    }
+                } catch (error) {
+                    console.error('兑换失败:', error);
+                    this.showToast('兑换失败，请重试');
+                } finally {
+                    // 恢复按钮状态
+                    redeemBtn.disabled = false;
+                    redeemBtn.textContent = '立即兑换';
+                }
+            }
+
+            validateCode(code) {
+                if (!code) {
+                    this.showToast('请输入兑换码');
+                    return false;
+                }
+
+                if (code.length !== 12) {
+                    this.showToast('兑换码必须是12位');
+                    return false;
+                }
+
+                if (!/^[A-Za-z0-9]{12}$/.test(code)) {
+                    this.showToast('兑换码格式不正确');
+                    return false;
+                }
+
+                // 检查是否已使用过
+                if (storageManager.isRedeemed(code, this.testId)) {
+                    this.showToast('该兑换码已被使用');
+                    return false;
+                }
+
+                return true;
+            }
+
+            async verifyRedeemCode(code) {
+                // 模拟API调用验证兑换码
+                const response = await fetch('/api/verify-redeem', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        code: code,
+                        testId: this.testId,
+                        userId: storageManager.getUserInfo().userId
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('验证失败');
+                }
+
+                const result = await response.json();
+                return result.valid;
+            }
+
+            showToast(message) {
+                if (window.app && window.app.showToast) {
+                    window.app.showToast(message);
+                } else {
+                    // 备用Toast
+                    alert(message);
+                }
+            }
+        }
+
+        // 初始化兑换页面
+        document.addEventListener('DOMContentLoaded', () => {
+            window.redeemManager = new RedeemManager();
+        });
+    </script>
+
+    <style>
+        .redeem-section {
+            background: white;
+            padding: 30px 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .redeem-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .redeem-header h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .redeem-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .redeem-form {
+            margin-bottom: 30px;
+        }
+
+        .redeem-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 16px;
+            text-align: center;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        .redeem-input:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .redeem-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .redeem-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .redeem-tips {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .redeem-tips h4 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .redeem-tips ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .redeem-tips li {
+            padding: 5px 0;
+            color: #666;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .redeem-tips li:before {
+            content: "•";
+            color: #667eea;
+            position: absolute;
+            left: 0;
+        }
+    </style>
+</body>
+</html>
