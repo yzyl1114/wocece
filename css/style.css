@@ -657,7 +657,7 @@ body {
     }
     
     .search-box {
-        flex-direction: column;
+        flex-direction: row;
     }
     
     .test-title {
