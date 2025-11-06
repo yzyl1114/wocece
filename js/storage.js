@@ -1,6 +1,36 @@
 class StorageManager {
     constructor() {
         this.storage = window.localStorage;
+        // 测试模式开关 - 设为true即可免费测试所有内容
+        this.TEST_MODE = true;
+    }
+
+    // 新增：检查是否已支付（测试模式直接返回true）
+    hasPaidForTest(testId) {
+        // 测试模式：直接返回true，绕过支付检查
+        if (this.TEST_MODE) {
+            console.log('测试模式：已免费解锁测试', testId);
+            return true;
+        }
+        
+        // 正式模式：检查真实的支付记录
+        const paidTests = this.getPaidTests();
+        return paidTests.includes(testId);
+    }
+
+    // 新增：获取已支付的测试列表
+    getPaidTests() {
+        const data = this.storage.getItem('paid_tests');
+        return data ? JSON.parse(data) : [];
+    }
+
+    // 新增：保存支付记录
+    savePaymentRecord(testId) {
+        const paidTests = this.getPaidTests();
+        if (!paidTests.includes(testId)) {
+            paidTests.push(testId);
+            this.storage.setItem('paid_tests', JSON.stringify(paidTests));
+        }
     }
 
     // 保存测试进度

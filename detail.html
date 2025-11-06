@@ -129,12 +129,21 @@
             }
 
             handleStartTest() {
-                // 调用支付
-                if (window.paymentManager) {
-                    window.paymentManager.initializePayment(this.testId, this.testData.price);
-                } else {
-                    // 支付未就绪，直接跳转（测试用）
+                // 检查是否已支付或免费测试
+                if (this.testData.price === 0 || storageManager.hasPaidForTest(this.testId)) {
+                    // 免费测试或已支付，直接开始
                     window.location.href = `testing.html?id=${this.testId}`;
+                } else {
+                    // 需要支付
+                    if (window.paymentManager) {
+                        window.paymentManager.initializePayment(this.testId, this.testData.price);
+                    } else {
+                        // 支付未就绪时的备用方案
+                        this.showToast('正在准备支付...');
+                        setTimeout(() => {
+                            window.location.href = `testing.html?id=${this.testId}`;
+                        }, 1000);
+                    }
                 }
             }
 
