@@ -12,7 +12,6 @@
         <!-- 顶部导航 -->
         <nav class="navbar">
             <div class="logo" onclick="window.history.back()">← 返回</div>
-            <div class="nav-icon">⭐</div>
         </nav>
 
         <!-- 结果头部 -->
@@ -62,7 +61,7 @@
         <!-- 更多推荐 -->
         <section class="recommendations">
             <h3>更多推荐</h3>
-            <div class="recommendation-list" id="recommendationList">
+            <div class="test-list" id="recommendationList">
                 <!-- 动态生成 -->
             </div>
         </section>
@@ -71,18 +70,6 @@
         <footer style="text-align: center; padding: 20px; color: #666; font-size: 12px;">
             *本小程序仅供娱乐*
         </footer>
-    </div>
-
-    <!-- 底部导航 -->
-    <div class="bottom-nav">
-        <div class="nav-item" data-target="index.html">
-            <div class="nav-icon">🏠</div>
-            <div>首页</div>
-        </div>
-        <div class="nav-item" data-target="discover.html">
-            <div class="nav-icon">🔍</div>
-            <div>发现</div>
-        </div>
     </div>
 
     <script src="js/app.js"></script>
@@ -124,8 +111,9 @@
                     };
                 }
 
-                // 判断测试类型（简单逻辑，实际应该从测试数据获取）
-                this.testType = this.resultData.dimensions ? 'standard' : 'fun';
+                // 判断测试类型
+                this.testType = this.resultData.testType === 'scl90' ? 'scl90' : 
+                               (this.resultData.dimensions ? 'standard' : 'fun');
             }
 
             renderResult() {
@@ -133,14 +121,15 @@
                 document.getElementById('totalScore').textContent = this.resultData.score;
 
                 // 根据测试类型显示不同的报告样式
-                if (this.testType === 'fun') {
+                if (this.testType === 'scl90') {
+                    this.renderSCL90Result();
+                } else if (this.testType === 'fun') {
                     this.renderFunResult();
                 } else {
                     this.renderStandardResult();
                 }
             }
 
-            // 新增：SCL-90结果渲染
             renderSCL90Result() {
                 const result = this.resultData;
                 
@@ -152,63 +141,15 @@
                 document.querySelector('.result-title').textContent = 'SCL-90测评完成';
                 
                 // 更新总分显示
-                document.getElementById('totalScore').textContent = result.totalScore;
+                document.getElementById('totalScore').textContent = result.totalScore || result.score;
                 document.querySelector('.score-label').textContent = '总分';
-
-                // 渲染各维度分数
-                const dimensionsList = document.getElementById('dimensionsList');
-                dimensionsList.innerHTML = Object.keys(result.dimensions).map(dimKey => {
-                    const dim = result.dimensions[dimKey];
-                    const percentage = (dim.averageScore / 5) * 100;
-                    return `
-                        <div class="dimension-item ${dim.isHigh ? 'high-score' : ''}">
-                            <div class="dimension-header">
-                                <span class="dimension-name">${dim.name}</span>
-                                <span class="dimension-score">${dim.averageScore.toFixed(2)}分</span>
-                            </div>
-                            <div class="dimension-bar">
-                                <div class="dimension-progress" style="width: ${percentage}%"></div>
-                            </div>
-                            <div class="dimension-analysis">
-                                <div class="dim-desc">${dim.description}</div>
-                                <div class="dim-result ${dim.isHigh ? 'high-text' : ''}">
-                                    ${dim.isHigh ? dim.highDescription : dim.lowDescription}
-                                </div>
-                                <div class="dim-range">分数范围：${dim.scoreRange[0]} - ${dim.scoreRange[1]}分</div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-
-                // 渲染总体评估
-                const assessment = result.overallAssessment;
-                document.getElementById('summaryText').innerHTML = `
-                    <div class="scl90-summary">
-                        <div class="assessment-level ${assessment.level}">
-                            <strong>评估等级：</strong>${assessment.level}
-                        </div>
-                        <div class="assessment-desc">
-                            <strong>总体描述：</strong>${assessment.description}
-                        </div>
-                        <div class="assessment-suggestion">
-                            <strong>建议：</strong>${assessment.suggestion}
-                        </div>
-                        ${assessment.hasHighFactors ? `
-                            <div class="high-factors">
-                                <strong>重点关注维度：</strong>${assessment.highFactors.join('、')}
-                            </div>
-                            <div class="factor-suggestion">
-                                ${assessment.factorSuggestion}
-                            </div>
-                        ` : ''}
-                        <div class="scl90-note">
-                            <em>注：总分超过160分或任一因子分超过2分建议进一步检查</em>
-                        </div>
-                    </div>
-                `;
 
                 // 隐藏雷达图
                 document.querySelector('.radar-chart-container').style.display = 'none';
+
+                // 渲染SCL-90特定内容
+                document.getElementById('analysisText').textContent = result.analysis || 'SCL-90症状自评量表专业分析结果';
+                document.getElementById('summaryText').textContent = result.summary || '建议根据具体分数情况寻求专业心理咨询。';
             }
 
             renderFunResult() {
@@ -229,18 +170,20 @@
 
                 // 渲染维度列表
                 const dimensionsList = document.getElementById('dimensionsList');
-                dimensionsList.innerHTML = this.resultData.dimensions.map(dim => `
-                    <div class="dimension-item">
-                        <div class="dimension-header">
-                            <span class="dimension-name">${dim.name}</span>
-                            <span class="dimension-score">${dim.score}%</span>
+                if (this.resultData.dimensions && this.resultData.dimensions.length > 0) {
+                    dimensionsList.innerHTML = this.resultData.dimensions.map(dim => `
+                        <div class="dimension-item">
+                            <div class="dimension-header">
+                                <span class="dimension-name">${dim.name}</span>
+                                <span class="dimension-score">${dim.score}%</span>
+                            </div>
+                            <div class="dimension-bar">
+                                <div class="dimension-progress" style="width: ${dim.score}%"></div>
+                            </div>
+                            <div class="dimension-analysis">${dim.analysis}</div>
                         </div>
-                        <div class="dimension-bar">
-                            <div class="dimension-progress" style="width: ${dim.score}%"></div>
-                        </div>
-                        <div class="dimension-analysis">${dim.analysis}</div>
-                    </div>
-                `).join('');
+                    `).join('');
+                }
 
                 // 渲染总结
                 document.getElementById('summaryText').textContent = this.resultData.summary;
@@ -250,6 +193,11 @@
             }
 
             renderRadarChart() {
+                if (!this.resultData.dimensions || this.resultData.dimensions.length === 0) {
+                    document.querySelector('.radar-chart-container').style.display = 'none';
+                    return;
+                }
+
                 const canvas = document.getElementById('radarChart');
                 const ctx = canvas.getContext('2d');
                 
@@ -330,42 +278,61 @@
             }
 
             loadRecommendations() {
-                // 模拟推荐数据
-                const recommendations = [
+                // 从所有测试中随机选择3个（排除当前测试）
+                const allTests = [
+                    { id: '1', title: '性格色彩测试', description: '了解你的性格色彩，发现真实的自己', image: 'images/test1.jpg' },
                     { id: '2', title: '心理年龄测试', description: '测测你的心理年龄是多少', image: 'images/test2.jpg' },
-                    { id: '3', title: '情绪管理测试', description: '了解你的情绪管理能力', image: 'images/test3.jpg' },
-                    { id: '4', title: '职业倾向测试', description: '发现适合你的职业方向', image: 'images/test4.jpg' }
+                    { id: '3', title: '焦虑水平测试', description: '评估你的焦虑程度和应对方式', image: 'images/test3.jpg' },
+                    { id: '4', title: '职业倾向测试', description: '发现最适合你的职业方向', image: 'images/test4.jpg' },
+                    { id: '5', title: '情绪管理测试', description: '了解你的情绪管理能力', image: 'images/test5.jpg' },
+                    { id: '6', title: 'SCL-90心理健康测试', description: '专业心理健康筛查，评估9大心理症状维度', image: 'images/scl90.jpg' }
                 ];
+
+                // 过滤掉当前测试
+                const availableTests = allTests.filter(test => test.id !== this.testId);
+                
+                // 随机选择3个测试
+                const recommendations = this.shuffleArray(availableTests).slice(0, 3);
 
                 const container = document.getElementById('recommendationList');
                 container.innerHTML = recommendations.map(rec => `
-                    <div class="recommendation-item" data-test-id="${rec.id}">
-                        <img src="${rec.image}" alt="${rec.title}" class="rec-image">
-                        <div class="rec-content">
-                            <div class="rec-title">${rec.title}</div>
-                            <div class="rec-desc">${rec.description}</div>
-                            <button class="rec-btn">前往测试</button>
+                    <div class="test-list-item" data-test-id="${rec.id}">
+                        <div class="test-thumb" style="background: linear-gradient(135deg, #667eea, #764ba2);"></div>
+                        <div class="test-info">
+                            <div class="test-title">${rec.title}</div>
+                            <div class="test-desc">${rec.description}</div>
                         </div>
+                        <button class="small-btn">前往</button>
                     </div>
                 `).join('');
 
                 // 绑定推荐项点击事件
-                container.querySelectorAll('.recommendation-item').forEach(item => {
+                container.querySelectorAll('.test-list-item').forEach(item => {
                     item.addEventListener('click', (e) => {
-                        if (!e.target.classList.contains('rec-btn')) {
+                        if (!e.target.classList.contains('small-btn')) {
                             const testId = item.dataset.testId;
                             window.location.href = `detail.html?id=${testId}`;
                         }
                     });
                 });
 
-                container.querySelectorAll('.rec-btn').forEach(btn => {
+                container.querySelectorAll('.small-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         e.stopPropagation();
-                        const testId = btn.closest('.recommendation-item').dataset.testId;
+                        const testId = btn.closest('.test-list-item').dataset.testId;
                         window.location.href = `detail.html?id=${testId}`;
                     });
                 });
+            }
+
+            // 随机打乱数组
+            shuffleArray(array) {
+                const newArray = [...array];
+                for (let i = newArray.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+                }
+                return newArray;
             }
         }
 
@@ -376,6 +343,15 @@
     </script>
 
     <style>
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+        }
+
         .result-header {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
@@ -541,63 +517,8 @@
             color: #333;
             margin-bottom: 15px;
             font-size: 18px;
-        }
-
-        .recommendation-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .recommendation-item {
-            display: flex;
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .recommendation-item:hover {
-            transform: translateY(-2px);
-        }
-
-        .rec-image {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-        }
-
-        .rec-content {
-            flex: 1;
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .rec-title {
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #333;
-        }
-
-        .rec-desc {
-            font-size: 12px;
-            color: #666;
-            margin-bottom: 8px;
-        }
-
-        .rec-btn {
-            align-self: flex-start;
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 4px 12px;
-            border-radius: 4px;
-            font-size: 12px;
-            cursor: pointer;
+            border-left: 4px solid #667eea;
+            padding-left: 10px;
         }
 
         /* 响应式调整 */

@@ -44,18 +44,6 @@
         </footer>
     </div>
 
-    <!-- 底部导航 -->
-    <div class="bottom-nav">
-        <div class="nav-item" data-target="index.html">
-            <div class="nav-icon">🏠</div>
-            <div>首页</div>
-        </div>
-        <div class="nav-item" data-target="discover.html">
-            <div class="nav-icon">🔍</div>
-            <div>发现</div>
-        </div>
-    </div>
-
     <!-- Toast提示 -->
     <div class="toast"></div>
 
@@ -86,16 +74,37 @@
             }
 
             async loadTestData() {
-                // 模拟API调用获取测试详情
-                this.testData = {
-                    id: this.testId,
-                    title: '性格色彩测试',
-                    description: '这是一个基于心理学原理的性格测试，通过10个问题深入分析你的性格特点、行为模式和潜在优势。测试结果将帮助你更好地了解自己，改善人际关系，提升个人成长。',
-                    price: 1,
-                    image: 'images/test-detail.jpg',
-                    questions: 10,
-                    category: 'standard'
-                };
+                try {
+                    // 尝试从本地存储或API获取测试数据
+                    const response = await fetch('data/tests.json');
+                    const data = await response.json();
+                    this.testData = data.tests[this.testId];
+                    
+                    if (!this.testData) {
+                        // 如果没有找到测试数据，使用默认数据
+                        this.testData = {
+                            id: this.testId,
+                            title: '心理测试',
+                            description: '这是一个基于心理学原理的测试，通过问题深入分析你的特点、行为模式和潜在优势。',
+                            price: this.testId === '6' ? 0 : 1,
+                            image: 'images/test-detail.jpg',
+                            questions: this.testId === '6' ? 90 : 10,
+                            category: 'standard'
+                        };
+                    }
+                } catch (error) {
+                    console.error('加载测试数据失败:', error);
+                    // 使用默认数据
+                    this.testData = {
+                        id: this.testId,
+                        title: '心理测试',
+                        description: '这是一个基于心理学原理的测试，通过问题深入分析你的特点、行为模式和潜在优势。',
+                        price: this.testId === '6' ? 0 : 1,
+                        image: 'images/test-detail.jpg',
+                        questions: this.testId === '6' ? 90 : 10,
+                        category: 'standard'
+                    };
+                }
             }
 
             renderTestDetail() {
@@ -149,6 +158,16 @@
 
             goToRedeem() {
                 window.location.href = `redeem.html?testId=${this.testId}`;
+            }
+
+            showToast(message) {
+                const toast = document.querySelector('.toast');
+                toast.textContent = message;
+                toast.classList.add('show');
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2000);
             }
         }
 

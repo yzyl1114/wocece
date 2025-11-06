@@ -27,7 +27,7 @@ class PsychTestApp {
     }
 
     loadTestData() {
-        // 测试数据 - 包含3个测试
+        // 测试数据 - 包含6个测试
         this.tests = [
             {
                 id: '1',
@@ -94,8 +94,10 @@ class PsychTestApp {
     renderFeaturedTests() {
         const featuredContainer = document.getElementById('featuredTests');
         if (featuredContainer) {
-            // 取前3个测试作为特色测试
-            const featuredTests = this.tests.slice(0, 3);
+            // 指定4个测试作为特色测试：1,2,3,4
+            const featuredIds = ['1', '2', '3', '4'];
+            const featuredTests = this.tests.filter(test => featuredIds.includes(test.id));
+            
             featuredContainer.innerHTML = featuredTests.map(test => `
                 <div class="test-card" data-test-id="${test.id}">
                     <div class="test-image" style="background: linear-gradient(135deg, #667eea, #764ba2);"></div>

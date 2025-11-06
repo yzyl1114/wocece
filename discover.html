@@ -11,8 +11,8 @@
     <div class="container">
         <!-- 顶部导航 -->
         <nav class="navbar">
-            <div class="logo">星座壁纸</div>
-            <div class="nav-icon">⭐</div>
+            <div class="logo" onclick="window.history.back()">← 返回</div>
+            <div class="nav-title">星座壁纸</div>
         </nav>
 
         <!-- 星座分类标签 -->
@@ -61,11 +61,11 @@
 
     <!-- 底部导航 -->
     <div class="bottom-nav">
-        <div class="nav-item" data-target="index.html">
+        <div class="nav-item" onclick="app.navigateTo('index.html')">
             <div class="nav-icon">🏠</div>
             <div>首页</div>
         </div>
-        <div class="nav-item active" data-target="discover.html">
+        <div class="nav-item active" onclick="app.navigateTo('discover.html')">
             <div class="nav-icon">🔍</div>
             <div>发现</div>
         </div>
@@ -304,6 +304,25 @@
     </script>
 
     <style>
+        /* 导航栏样式调整 */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
         .zodiac-tabs-section {
             background: white;
             padding: 15px 0;
@@ -318,6 +337,12 @@
             gap: 8px;
             padding: 0 15px;
             overflow-x: auto;
+            scrollbar-width: none; /* 隐藏滚动条 */
+            -ms-overflow-style: none; /* IE和Edge */
+        }
+
+        .zodiac-tabs::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
         }
 
         .zodiac-tabs .tab {
@@ -477,7 +502,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(10px);
+            line-height: 1;
         }
 
         /* 响应式调整 */
@@ -502,21 +527,6 @@
                 grid-template-columns: repeat(4, 1fr);
                 gap: 12px;
             }
-        }
-
-        /* 滚动条样式 */
-        .zodiac-tabs::-webkit-scrollbar {
-            height: 4px;
-        }
-
-        .zodiac-tabs::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 2px;
-        }
-
-        .zodiac-tabs::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 2px;
         }
     </style>
 </body>

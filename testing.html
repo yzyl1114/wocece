@@ -29,6 +29,12 @@
                 <!-- 动态生成选项 -->
             </div>
         </section>
+
+        <!-- 导航按钮 -->
+        <section class="navigation-buttons">
+            <button id="prevBtn" class="nav-btn prev-btn" disabled>上一题</button>
+            <button id="nextBtn" class="nav-btn next-btn">下一题</button>
+        </section>
     </div>
 
     <script src="js/storage.js"></script>
@@ -48,14 +54,68 @@
                 this.loadProgress();
                 this.renderQuestion();
                 this.bindEvents();
+                this.updateNavigationButtons();
             }
 
             async loadTestData() {
-                // 模拟测试数据
-                this.testData = {
-                    id: this.testId,
-                    title: '性格色彩测试',
-                    questions: [
+                try {
+                    // 尝试加载真实测试数据
+                    const response = await fetch('data/tests.json');
+                    const data = await response.json();
+                    this.testData = data.tests[this.testId];
+                    
+                    if (!this.testData) {
+                        // 如果没有找到测试数据，使用默认数据
+                        this.testData = {
+                            id: this.testId,
+                            title: '心理测试',
+                            questions: this.getDefaultQuestions()
+                        };
+                    }
+                } catch (error) {
+                    console.error('加载测试数据失败:', error);
+                    // 使用默认数据
+                    this.testData = {
+                        id: this.testId,
+                        title: '心理测试',
+                        questions: this.getDefaultQuestions()
+                    };
+                }
+            }
+
+            getDefaultQuestions() {
+                if (this.testId === '6') {
+                    // SCL-90测试的默认问题
+                    return [
+                        {
+                            id: 1,
+                            text: '头痛',
+                            image: null,
+                            options: [
+                                { id: '1', text: '没有', score: 1 },
+                                { id: '2', text: '很轻', score: 2 },
+                                { id: '3', text: '中度', score: 3 },
+                                { id: '4', text: '偏重', score: 4 },
+                                { id: '5', text: '严重', score: 5 }
+                            ]
+                        },
+                        {
+                            id: 2,
+                            text: '神经过敏，心中不踏实',
+                            image: null,
+                            options: [
+                                { id: '1', text: '没有', score: 1 },
+                                { id: '2', text: '很轻', score: 2 },
+                                { id: '3', text: '中度', score: 3 },
+                                { id: '4', text: '偏重', score: 4 },
+                                { id: '5', text: '严重', score: 5 }
+                            ]
+                        }
+                        // 这里可以添加更多SCL-90问题...
+                    ];
+                } else {
+                    // 其他测试的默认问题
+                    return [
                         {
                             id: 1,
                             text: '当你遇到困难时，你通常会？',
@@ -81,7 +141,7 @@
                         {
                             id: 3,
                             text: '面对新的挑战，你的第一反应是？',
-                            image: 'images/question3.jpg',
+                            image: null,
                             options: [
                                 { id: 'A', text: '兴奋和期待' },
                                 { id: 'B', text: '谨慎评估风险' },
@@ -89,9 +149,8 @@
                                 { id: 'D', text: '寻找他人意见' }
                             ]
                         }
-                        // 更多问题...
-                    ]
-                };
+                    ];
+                }
             }
 
             renderQuestion() {
@@ -121,20 +180,34 @@
 
                 // 更新选项
                 const optionsContainer = document.getElementById('optionsContainer');
-                optionsContainer.innerHTML = question.options.map(option => `
-                    <div class="option" data-option-id="${option.id}">
-                        <span class="option-label">${option.id}</span>
-                        <span class="option-text">${option.text}</span>
-                    </div>
-                `).join('');
+                optionsContainer.innerHTML = question.options.map(option => {
+                    const isSelected = this.answers[this.currentQuestionIndex] === option.id;
+                    return `
+                        <div class="option ${isSelected ? 'selected' : ''}" data-option-id="${option.id}">
+                            <span class="option-label">${option.id}</span>
+                            <span class="option-text">${option.text}</span>
+                        </div>
+                    `;
+                }).join('');
             }
 
             bindEvents() {
+                // 选项点击事件
                 document.getElementById('optionsContainer').addEventListener('click', (e) => {
                     const option = e.target.closest('.option');
                     if (option) {
-                        this.handleAnswer(option.dataset.optionId);
+                        this.selectOption(option.dataset.optionId);
                     }
+                });
+
+                // 上一题按钮
+                document.getElementById('prevBtn').addEventListener('click', () => {
+                    this.previousQuestion();
+                });
+
+                // 下一题按钮
+                document.getElementById('nextBtn').addEventListener('click', () => {
+                    this.nextQuestion();
                 });
 
                 // 防止页面刷新
@@ -147,20 +220,65 @@
                 });
             }
 
-            handleAnswer(optionId) {
+            selectOption(optionId) {
                 // 记录答案
                 this.answers[this.currentQuestionIndex] = optionId;
-
+                
+                // 重新渲染选项以显示选中状态
+                this.renderQuestion();
+                
                 // 保存进度
                 this.saveProgress();
+                
+                // 更新导航按钮状态
+                this.updateNavigationButtons();
+            }
 
-                // 自动下一题
-                if (this.currentQuestionIndex < this.testData.questions.length - 1) {
-                    this.currentQuestionIndex++;
+            previousQuestion() {
+                if (this.currentQuestionIndex > 0) {
+                    this.currentQuestionIndex--;
                     this.renderQuestion();
-                } else {
-                    this.completeTest();
+                    this.updateNavigationButtons();
                 }
+            }
+
+            nextQuestion() {
+                if (this.currentQuestionIndex < this.testData.questions.length - 1) {
+                    // 如果有答案才允许进入下一题
+                    if (this.answers[this.currentQuestionIndex]) {
+                        this.currentQuestionIndex++;
+                        this.renderQuestion();
+                        this.updateNavigationButtons();
+                    } else {
+                        this.showToast('请先选择答案');
+                    }
+                } else {
+                    // 最后一题，完成测试
+                    if (this.answers[this.currentQuestionIndex]) {
+                        this.completeTest();
+                    } else {
+                        this.showToast('请先选择答案');
+                    }
+                }
+            }
+
+            updateNavigationButtons() {
+                const prevBtn = document.getElementById('prevBtn');
+                const nextBtn = document.getElementById('nextBtn');
+                
+                // 更新上一题按钮状态
+                prevBtn.disabled = this.currentQuestionIndex === 0;
+                
+                // 更新下一题按钮文本和状态
+                if (this.currentQuestionIndex === this.testData.questions.length - 1) {
+                    nextBtn.textContent = '完成测试';
+                } else {
+                    nextBtn.textContent = '下一题';
+                }
+                
+                // 如果有答案，启用下一题按钮
+                const hasAnswer = !!this.answers[this.currentQuestionIndex];
+                nextBtn.disabled = !hasAnswer;
             }
 
             saveProgress() {
@@ -194,7 +312,42 @@
             }
 
             calculateResult() {
-                // 简单的计分逻辑（实际应该更复杂）
+                // 根据测试ID使用不同的计分逻辑
+                if (this.testId === '6') {
+                    return this.calculateSCL90Result();
+                } else {
+                    return this.calculateDefaultResult();
+                }
+            }
+
+            calculateSCL90Result() {
+                // SCL-90计分逻辑
+                let totalScore = 0;
+                let answeredCount = 0;
+                
+                this.answers.forEach((answer, index) => {
+                    if (answer) {
+                        const question = this.testData.questions[index];
+                        const option = question.options.find(opt => opt.id === answer);
+                        if (option && option.score) {
+                            totalScore += option.score;
+                            answeredCount++;
+                        }
+                    }
+                });
+
+                const averageScore = answeredCount > 0 ? totalScore / answeredCount : 0;
+                
+                return {
+                    score: Math.round(averageScore * 20), // 转换为百分制
+                    totalScore: totalScore,
+                    analysis: '基于SCL-90症状自评量表的专业分析...',
+                    testType: 'scl90'
+                };
+            }
+
+            calculateDefaultResult() {
+                // 简单的计分逻辑
                 const scores = {
                     A: 0, B: 0, C: 0, D: 0
                 };
@@ -232,6 +385,27 @@
                     'D': '你行动力强，果断坚决。善于把握机会，但需要注意考虑周全再行动。'
                 };
                 return analyses[trait] || '基于你的选择，这是一个个性化的分析结果。';
+            }
+
+            showToast(message) {
+                const toast = document.createElement('div');
+                toast.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: rgba(0,0,0,0.8);
+                    color: white;
+                    padding: 12px 20px;
+                    border-radius: 6px;
+                    z-index: 2000;
+                `;
+                toast.textContent = message;
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.remove();
+                }, 2000);
             }
         }
 
@@ -298,6 +472,11 @@
             transform: translateY(-2px);
         }
 
+        .option.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
         .option-label {
             background: #667eea;
             color: white;
@@ -311,9 +490,52 @@
             font-weight: bold;
         }
 
+        .option.selected .option-label {
+            background: #764ba2;
+        }
+
         .option-text {
             flex: 1;
             font-size: 16px;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0 40px 0;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .prev-btn {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .prev-btn:disabled {
+            background: #f5f5f5;
+            color: #ccc;
+            border-color: #e0e0e0;
+            cursor: not-allowed;
+        }
+
+        .next-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .next-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
         }
 
         @media (max-width: 480px) {
