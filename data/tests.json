@@ -1,7 +1,7 @@
 {
   "tests": {
-    "scl90": {
-      "id": "scl90",
+    "6": {
+      "id": "6",
       "title": "SCL-90症状自查量表",
       "description": "专业心理健康筛查，评估9大心理症状维度",
       "category": "standard",
@@ -1198,6 +1198,7 @@
         }
       }
     },
+    
     "1": {
       "id": "1",
       "title": "性格色彩测试",
@@ -1232,6 +1233,7 @@
         }
       }
     },
+    
     "2": {
       "id": "2",
       "title": "心理年龄测试", 
@@ -1263,6 +1265,7 @@
         }
       }
     },
+    
     "3": {
       "id": "3", 
       "title": "焦虑水平测试",
@@ -1293,6 +1296,115 @@
           "dimensions": [
             {"name": "情绪稳定", "score": 85},
             {"name": "压力应对", "score": 80}
+          ]
+        }
+      }
+    },
+
+    "4": {
+      "id": "4",
+      "title": "职业倾向测试",
+      "description": "发现最适合你的职业方向",
+      "category": "standard",
+      "price": 1,
+      "image": "images/test4.jpg",
+      "coverImage": "images/test-detail-4.jpg",
+      "tags": ["职业", "发展", "规划"],
+      "questions": [
+        {
+          "id": 1,
+          "text": "你更喜欢哪种工作环境？",
+          "image": null,
+          "options": [
+            {"id": "A", "text": "独立安静的办公室"},
+            {"id": "B", "text": "团队合作的开放空间"},
+            {"id": "C", "text": "外出拜访客户"},
+            {"id": "D", "text": "创意工作室"}
+          ]
+        },
+        {
+          "id": 2,
+          "text": "面对挑战时，你的第一反应是？",
+          "image": null,
+          "options": [
+            {"id": "A", "text": "分析问题制定计划"},
+            {"id": "B", "text": "寻求他人帮助"},
+            {"id": "C", "text": "立即尝试解决"},
+            {"id": "D", "text": "寻找创新方案"}
+          ]
+        }
+      ],
+      "results": {
+        "A": {
+          "title": "研究型职业倾向",
+          "score": 85,
+          "analysis": "你适合需要深度思考和独立工作的职业，如研究员、分析师等。",
+          "dimensions": [
+            {"name": "分析能力", "score": 90},
+            {"name": "专注力", "score": 85}
+          ]
+        },
+        "B": {
+          "title": "社会型职业倾向", 
+          "score": 80,
+          "analysis": "你擅长与人打交道，适合教育、咨询、服务等行业。",
+          "dimensions": [
+            {"name": "沟通能力", "score": 88},
+            {"name": "同理心", "score": 82}
+          ]
+        }
+      }
+    },
+    "5": {
+      "id": "5",
+      "title": "情绪管理测试",
+      "description": "了解你的情绪管理能力", 
+      "category": "fun",
+      "price": 1,
+      "image": "images/test5.jpg",
+      "coverImage": "images/test-detail-5.jpg",
+      "tags": ["情绪", "管理", "自控"],
+      "questions": [
+        {
+          "id": 1,
+          "text": "当遇到挫折时，你通常会？",
+          "image": null,
+          "options": [
+            {"id": "A", "text": "冷静分析原因"},
+            {"id": "B", "text": "向朋友倾诉"},
+            {"id": "C", "text": "短暂情绪低落"},
+            {"id": "D", "text": "容易发脾气"}
+          ]
+        },
+        {
+          "id": 2, 
+          "text": "面对压力时，你的应对方式是？",
+          "image": null,
+          "options": [
+            {"id": "A", "text": "运动放松"},
+            {"id": "B", "text": "听音乐缓解"},
+            {"id": "C", "text": "吃东西减压"},
+            {"id": "D", "text": "难以入睡"}
+          ]
+        }
+      ],
+      "results": {
+        "A": {
+          "title": "情绪管理高手",
+          "score": 90,
+          "analysis": "你能够很好地管理和调节自己的情绪，抗压能力强。",
+          "dimensions": [
+            {"name": "情绪稳定", "score": 92},
+            {"name": "压力应对", "score": 88}
+          ]
+        },
+        "B": {
+          "title": "情绪调节良好",
+          "score": 75,
+          "analysis": "你基本能够管理情绪，但在极端情况下需要改进。",
+          "dimensions": [
+            {"name": "情绪表达", "score": 80},
+            {"name": "自我调节", "score": 70}
           ]
         }
       }
