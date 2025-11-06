@@ -325,29 +325,80 @@
             }
 
             calculateSCL90Result() {
-                // SCL-90计分逻辑
-                let totalScore = 0;
-                let answeredCount = 0;
-                
-                this.answers.forEach((answer, index) => {
-                    if (answer) {
-                        const question = this.testData.questions[index];
-                        const option = question.options.find(opt => opt.id === answer);
-                        if (option && option.score) {
-                            totalScore += option.score;
-                            answeredCount++;
-                        }
-                    }
-                });
-
-                const averageScore = answeredCount > 0 ? totalScore / answeredCount : 0;
-                
-                return {
-                    score: Math.round(averageScore * 20), // 转换为百分制
-                    totalScore: totalScore,
-                    analysis: '基于SCL-90症状自评量表的专业分析...',
+                const dimensions = this.testData.dimensions;
+                const result = {
+                    score: 0,
+                    dimensions: [],
                     testType: 'scl90'
                 };
+                
+                // 计算各维度分数
+                Object.keys(dimensions).forEach(dimKey => {
+                    const dimension = dimensions[dimKey];
+                    let dimensionScore = 0;
+                    let answeredCount = 0;
+                    
+                    // 计算该维度下所有题目的总分
+                    dimension.items.forEach(questionNum => {
+                        const answerIndex = questionNum - 1; // 题目编号从1开始，数组索引从0开始
+                        if (this.answers[answerIndex]) {
+                            const question = this.testData.questions[answerIndex];
+                            const option = question.options.find(opt => opt.id === this.answers[answerIndex]);
+                            if (option && option.score) {
+                                dimensionScore += option.score;
+                                answeredCount++;
+                            }
+                        }
+                    });
+                    
+                    // 计算平均分并转换为百分制（1-5分制转换为0-100分）
+                    const averageScore = answeredCount > 0 ? dimensionScore / answeredCount : 0;
+                    const percentageScore = Math.round((averageScore - 1) / 4 * 100); // 1-5分制转0-100分
+                    
+                    result.dimensions.push({
+                        name: dimension.name,
+                        score: percentageScore,
+                        analysis: dimension.description,
+                        rawScore: dimensionScore,
+                        averageScore: averageScore
+                    });
+                });
+                
+                // 计算总分（各维度平均分的平均值）
+                const totalAverage = result.dimensions.reduce((sum, dim) => sum + dim.score, 0) / result.dimensions.length;
+                result.score = Math.round(totalAverage);
+                
+                // 生成总体分析
+                result.analysis = this.generateSCL90Analysis(result.dimensions);
+                result.summary = this.generateSCL90Summary(result.dimensions, result.score);
+                
+                return result;
+            }
+
+            generateSCL90Analysis(dimensions) {
+                let analysis = '基于SCL-90症状自评量表的专业分析：\n\n';
+                
+                dimensions.forEach(dim => {
+                    let level = '';
+                    if (dim.score >= 70) level = '较高';
+                    else if (dim.score >= 40) level = '中等';
+                    else level = '较低';
+                    
+                    analysis += `• ${dim.name}：${level}水平（${dim.score}分）。${dim.analysis}\n`;
+                });
+                
+                return analysis;
+            }
+
+            generateSCL90Summary(dimensions, totalScore) {
+                const highDimensions = dimensions.filter(dim => dim.score >= 60);
+                
+                if (highDimensions.length === 0) {
+                    return '您的各项心理症状均在正常范围内，整体心理健康状况良好。';
+                } else {
+                    const highNames = highDimensions.map(dim => dim.name).join('、');
+                    return `您在${highNames}方面需要特别关注，建议适当调整生活方式，必要时寻求专业心理咨询。`;
+                }
             }
 
             calculateDefaultResult() {

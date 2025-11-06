@@ -44,11 +44,6 @@
         <section class="load-more-section">
             <button id="loadMoreBtn" class="load-more-btn">加载更多</button>
         </section>
-
-        <!-- 页脚 -->
-        <footer style="text-align: center; padding: 20px; color: #666; font-size: 12px;">
-            *本小程序仅供娱乐*
-        </footer>
     </div>
 
     <!-- 全屏预览 -->
@@ -96,20 +91,22 @@
                 
                 this.isLoading = true;
                 
-                // 模拟壁纸数据
+                // 使用本地images文件夹的壁纸
                 const zodiacs = ['aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo', 
-                               'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces'];
+                            'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces'];
                 
-                // 生成模拟壁纸数据
+                // 生成本地壁纸数据
                 const newWallpapers = [];
                 const itemsPerPage = 12;
                 
                 for (let i = 0; i < itemsPerPage; i++) {
                     const zodiac = zodiacs[Math.floor(Math.random() * zodiacs.length)];
+                    const imageNum = Math.floor(Math.random() * 5) + 1; // 假设每个星座有5张图
+                    
                     newWallpapers.push({
                         id: `wallpaper_${page}_${i}`,
-                        url: `https://picsum.photos/400/400?random=${page * 100 + i}`,
-                        thumbnail: `https://picsum.photos/200/200?random=${page * 100 + i}`,
+                        url: `images/wallpapers/${zodiac}_${imageNum}.jpg`, // 大图路径
+                        thumbnail: `images/wallpapers/${zodiac}_${imageNum}_thumb.jpg`, // 缩略图路径
                         zodiac: zodiac,
                         name: `${this.getZodiacName(zodiac)}星座壁纸 ${i + 1}`
                     });

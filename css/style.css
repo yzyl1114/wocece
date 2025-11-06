@@ -436,24 +436,33 @@ body {
 
 /* 发现页标签样式调整 */
 .zodiac-tabs-section {
-    background: white;
-    padding: 15px 0;
+    background: none; /* 移除背景 */
+    padding: 10px 0; /* 减少内边距 */
     position: sticky;
     top: 0;
     z-index: 100;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* 更轻的阴影 */
 }
 
 .zodiac-tabs {
     display: flex;
-    gap: 8px;
+    gap: 6px;
     padding: 0 15px;
     overflow-x: auto;
-    background: none;
-    box-shadow: none;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    background: none; /* 确保没有背景 */
 }
 
 .zodiac-tabs .tab {
-    margin-bottom: 0;
+    flex-shrink: 0;
+    padding: 6px 12px; /* 更小的内边距 */
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 12px; /* 更小的字体 */
 }
 
 /* 反馈页面样式 */

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>我的测评报告 - 我测测</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 结果头部 -->
+        <section class="result-header">
+            <div class="result-title">测评报告分享</div>
+            <div class="result-score">
+                <div class="score-circle">
+                    <span id="totalScore">85</span>分
+                </div>
+                <div class="score-label">综合评分</div>
+            </div>
+        </section>
+
+        <!-- 报告内容 -->
+        <section class="analysis-section">
+            <h3>测评结果</h3>
+            <div class="analysis-content" id="analysisText"></div>
+        </section>
+
+        <!-- 二维码区域 -->
+        <section class="share-section">
+            <div class="qrcode-container">
+                <div class="qrcode" id="qrcode"></div>
+                <div class="qrcode-text">
+                    <div class="text-line1">扫一扫</div>
+                    <div class="text-line2">发现更多有趣测评</div>
+                </div>
+            </div>
+        </section>
+
+        <footer style="text-align: center; padding: 20px; color: #666; font-size: 12px;">
+            *本小程序仅供娱乐*
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script>
+        class SharePageManager {
+            constructor() {
+                this.shareData = null;
+                this.init();
+            }
+
+            init() {
+                this.loadShareData();
+                this.renderShareContent();
+                this.generateQRCode();
+            }
+
+            loadShareData() {
+                const dataParam = new URLSearchParams(window.location.search).get('data');
+                if (dataParam) {
+                    this.shareData = JSON.parse(decodeURIComponent(dataParam));
+                } else {
+                    // 默认数据
+                    this.shareData = {
+                        result: {
+                            score: 85,
+                            analysis: '基于你的答题情况分析，你是一个善于思考且情感丰富的人。在人际交往中表现出色，但有时可能过于在意他人看法。'
+                        }
+                    };
+                }
+            }
+
+            renderShareContent() {
+                if (this.shareData.result) {
+                    document.getElementById('totalScore').textContent = this.shareData.result.score;
+                    document.getElementById('analysisText').textContent = this.shareData.result.analysis;
+                }
+            }
+
+            generateQRCode() {
+                const homepageUrl = window.location.origin + '/index.html';
+                QRCode.toCanvas(document.getElementById('qrcode'), homepageUrl, {
+                    width: 120,
+                    height: 120,
+                    margin: 1
+                }, function (error) {
+                    if (error) console.error(error);
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new SharePageManager();
+        });
+    </script>
+
+    <style>
+        .result-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+            margin: -15px -15px 20px -15px;
+        }
+
+        .analysis-section {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .share-section {
+            background: white;
+            padding: 30px 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .qrcode-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .qrcode {
+            border: 1px solid #eee;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .qrcode-text {
+            text-align: left;
+        }
+
+        .text-line1 {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .text-line2 {
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</body>
+</html>
