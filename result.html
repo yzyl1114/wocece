@@ -55,7 +55,7 @@
         <!-- 行动按钮 -->
         <section class="result-actions">
             <button id="retestBtn" class="action-btn secondary">再测一次</button>
-            <button onclick="app.navigateTo('index.html')" class="action-btn primary">更多测试</button>
+            <button onclick="app.navigateTo('index.html')" class="action-btn primary">回首页</button>
         </section>
 
         <!-- 更多推荐 -->
@@ -131,27 +131,22 @@
             }
 
             renderSCL90Result() {
-                const result = this.resultData;
-                
-                // 隐藏趣味分析，显示标准分析
+                // 使用标准报告结构，隐藏趣味分析
                 document.getElementById('funAnalysis').style.display = 'none';
                 document.getElementById('standardAnalysis').style.display = 'block';
                 
-                // 更新标题
-                document.querySelector('.result-title').textContent = 'SCL-90测评完成';
+                // 更新分析内容
+                document.getElementById('analysisText').textContent = this.resultData.analysis || '基于SCL-90症状自评量表的专业心理健康分析';
                 
-                // 更新总分显示
-                document.getElementById('totalScore').textContent = result.totalScore || result.score;
-                document.querySelector('.score-label').textContent = '总分';
-
-                // 隐藏雷达图
-                document.querySelector('.radar-chart-container').style.display = 'none';
-
-                // 渲染SCL-90特定内容
-                document.getElementById('analysisText').textContent = result.analysis || 'SCL-90症状自评量表专业分析结果';
-                document.getElementById('summaryText').textContent = result.summary || '建议根据具体分数情况寻求专业心理咨询。';
+                // 如果有维度数据，渲染标准维度报告
+                if (this.resultData.dimensions) {
+                    this.renderStandardDimensions();
+                }
+                
+                // 更新总结
+                document.getElementById('summaryText').textContent = this.resultData.summary || '建议根据具体评估结果关注心理健康，必要时寻求专业帮助。';
             }
-
+                
             renderFunResult() {
                 // 显示趣味测试报告
                 document.getElementById('funAnalysis').style.display = 'block';

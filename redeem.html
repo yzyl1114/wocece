@@ -12,7 +12,6 @@
         <!-- 顶部导航 -->
         <nav class="navbar">
             <div class="logo" onclick="window.history.back()">← 返回</div>
-            <div class="nav-icon">⚙️</div>
         </nav>
 
         <!-- 兑换码表单 -->
@@ -30,9 +29,9 @@
             <div class="redeem-tips">
                 <h4>兑换说明：</h4>
                 <ul>
-                    <li>兑换码为12位数字和字母组合</li>
-                    <li>每个兑换码仅限使用一次</li>
-                    <li>兑换成功后即可开始测试</li>
+                    <li>1. 兑换码为12位数字和字母组合</li>
+                    <li>2. 每个兑换码仅限使用一次</li>
+                    <li>3. 兑换成功后即可开始测试</li>
                 </ul>
             </div>
         </section>
@@ -41,18 +40,6 @@
         <footer style="text-align: center; padding: 20px; color: #666; font-size: 12px;">
             *本小程序仅供娱乐*
         </footer>
-    </div>
-
-    <!-- 底部导航 -->
-    <div class="bottom-nav">
-        <div class="nav-item" data-target="index.html">
-            <div class="nav-icon">🏠</div>
-            <div>首页</div>
-        </div>
-        <div class="nav-item" data-target="discover.html">
-            <div class="nav-icon">🔍</div>
-            <div>发现</div>
-        </div>
     </div>
 
     <!-- Toast提示 -->
@@ -264,10 +251,10 @@
         }
 
         .redeem-tips {
-            background: #f8f9fa;
-            padding: 20px;
+            background: none;
+            padding: 10px;
             border-radius: 8px;
-            border-left: 4px solid #667eea;
+            border-left: none;
         }
 
         .redeem-tips h4 {
@@ -285,13 +272,6 @@
             color: #666;
             position: relative;
             padding-left: 15px;
-        }
-
-        .redeem-tips li:before {
-            content: "•";
-            color: #667eea;
-            position: absolute;
-            left: 0;
         }
     </style>
 </body>
