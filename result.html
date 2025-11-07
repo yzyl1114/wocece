@@ -273,18 +273,36 @@
                 ctx.stroke();
             }
 
+            // 在ResultManager类中修改bindEvents方法：
             bindEvents() {
-                document.getElementById('saveResultBtn').addEventListener('click', () => {
-                    this.saveResultAsImage();
-                });
+                console.log('开始绑定事件');
+                const saveBtn = document.getElementById('saveResultBtn');
+                console.log('找到保存按钮:', saveBtn);
+                
+                if (saveBtn) {
+                    saveBtn.addEventListener('click', () => {
+                        console.log('保存按钮被点击');
+                        this.saveResultAsImage();
+                    });
+                } else {
+                    console.error('保存按钮未找到，当前页面按钮：', document.querySelectorAll('button'));
+                }
             }
 
             // 保存结果为图片（包含二维码）
             async saveResultAsImage() {
                 try {
+                    // 确保testData有值
+                    if (!this.testData) {
+                        this.testData = {
+                            title: '心理测试',
+                            image: 'images/default.jpg'
+                        };
+                    }
+                    
                     this.showToast('正在生成图片...');
                     
-                    // 创建临时容器，包含需要保存的内容
+                    // 创建临时容器
                     const tempContainer = document.createElement('div');
                     tempContainer.style.cssText = `
                         position: fixed;
@@ -362,15 +380,16 @@
                     tempContainer.appendChild(contentToSave);
                     document.body.appendChild(tempContainer);
                     
+                    // 等待一下确保DOM渲染完成
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    
                     // 使用html2canvas生成图片
                     const canvas = await html2canvas(tempContainer, {
                         backgroundColor: '#f5f6fa',
                         scale: 2, // 高清
                         useCORS: true,
                         allowTaint: false,
-                        logging: false,
-                        width: 375,
-                        height: tempContainer.scrollHeight
+                        logging: false
                     });
                     
                     // 清理临时容器
@@ -378,7 +397,7 @@
                     
                     // 转换为图片并下载
                     const link = document.createElement('a');
-                    const fileName = `我测测-${this.testData?.title || '测评'}-${new Date().toLocaleDateString()}.png`;
+                    const fileName = `我测测-${this.testData.title || '测评'}-${new Date().toLocaleDateString().replace(/\//g, '-')}.png`;
                     link.download = fileName;
                     link.href = canvas.toDataURL('image/png');
                     link.click();
@@ -389,7 +408,7 @@
                     console.error('保存失败:', error);
                     this.showToast('保存失败，请重试');
                 }
-            }
+            }            
 
             loadRecommendations() {
                 // 从所有测试中随机选择3个（排除当前测试）
