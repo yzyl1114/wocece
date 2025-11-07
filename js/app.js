@@ -24,6 +24,52 @@ class PsychTestApp {
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', (e) => this.handleTabClick(e));
         });
+
+        // +++ 新增：分享功能 +++
+        document.getElementById('shareIcon')?.addEventListener('click', () => {
+            this.handleShare();
+        });      
+    }
+
+    handleShare() {
+        // 获取当前首页的URL
+        const shareUrl = window.location.href;
+        
+        // 方案一：使用现代的 Clipboard API (推荐)
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(shareUrl)
+                .then(() => {
+                    this.showToast('分享链接已复制，快去分享给好友吧！');
+                })
+                .catch(err => {
+                    console.error('复制失败:', err);
+                    this.showToast('复制失败，请手动复制链接');
+                });
+        } 
+        // 方案二：兼容旧浏览器的备用方案
+        else {
+            // 创建临时文本域
+            const textArea = document.createElement('textarea');
+            textArea.value = shareUrl;
+            textArea.style.position = 'fixed'; // 避免滚动到页面底部
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    this.showToast('分享链接已复制，快去分享给好友吧！');
+                } else {
+                    this.showToast('复制失败，请手动复制链接');
+                }
+            } catch (err) {
+                console.error('复制失败:', err);
+                this.showToast('复制失败，请手动复制链接');
+            }
+            
+            document.body.removeChild(textArea);
+        }
     }
 
     loadTestData() {
