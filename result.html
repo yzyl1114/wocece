@@ -80,15 +80,33 @@
                 this.resultData = null;
                 this.testType = null;
                 this.testData = null;
+                this.resultDisplayType = 'score'; // 默认分数展示
                 this.init();
             }
 
-            init() {
+            async init() {
                 this.testId = new URLSearchParams(window.location.search).get('id');
+                await this.loadTestConfig(); // 先加载配置
                 this.loadResultData();
                 this.renderResult();
                 this.bindEvents();
                 this.loadRecommendations();
+            }
+
+            // 新增方法：加载测试配置
+            async loadTestConfig() {
+                try {
+                    const response = await fetch('data/tests.json');
+                    const data = await response.json();
+                    const testConfig = data.tests[this.testId];
+                    
+                    // 获取结果展示类型，默认为 score
+                    this.resultDisplayType = testConfig?.resultDisplayType || 'score';
+                    
+                } catch (error) {
+                    console.error('加载测试配置失败:', error);
+                    this.resultDisplayType = 'score'; // 默认使用分数展示
+                }
             }
 
             loadResultData() {
@@ -122,8 +140,8 @@
             }
 
             renderResult() {
-                // 根据测试类型选择不同的展示方式
-                if (this.testType === 'fun' || !this.resultData.score) {
+                // 根据配置的结果展示类型选择展示方式
+                if (this.resultDisplayType === 'text') {
                     this.renderTextResult(); // 文本结果展示
                 } else {
                     this.renderScoreResult(); // 分数结果展示
@@ -137,7 +155,7 @@
                 }
             }
 
-            // 新增文本结果展示方法
+            // 修改文本结果展示方法
             renderTextResult() {
                 const resultHeader = document.querySelector('.result-header');
                 resultHeader.innerHTML = `
@@ -149,7 +167,7 @@
                 `;
             }
 
-            // 新增分数结果展示方法
+            // 修改分数结果展示方法
             renderScoreResult() {
                 const resultHeader = document.querySelector('.result-header');
                 resultHeader.innerHTML = `
@@ -307,8 +325,8 @@
 
                 const canvas = document.getElementById('radarChart');
                 // 设置更大的canvas尺寸
-                canvas.width = 350;
-                canvas.height = 350;
+                canvas.width = 280;
+                canvas.height = 280;
 
                 const ctx = canvas.getContext('2d');
                 
@@ -317,7 +335,7 @@
 
                 const centerX = canvas.width / 2;
                 const centerY = canvas.height / 2;
-                const radius = Math.min(centerX, centerY) - 40; // 增加边距给标签
+                const radius = Math.min(centerX, centerY) - 35; // 增加边距给标签
                 const dimensions = this.resultData.dimensions;
                 const angleStep = (2 * Math.PI) / dimensions.length;
 
@@ -512,9 +530,11 @@
                         }
                         .radar-chart-container {
                             text-align: center;
-                            margin: 20px 0;
-                            padding: 10px;
-                            position: relative;
+                            margin: 25px 0; /* 调整边距 */
+                            padding: 20px;
+                            background: white;
+                            border-radius: 12px;
+                            box-shadow: 0 2px 12px rgba(0,0,0,0.08); /* 同步阴影效果 */
                         }
                         .professional-assessment {
                             line-height: 1.6;
@@ -533,13 +553,78 @@
                             border-left: 3px solid #ff4757;
                         }
                         .professional-note {
-                            background: #f8f9fa;
-                            padding: 10px;
-                            border-radius: 4px;
+                            background: none; /* 移除背景框 */
+                            padding: 10px 0; /* 调整内边距 */
+                            border-radius: 0; /* 移除圆角 */
                             font-size: 12px;
                             color: #666;
                             margin-top: 15px;
-                            border-left: 3px solid #667eea;
+                            border-left: none; /* 移除蓝色左边框 */
+                        }
+                        
+                        /* 新增：结果头部字号调整 */
+                        .result-title {
+                            font-size: 16px; /* 减小字号 */
+                            margin-bottom: 15px;
+                            opacity: 0.9;
+                            font-weight: 500;
+                        }
+                        
+                        .score-number {
+                            font-size: 56px; /* 增大字号 */
+                            font-weight: bold;
+                            margin-bottom: 8px;
+                            line-height: 1;
+                        }
+                        
+                        .score-label {
+                            font-size: 16px;
+                            opacity: 0.9;
+                            font-weight: 500;
+                        }
+                        
+                        .result-label {
+                            font-size: 16px;
+                            margin-bottom: 12px;
+                            opacity: 0.9;
+                            font-weight: 500;
+                        }
+                        
+                        .result-text {
+                            font-size: 32px; /* 增大字号 */
+                            font-weight: bold;
+                            line-height: 1.2;
+                        }
+                        
+                        /* 新增：维度项样式修复 */
+                        .dimension-item {
+                            margin-bottom: 20px;
+                            padding: 15px;
+                            background: #f8f9fa;
+                            border-radius: 8px;
+                            border-left: none; /* 移除所有左边框 */
+                        }
+                        
+                        .dimension-item.high-score {
+                            border-left: none; /* 移除红色左边框 */
+                            background: #fff5f5; /* 保留背景色提示 */
+                        }
+                        
+                        /* 新增：总结评语样式修复 */
+                        .summary-section h4 {
+                            color: #333;
+                            margin-bottom: 10px;
+                            border-left: none; /* 移除蓝色左边框 */
+                            padding-left: 0;
+                        }
+                        
+                        .summary-content {
+                            color: #666;
+                            line-height: 1.8;
+                            background: none; /* 移除背景框 */
+                            padding: 0; /* 移除内边距 */
+                            border-radius: 0; /* 移除圆角 */
+                            border-left: none; /* 移除蓝色左边框 */
                         }
                     `;
                     
@@ -831,32 +916,38 @@
         }
 
         .result-title {
-            font-size: 20px;
-            margin-bottom: 20px;
+            font-size: 16px;
+            margin-bottom: 15px;
             opacity: 0.9;
+            font-weight: 500;
         }
 
-        .score-circle {
-            width: 100px;
-            height: 100px;
-            border: 4px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 10px;
-            background: rgba(255,255,255,0.1);
-        }
-
-        .score-circle span {
-            font-size: 28px;
+        /* 分数展示样式 */
+        .score-number {
+            font-size: 56px; /* 增大字号 */
             font-weight: bold;
+            margin-bottom: 8px;
+            line-height: 1;
         }
 
         .score-label {
-            font-size: 14px;
-            opacity: 0.8;
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        /* 文本结果展示样式 */
+        .result-label {
+            font-size: 16px;
+            margin-bottom: 12px;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .result-text {
+            font-size: 32px; /* 增大字号 */
+            font-weight: bold;
+            line-height: 1.2;
         }
 
         .analysis-section, .dimensions-section {
@@ -880,12 +971,22 @@
             text-align: justify;
         }
 
+        /* 修复雷达图容器 */
         .radar-chart-container {
             text-align: center;
-            margin: 20px 0;
-            padding: 10px;
-            position: relative;
+            margin: 25px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
         }
+
+        #radarChart {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }        
 
         .dimension-item {
             margin-bottom: 20px;
