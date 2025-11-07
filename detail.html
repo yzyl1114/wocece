@@ -99,54 +99,16 @@
 
             async loadTestData() {
                 try {
-                    // 实际项目中从API或JSON文件加载
-                    // 这里使用SCL-90的示例数据
-                    this.testData = {
-                        id: this.testId,
-                        title: 'SCL-90心理健康测试',
-                        description: '专业心理健康筛查，评估9大心理症状维度',
-                        templateType: 'standard',
-                        price: 0, // 免费测试
-                        image: 'images/scl90.jpg',
-                        
-                        // 标准测试特有字段
-                        basicInfo: {
-                            questions: 90,
-                            duration: 25,
-                            reportType: '专业报告'
-                        },
-                        theory: {
-                            content: `SCL-90症状自评量表是世界上最著名的心理健康测试量表之一，由L.R.Derogatis编制。\n\nSCL-90从感觉、思维、情感、意识、行为等方面全面评估心理健康程度，是当前使用最广泛的精神和心理门诊检查量表。`,
-                            image: 'images/theory-demo.jpg' // 可选图片
-                        },
-                        requirements: {
-                            content: `题目项目均采用5级评分制，评定时间是最近一个星期的实际感觉。`,
-                            items: [
-                                '没有 - 表示无该项问题',
-                                '很轻 - 表示有症状但影响轻微', 
-                                '中度 - 表示有症状且有一定影响',
-                                '偏重 - 表示有症状且有相当程度影响',
-                                '严重 - 表示症状的频度、强度、影响都十分严重'
-                            ],
-                            image: 'images/requirements-demo.jpg' // 可选图片
-                        },
-                        reportExample: {
-                            content: ``, // 报告示例内容
-                            steps: [
-                                {
-                                    title: 'Step1',
-                                    subtitle: '心理健康状态评估', 
-                                    description: '含综合状态评估和各因子得分评估'
-                                },
-                                {
-                                    title: 'Step2',
-                                    subtitle: '指标详细解读',
-                                    description: '阳性因子严重程度评估及状态解读'
-                                }
-                            ],
-                            image: 'images/report-demo.jpg' // 可选图片
-                        }
-                    };
+                    this.testId = new URLSearchParams(window.location.search).get('id');
+                    
+                    // 从 tests.json 加载对应测试数据
+                    const response = await fetch('data/tests.json');
+                    const data = await response.json();
+                    this.testData = data.tests[this.testId];
+                    
+                    if (!this.testData) {
+                        throw new Error('测试数据不存在');
+                    }
                     
                 } catch (error) {
                     console.error('加载测试数据失败:', error);
@@ -379,11 +341,13 @@
         .test-cover {
             position: relative;
             margin: -15px -15px 20px -15px;
+            height: 250px; /* 增加高度 */
+            overflow: hidden;
         }
 
         .cover-image {
             width: 100%;
-            height: 200px;
+            height: 100px;
             object-fit: cover;
         }
 
@@ -412,6 +376,7 @@
             display: flex;
             justify-content: space-around;
             text-align: center;
+            flex-direction: row; /* 确保水平排列 */
         }
 
         .info-card {
@@ -475,7 +440,7 @@
 
         .requirements-list li {
             padding: 8px 0;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: none; /* 移除横线 */
             position: relative;
             padding-left: 15px;
         }
@@ -513,7 +478,7 @@
             background: #f8f9fa;
             padding: 15px;
             border-radius: 8px;
-            border-left: 4px solid #667eea;
+            border-left: none; /* 移除蓝色左边框 */
         }
 
         .step-header {
@@ -590,7 +555,7 @@
         /* 响应式调整 */
         @media (max-width: 480px) {
             .basic-info-cards {
-                flex-direction: column;
+                flex-direction: row;
                 gap: 10px;
             }
             

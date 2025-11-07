@@ -33,7 +33,7 @@
             
             <!-- 雷达图容器 -->
             <div class="radar-chart-container">
-                <canvas id="radarChart" width="300" height="300"></canvas>
+                <canvas id="radarChart" max-width="100%" height="auto"></canvas>
             </div>
 
             <!-- 维度分析 -->
@@ -272,7 +272,7 @@
 
                 const centerX = canvas.width / 2;
                 const centerY = canvas.height / 2;
-                const radius = Math.min(centerX, centerY) - 20;
+                const radius = Math.min(centerX, centerY) - 30; // 增加边距给标签
                 const dimensions = this.resultData.dimensions;
                 const angleStep = (2 * Math.PI) / dimensions.length;
 
@@ -299,15 +299,23 @@
                     ctx.lineTo(x, y);
                     ctx.stroke();
 
-                    // 绘制维度标签
+                    // 修复维度标签显示 - 使用更小的字体和更好的位置计算
                     ctx.fillStyle = '#666';
-                    ctx.font = '12px Arial';
+                    ctx.font = '10px Arial'; // 减小字体大小
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
                     
-                    const labelX = centerX + (radius + 20) * Math.cos(angle);
-                    const labelY = centerY + (radius + 20) * Math.sin(angle);
-                    ctx.fillText(dimensions[i].name, labelX, labelY);
+                    const labelRadius = radius + 25; // 增加标签距离
+                    const labelX = centerX + labelRadius * Math.cos(angle);
+                    const labelY = centerY + labelRadius * Math.sin(angle);
+                    
+                    // 处理标签文本 - 截断过长的文本
+                    let labelText = dimensions[i].name;
+                    if (labelText.length > 4) {
+                        labelText = labelText.substring(0, 4) + '...';
+                    }
+                    
+                    ctx.fillText(labelText, labelX, labelY);
                 }
 
                 // 绘制数据多边形
@@ -331,7 +339,7 @@
                 ctx.closePath();
                 ctx.fill();
                 ctx.stroke();
-            }
+            }                
 
             showToast(message) {
                 const toast = document.querySelector('.toast');
@@ -461,6 +469,7 @@
                             text-align: center;
                             margin: 20px 0;
                             padding: 10px;
+                            position: relative;
                         }
                         .professional-assessment {
                             line-height: 1.6;
@@ -830,6 +839,7 @@
             text-align: center;
             margin: 20px 0;
             padding: 10px;
+            position: relative;
         }
 
         .dimension-item {
@@ -837,6 +847,13 @@
             padding: 15px;
             background: #f8f9fa;
             border-radius: 8px;
+            border-left: none; /* 移除所有左边框 */
+        }
+
+        /* 特定修复高分数项的红色边框 */
+        .dimension-item.high-score {
+            border-left: none; /* 移除红色左边框 */
+            background: #fff5f5; /* 保留背景色提示 */
         }
 
         .dimension-header {
@@ -886,15 +903,17 @@
         .summary-section h4 {
             color: #333;
             margin-bottom: 10px;
+            border-left: none; /* 移除蓝色左边框 */
+            padding-left: 0;
         }
 
         .summary-content {
             color: #666;
             line-height: 1.8;
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 6px;
-            border-left: 4px solid #667eea;
+            background: none; /* 移除背景框 */
+            padding: 0; /* 移除内边距 */
+            border-radius: 0; /* 移除圆角 */
+            border-left: none; /* 移除蓝色左边框 */
         }
 
         .result-actions {
@@ -992,13 +1011,14 @@
         }
 
         .professional-note {
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 4px;
+            background: none; /* 移除背景框 */
+            padding: 10px 0; /* 调整内边距 */
+            border-radius: 0; /* 移除圆角 */
             font-size: 12px;
             color: #666;
             margin-top: 15px;
-            border-left: 3px solid #667eea;
+            border-left: none; /* 移除蓝色左边框 */
+            font-style: italic; /* 可选：添加斜体强调 */
         }
 
         /* 维度增强样式 */
