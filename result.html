@@ -68,6 +68,9 @@
         </footer>
     </div>
 
+    <!-- Toast提示 -->
+    <div class="toast"></div>
+
     <script src="js/app.js"></script>
     <script src="js/storage.js"></script>
     <script>
@@ -76,6 +79,7 @@
                 this.testId = null;
                 this.resultData = null;
                 this.testType = null;
+                this.testData = null; // 添加 testData 属性
                 this.init();
             }
 
@@ -110,6 +114,12 @@
                 // 判断测试类型
                 this.testType = this.resultData.testType === 'scl90' ? 'scl90' : 
                                (this.resultData.dimensions ? 'standard' : 'fun');
+
+                // 初始化testData
+                this.testData = {
+                    title: document.querySelector('.test-title-main')?.textContent || '心理测试',
+                    image: document.querySelector('.cover-image')?.src || 'images/default.jpg'
+                };
             }
 
             renderResult() {
@@ -273,6 +283,22 @@
                 ctx.stroke();
             }
 
+            // 添加 showToast 方法
+            showToast(message) {
+                const toast = document.querySelector('.toast');
+                if (toast) {
+                    toast.textContent = message;
+                    toast.classList.add('show');
+                    
+                    setTimeout(() => {
+                        toast.classList.remove('show');
+                    }, 2000);
+                } else {
+                    // 备用方案
+                    alert(message);
+                }
+            }
+
             // 在ResultManager类中修改bindEvents方法：
             bindEvents() {
                 console.log('开始绑定事件');
@@ -291,14 +317,21 @@
 
             // 保存结果为图片（包含二维码）
             async saveResultAsImage() {
+                const saveBtn = document.getElementById('saveResultBtn');
+                const originalText = saveBtn.textContent;
+                
                 try {
                     // 确保testData有值
                     if (!this.testData) {
                         this.testData = {
-                            title: '心理测试',
-                            image: 'images/default.jpg'
+                            title: document.querySelector('.test-title-main')?.textContent || '心理测试',
+                            image: document.querySelector('.cover-image')?.src || 'images/default.jpg'
                         };
                     }
+                    
+                    // 设置按钮状态
+                    saveBtn.disabled = true;
+                    saveBtn.textContent = '生成中...';
                     
                     this.showToast('正在生成图片...');
                     
@@ -311,6 +344,7 @@
                         width: 375px;
                         background: #f5f6fa;
                         padding: 20px;
+                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
                     `;
                     
                     // 复制结果内容（排除行动按钮和更多推荐）
@@ -328,7 +362,9 @@
                     qrSection.className = 'qr-section';
                     qrSection.innerHTML = `
                         <div class="qr-content">
-                            <img src="images/qrcode.jpg" alt="我测测二维码" class="qr-image">
+                            <div style="width: 100px; height: 100px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 8px; border: 1px solid #eee;">
+                                <span style="color: #666; font-size: 12px;">二维码</span>
+                            </div>
                             <div class="qr-text">
                                 <div class="qr-line1">扫一扫</div>
                                 <div class="qr-line2">发现更多有趣测评</div>
@@ -355,12 +391,6 @@
                             justify-content: center;
                             gap: 20px;
                         }
-                        .qr-image {
-                            width: 100px;
-                            height: 100px;
-                            border: 1px solid #eee;
-                            border-radius: 8px;
-                        }
                         .qr-text {
                             text-align: left;
                         }
@@ -374,6 +404,21 @@
                             font-size: 12px;
                             color: #666;
                         }
+                        .result-header {
+                            background: linear-gradient(135deg, #667eea, #764ba2);
+                            color: white;
+                            padding: 30px 20px;
+                            text-align: center;
+                            border-radius: 0 0 20px 20px;
+                            margin: -15px -15px 20px -15px;
+                        }
+                        .analysis-section, .dimensions-section {
+                            background: white;
+                            padding: 20px;
+                            margin: 15px 0;
+                            border-radius: 10px;
+                            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                        }
                     `;
                     
                     tempContainer.appendChild(style);
@@ -381,7 +426,7 @@
                     document.body.appendChild(tempContainer);
                     
                     // 等待一下确保DOM渲染完成
-                    await new Promise(resolve => setTimeout(resolve, 100));
+                    await new Promise(resolve => setTimeout(resolve, 500));
                     
                     // 使用html2canvas生成图片
                     const canvas = await html2canvas(tempContainer, {
@@ -400,13 +445,23 @@
                     const fileName = `我测测-${this.testData.title || '测评'}-${new Date().toLocaleDateString().replace(/\//g, '-')}.png`;
                     link.download = fileName;
                     link.href = canvas.toDataURL('image/png');
+                    document.body.appendChild(link);
                     link.click();
+                    document.body.removeChild(link);
                     
                     this.showToast('结果已保存到相册');
                     
                 } catch (error) {
                     console.error('保存失败:', error);
-                    this.showToast('保存失败，请重试');
+                    let errorMessage = '保存失败，请重试';
+                    if (error.message.includes('html2canvas')) {
+                        errorMessage = '图片生成失败，请检查浏览器兼容性';
+                    }
+                    this.showToast(errorMessage);
+                } finally {
+                    // 恢复按钮状态
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = originalText;
                 }
             }            
 
