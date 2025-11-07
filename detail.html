@@ -338,6 +338,36 @@
     </script>
 
     <style>
+        /* 修复返回按钮样式 */
+        .navbar {
+            display: flex;
+            align-items: center;
+            padding: 20px 15px 15px; /* 增加上边距，向下移动 */
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+            min-height: 60px; /* 确保有足够高度 */
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 12px 20px 12px 0; /* 增加点击区域 */
+            margin: -12px 0 -12px -20px; /* 扩大点击区域 */
+            position: relative;
+            z-index: 10;
+        }
+
+        /* 为返回按钮添加更大的点击区域 */
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -15px;
+            right: -15px;
+            bottom: -10px;
+            z-index: -1;
+        }
         .test-cover {
             position: relative;
             margin: -15px -15px 20px -15px;

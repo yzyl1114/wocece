@@ -79,7 +79,7 @@ class PsychTestApp {
                 id: '1',
                 title: '性格色彩测试',
                 description: '了解你的性格色彩，发现真实的自己',
-                category: 'standard',
+                category: 'fun',
                 price: 1,
                 questions: 10,
                 image: 'images/test1.jpg'
@@ -97,7 +97,7 @@ class PsychTestApp {
                 id: '3',
                 title: '焦虑水平测试',
                 description: '评估你的焦虑程度和应对方式',
-                category: 'standard',
+                category: 'fun',
                 price: 1,
                 questions: 12,
                 image: 'images/test3.jpg'
@@ -106,7 +106,7 @@ class PsychTestApp {
                 id: '4',
                 title: '职业倾向测试',
                 description: '发现最适合你的职业方向',
-                category: 'standard',
+                category: 'fun',
                 price: 1,
                 questions: 15,
                 image: 'images/test4.jpg'

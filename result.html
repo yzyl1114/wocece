@@ -122,15 +122,56 @@
             }
 
             renderResult() {
-                // 更新总分
-                document.getElementById('totalScore').textContent = this.resultData.score;
+                // 根据测试类型选择不同的展示方式
+                if (this.testType === 'fun' || !this.resultData.score) {
+                    this.renderTextResult(); // 文本结果展示
+                } else {
+                    this.renderScoreResult(); // 分数结果展示
+                }
 
                 // 根据测试类型显示不同的报告样式
                 if (this.testType === 'fun') {
                     this.renderFunResult();
                 } else {
-                    this.renderStandardResult(); // 所有标准测试都使用这个模板
+                    this.renderStandardResult();
                 }
+            }
+
+            // 新增文本结果展示方法
+            renderTextResult() {
+                const resultHeader = document.querySelector('.result-header');
+                resultHeader.innerHTML = `
+                    <div class="result-title">测试完成</div>
+                    <div class="result-content">
+                        <div class="result-label">您的结果</div>
+                        <div class="result-text">${this.getResultText()}</div>
+                    </div>
+                `;
+            }
+
+            // 新增分数结果展示方法
+            renderScoreResult() {
+                const resultHeader = document.querySelector('.result-header');
+                resultHeader.innerHTML = `
+                    <div class="result-title">测试完成</div>
+                    <div class="result-content">
+                        <div class="score-number">${this.resultData.score}</div>
+                        <div class="score-label">综合评分</div>
+                    </div>
+                `;
+            }
+
+            // 根据测试ID获取对应的文本结果
+            getResultText() {
+                const resultTexts = {
+                    '1': '外向型人格', // 性格色彩测试
+                    '2': '心理年龄：28岁', // 心理年龄测试
+                    '3': '轻度焦虑', // 焦虑水平测试
+                    '4': '艺术型职业倾向', // 职业倾向测试
+                    '5': '情绪管理良好' // 情绪管理测试
+                };
+                
+                return resultTexts[this.testId] || '测试完成';
             }
 
             renderFunResult() {
@@ -265,6 +306,10 @@
                 }
 
                 const canvas = document.getElementById('radarChart');
+                // 设置更大的canvas尺寸
+                canvas.width = 350;
+                canvas.height = 350;
+
                 const ctx = canvas.getContext('2d');
                 
                 // 清除画布
@@ -272,7 +317,7 @@
 
                 const centerX = canvas.width / 2;
                 const centerY = canvas.height / 2;
-                const radius = Math.min(centerX, centerY) - 30; // 增加边距给标签
+                const radius = Math.min(centerX, centerY) - 40; // 增加边距给标签
                 const dimensions = this.resultData.dimensions;
                 const angleStep = (2 * Math.PI) / dimensions.length;
 
