@@ -111,9 +111,8 @@
                     };
                 }
 
-                // 判断测试类型
-                this.testType = this.resultData.testType === 'scl90' ? 'scl90' : 
-                               (this.resultData.dimensions ? 'standard' : 'fun');
+                // 判断测试类型：只区分趣味测试和标准测试
+                this.testType = this.resultData.dimensions ? 'standard' : 'fun';
 
                 // 初始化testData
                 this.testData = {
@@ -127,47 +126,13 @@
                 document.getElementById('totalScore').textContent = this.resultData.score;
 
                 // 根据测试类型显示不同的报告样式
-                if (this.testType === 'scl90') {
-                    this.renderSCL90Result();
-                } else if (this.testType === 'fun') {
+                if (this.testType === 'fun') {
                     this.renderFunResult();
                 } else {
-                    this.renderStandardResult();
+                    this.renderStandardResult(); // 所有标准测试都使用这个模板
                 }
             }
 
-            renderSCL90Result() {
-                // 使用标准报告结构
-                document.getElementById('funAnalysis').style.display = 'none';
-                document.getElementById('standardAnalysis').style.display = 'block';
-                
-                // 更新分析内容
-                document.getElementById('analysisText').textContent = this.resultData.analysis;
-                
-                // 渲染维度列表
-                const dimensionsList = document.getElementById('dimensionsList');
-                if (this.resultData.dimensions && this.resultData.dimensions.length > 0) {
-                    dimensionsList.innerHTML = this.resultData.dimensions.map(dim => `
-                        <div class="dimension-item">
-                            <div class="dimension-header">
-                                <span class="dimension-name">${dim.name}</span>
-                                <span class="dimension-score">${dim.score}%</span>
-                            </div>
-                            <div class="dimension-bar">
-                                <div class="dimension-progress" style="width: ${dim.score}%"></div>
-                            </div>
-                            <div class="dimension-analysis">${dim.analysis}</div>
-                        </div>
-                    `).join('');
-                }
-                
-                // 渲染雷达图（SCL-90也需要雷达图）
-                this.renderRadarChart();
-                
-                // 更新总结
-                document.getElementById('summaryText').textContent = this.resultData.summary;
-            }
-                            
             renderFunResult() {
                 // 显示趣味测试报告
                 document.getElementById('funAnalysis').style.display = 'block';
@@ -177,35 +142,120 @@
             }
 
             renderStandardResult() {
-                // 显示标准测试报告
+                // 显示标准测试报告 - 统一模板，数据驱动
                 document.getElementById('funAnalysis').style.display = 'none';
                 document.getElementById('standardAnalysis').style.display = 'block';
 
-                // 渲染分析文本
-                document.getElementById('analysisText').textContent = this.resultData.analysis;
+                // 动态渲染分析内容
+                this.renderDynamicAnalysis();
 
-                // 渲染维度列表
-                const dimensionsList = document.getElementById('dimensionsList');
-                if (this.resultData.dimensions && this.resultData.dimensions.length > 0) {
-                    dimensionsList.innerHTML = this.resultData.dimensions.map(dim => `
-                        <div class="dimension-item">
-                            <div class="dimension-header">
-                                <span class="dimension-name">${dim.name}</span>
-                                <span class="dimension-score">${dim.score}%</span>
-                            </div>
-                            <div class="dimension-bar">
-                                <div class="dimension-progress" style="width: ${dim.score}%"></div>
-                            </div>
-                            <div class="dimension-analysis">${dim.analysis}</div>
-                        </div>
-                    `).join('');
-                }
-
-                // 渲染总结
-                document.getElementById('summaryText').textContent = this.resultData.summary;
+                // 动态渲染维度列表
+                this.renderDynamicDimensions();
 
                 // 渲染雷达图
                 this.renderRadarChart();
+
+                // 动态渲染总结
+                this.renderDynamicSummary();
+            }
+
+            renderDynamicAnalysis() {
+                const analysisText = document.getElementById('analysisText');
+                
+                if (this.resultData.overallAssessment) {
+                    // SCL-90等专业测试的详细分析
+                    analysisText.innerHTML = `
+                        ${this.renderProfessionalAnalysis()}
+                        ${this.renderClinicalAssessment()}
+                        ${this.renderSymptomSeverity()}
+                        <div style="margin: 20px 0;">
+                            <h4 style="color: #333; margin-bottom: 15px; border-left: 3px solid #667eea; padding-left: 10px;">
+                                各因子详细分析
+                            </h4>
+                            ${this.renderSCL90Factors()}
+                        </div>
+                    `;
+                } else {
+                    // 普通标准测试的分析
+                    analysisText.textContent = this.resultData.analysis || '基于你的答题情况分析...';
+                }
+            }
+
+            renderProfessionalAnalysis() {
+                const assessment = this.resultData.overallAssessment;
+                if (!assessment) return '';
+                
+                return `
+                    <div class="professional-assessment">
+                        <div class="assessment-level ${assessment.level}">
+                            ${assessment.level}水平
+                        </div>
+                        <div class="assessment-desc">${assessment.description}</div>
+                        <div class="assessment-suggestion">${assessment.suggestion}</div>
+                        ${assessment.hasHighFactors ? `
+                            <div class="high-factors">
+                                <div class="factor-suggestion">${assessment.factorSuggestion}</div>
+                                <div>需要关注的方面：${assessment.highFactors.join('、')}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+
+            renderDynamicDimensions() {
+                const dimensionsList = document.getElementById('dimensionsList');
+                if (!this.resultData.dimensions || this.resultData.dimensions.length === 0) {
+                    dimensionsList.innerHTML = '<div class="no-dimensions">暂无维度数据</div>';
+                    return;
+                }
+
+                let dimensionsHTML = '';
+                
+                this.resultData.dimensions.forEach(dim => {
+                    // 支持不同的数据格式
+                    const score = dim.score || 0;
+                    const analysis = dim.analysis || dim.description || '';
+                    const isHigh = dim.isHigh || dim.averageScore > 2; // SCL-90阈值
+                    const showScoreDetail = dim.averageScore !== undefined; // 是否显示详细分数
+                    
+                    dimensionsHTML += `
+                        <div class="dimension-item ${isHigh ? 'high-score' : ''}">
+                            ${dim.description ? `<div class="dim-desc">${dim.description}</div>` : ''}
+                            <div class="dimension-header">
+                                <span class="dimension-name">${dim.name}</span>
+                                <span class="dimension-score ${isHigh ? 'high-text' : ''}">
+                                    ${showScoreDetail ? 
+                                        `${dim.averageScore.toFixed(2)}分 (${score}%)` : 
+                                        `${score}%`}
+                                </span>
+                            </div>
+                            <div class="dimension-bar">
+                                <div class="dimension-progress" style="width: ${score}%"></div>
+                            </div>
+                            <div class="dimension-analysis">${analysis}</div>
+                            ${showScoreDetail ? `<div class="dim-range">因子分: ${dim.averageScore.toFixed(2)}</div>` : ''}
+                        </div>
+                    `;
+                });
+                
+                dimensionsList.innerHTML = dimensionsHTML;
+            }
+
+            renderDynamicSummary() {
+                const summaryText = document.getElementById('summaryText');
+                
+                if (this.resultData.overallAssessment) {
+                    // 专业测试的总结，包含免责声明
+                    summaryText.innerHTML = `
+                        ${this.resultData.summary || ''}
+                        <div class="professional-note">
+                            * 本测试结果仅供参考，不能替代专业医疗诊断。如有需要，请咨询专业心理医生。
+                        </div>
+                    `;
+                } else {
+                    // 普通标准测试的总结
+                    summaryText.textContent = this.resultData.summary || '感谢您完成本次测试！';
+                }
             }
 
             renderRadarChart() {
@@ -283,7 +333,6 @@
                 ctx.stroke();
             }
 
-            // 添加 showToast 方法
             showToast(message) {
                 const toast = document.querySelector('.toast');
                 if (toast) {
@@ -294,34 +343,24 @@
                         toast.classList.remove('show');
                     }, 2000);
                 } else {
-                    // 备用方案
                     alert(message);
                 }
             }
 
-            // 在ResultManager类中修改bindEvents方法：
             bindEvents() {
-                console.log('开始绑定事件');
                 const saveBtn = document.getElementById('saveResultBtn');
-                console.log('找到保存按钮:', saveBtn);
-                
                 if (saveBtn) {
                     saveBtn.addEventListener('click', () => {
-                        console.log('保存按钮被点击');
                         this.saveResultAsImage();
                     });
-                } else {
-                    console.error('保存按钮未找到，当前页面按钮：', document.querySelectorAll('button'));
                 }
             }
 
-            // 保存结果为图片（包含二维码）
             async saveResultAsImage() {
                 const saveBtn = document.getElementById('saveResultBtn');
                 const originalText = saveBtn.textContent;
                 
                 try {
-                    // 确保testData有值
                     if (!this.testData) {
                         this.testData = {
                             title: document.querySelector('.test-title-main')?.textContent || '心理测试',
@@ -329,13 +368,11 @@
                         };
                     }
                     
-                    // 设置按钮状态
                     saveBtn.disabled = true;
                     saveBtn.textContent = '生成中...';
                     
                     this.showToast('正在生成图片...');
                     
-                    // 创建临时容器
                     const tempContainer = document.createElement('div');
                     tempContainer.style.cssText = `
                         position: fixed;
@@ -347,23 +384,19 @@
                         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
                     `;
                     
-                    // 复制结果内容（排除行动按钮和更多推荐）
                     const originalContainer = document.querySelector('.container');
                     const contentToSave = originalContainer.cloneNode(true);
                     
-                    // 移除不需要的元素
                     const elementsToRemove = contentToSave.querySelectorAll(
                         '.result-actions, .recommendations, .navbar, footer'
                     );
                     elementsToRemove.forEach(el => el.remove());
                     
-                    // 重新渲染雷达图到临时容器中的canvas
                     const tempRadarCanvas = contentToSave.querySelector('#radarChart');
                     if (tempRadarCanvas) {
                         this.renderRadarChartToCanvas(tempRadarCanvas);
                     }
                     
-                    // 添加二维码区域到内容中
                     const qrSection = document.createElement('section');
                     qrSection.className = 'qr-section';
                     qrSection.innerHTML = `
@@ -380,7 +413,6 @@
                     
                     contentToSave.appendChild(qrSection);
                     
-                    // 添加样式
                     const style = document.createElement('style');
                     style.textContent = `
                         .qr-section {
@@ -430,24 +462,46 @@
                             margin: 20px 0;
                             padding: 10px;
                         }
+                        .professional-assessment {
+                            line-height: 1.6;
+                        }
+                        .assessment-level {
+                            padding: 8px 12px;
+                            border-radius: 6px;
+                            margin-bottom: 10px;
+                            font-weight: bold;
+                        }
+                        .high-factors {
+                            background: #fff5f5;
+                            padding: 10px;
+                            border-radius: 6px;
+                            margin: 10px 0;
+                            border-left: 3px solid #ff4757;
+                        }
+                        .professional-note {
+                            background: #f8f9fa;
+                            padding: 10px;
+                            border-radius: 4px;
+                            font-size: 12px;
+                            color: #666;
+                            margin-top: 15px;
+                            border-left: 3px solid #667eea;
+                        }
                     `;
                     
                     tempContainer.appendChild(style);
                     tempContainer.appendChild(contentToSave);
                     document.body.appendChild(tempContainer);
                     
-                    // 等待一下确保DOM渲染完成
                     await new Promise(resolve => setTimeout(resolve, 800));
                     
-                    // 使用html2canvas生成图片
                     const canvas = await html2canvas(tempContainer, {
                         backgroundColor: '#f5f6fa',
-                        scale: 2, // 高清
+                        scale: 2,
                         useCORS: true,
                         allowTaint: false,
                         logging: false,
                         onclone: (clonedDoc) => {
-                            // 在克隆的文档中重新渲染雷达图
                             const clonedRadarCanvas = clonedDoc.querySelector('#radarChart');
                             if (clonedRadarCanvas) {
                                 this.renderRadarChartToCanvas(clonedRadarCanvas);
@@ -455,10 +509,8 @@
                         }
                     });
                     
-                    // 清理临时容器
                     document.body.removeChild(tempContainer);
                     
-                    // 转换为图片并下载
                     const link = document.createElement('a');
                     const fileName = `我测测-${this.testData.title || '测评'}-${new Date().toLocaleDateString().replace(/\//g, '-')}.png`;
                     link.download = fileName;
@@ -477,21 +529,15 @@
                     }
                     this.showToast(errorMessage);
                 } finally {
-                    // 恢复按钮状态
                     saveBtn.disabled = false;
                     saveBtn.textContent = originalText;
                 }
             }
 
-            // 专门为截图渲染雷达图的方法
             renderRadarChartToCanvas(canvas) {
-                if (!this.resultData.dimensions || this.resultData.dimensions.length === 0) {
-                    return;
-                }
+                if (!this.resultData.dimensions || this.resultData.dimensions.length === 0) return;
 
                 const ctx = canvas.getContext('2d');
-                
-                // 清除画布
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
                 const centerX = canvas.width / 2;
@@ -500,18 +546,15 @@
                 const dimensions = this.resultData.dimensions;
                 const angleStep = (2 * Math.PI) / dimensions.length;
 
-                // 绘制网格
                 ctx.strokeStyle = '#e0e0e0';
                 ctx.lineWidth = 1;
                 
-                // 绘制同心圆
                 for (let i = 1; i <= 5; i++) {
                     ctx.beginPath();
                     ctx.arc(centerX, centerY, radius * i / 5, 0, 2 * Math.PI);
                     ctx.stroke();
                 }
 
-                // 绘制维度线
                 ctx.strokeStyle = '#ccc';
                 for (let i = 0; i < dimensions.length; i++) {
                     const angle = i * angleStep - Math.PI / 2;
@@ -523,7 +566,6 @@
                     ctx.lineTo(x, y);
                     ctx.stroke();
 
-                    // 绘制维度标签
                     ctx.fillStyle = '#666';
                     ctx.font = '12px Arial';
                     ctx.textAlign = 'center';
@@ -534,7 +576,6 @@
                     ctx.fillText(dimensions[i].name, labelX, labelY);
                 }
 
-                // 绘制数据多边形
                 ctx.fillStyle = 'rgba(102, 126, 234, 0.3)';
                 ctx.strokeStyle = '#667eea';
                 ctx.lineWidth = 2;
@@ -555,10 +596,110 @@
                 ctx.closePath();
                 ctx.fill();
                 ctx.stroke();
-            }            
+            }
+
+            renderSCL90Factors() {
+                if (!this.resultData.dimensions) return '';
+                
+                return `
+                    <div class="scl90-factor-grid">
+                        ${this.resultData.dimensions.map(dim => {
+                            const riskLevel = this.getSCL90RiskLevel(dim.averageScore);
+                            const scoreClass = this.getSCL90ScoreClass(dim.averageScore);
+                            return `
+                                <div class="scl90-factor-card ${riskLevel}-risk">
+                                    <div class="scl90-factor-name">${dim.name}</div>
+                                    <div class="scl90-factor-score ${scoreClass}">
+                                        ${dim.averageScore ? dim.averageScore.toFixed(2) : '0.00'}
+                                    </div>
+                                    <div class="scl90-factor-desc">${dim.description || dim.analysis || ''}</div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+            }
+
+            getSCL90RiskLevel(score) {
+                if (!score) return 'low';
+                if (score >= 3.0) return 'high';
+                if (score >= 2.0) return 'medium';
+                return 'low';
+            }
+
+            getSCL90ScoreClass(score) {
+                if (!score) return 'low';
+                if (score >= 3.0) return 'high';
+                if (score >= 2.0) return 'medium';
+                return 'low';
+            }
+
+            renderClinicalAssessment() {
+                if (!this.resultData.overallAssessment) return '';
+                
+                const assessment = this.resultData.overallAssessment;
+                const levelClass = this.getClinicalLevelClass(assessment.level);
+                
+                return `
+                    <div class="clinical-indicator">
+                        <div>
+                            <strong>临床评估：</strong>
+                            ${assessment.description}
+                        </div>
+                        <span class="clinical-level ${levelClass}">${assessment.level}</span>
+                    </div>
+                `;
+            }
+
+            getClinicalLevelClass(level) {
+                const levelMap = {
+                    '严重': 'critical',
+                    '明显': 'warning', 
+                    '关注': 'attention',
+                    '正常': 'normal'
+                };
+                return levelMap[level] || 'normal';
+            }
+
+            renderSymptomSeverity() {
+                if (!this.resultData.totalScore) return '';
+                
+                const totalScore = this.resultData.totalScore;
+                let severityLevel, markerPosition;
+                
+                if (totalScore > 250) {
+                    severityLevel = '严重';
+                    markerPosition = 95;
+                } else if (totalScore > 200) {
+                    severityLevel = '明显';
+                    markerPosition = 75;
+                } else if (totalScore > 160) {
+                    severityLevel = '关注';
+                    markerPosition = 50;
+                } else {
+                    severityLevel = '正常';
+                    markerPosition = 25;
+                }
+                
+                return `
+                    <div class="symptom-severity">
+                        <div class="severity-scale">
+                            <span>正常</span>
+                            <span>关注</span>
+                            <span>明显</span>
+                            <span>严重</span>
+                        </div>
+                        <div class="severity-bar">
+                            <div class="severity-marker" style="left: ${markerPosition}%;"></div>
+                        </div>
+                        <div style="text-align: center; font-size: 12px; color: #666;">
+                            总体症状严重程度：<strong>${severityLevel}</strong>
+                        </div>
+                    </div>
+                `;
+            }
 
             loadRecommendations() {
-                // 从所有测试中随机选择3个（排除当前测试）
                 const allTests = [
                     { id: '1', title: '性格色彩测试', description: '了解你的性格色彩，发现真实的自己', image: 'images/test1.jpg' },
                     { id: '2', title: '心理年龄测试', description: '测测你的心理年龄是多少', image: 'images/test2.jpg' },
@@ -568,10 +709,7 @@
                     { id: '6', title: 'SCL-90心理健康测试', description: '专业心理健康筛查，评估9大心理症状维度', image: 'images/scl90.jpg' }
                 ];
 
-                // 过滤掉当前测试
                 const availableTests = allTests.filter(test => test.id !== this.testId);
-                
-                // 随机选择3个测试
                 const recommendations = this.shuffleArray(availableTests).slice(0, 3);
 
                 const container = document.getElementById('recommendationList');
@@ -586,7 +724,6 @@
                     </div>
                 `).join('');
 
-                // 绑定推荐项点击事件
                 container.querySelectorAll('.test-list-item').forEach(item => {
                     item.addEventListener('click', (e) => {
                         if (!e.target.classList.contains('small-btn')) {
@@ -605,7 +742,6 @@
                 });
             }
 
-            // 随机打乱数组
             shuffleArray(array) {
                 const newArray = [...array];
                 for (let i = newArray.length - 1; i > 0; i--) {
@@ -616,7 +752,6 @@
             }
         }
 
-        // 初始化结果页面
         document.addEventListener('DOMContentLoaded', () => {
             window.resultManager = new ResultManager();
         });
@@ -801,46 +936,8 @@
             padding-left: 10px;
         }
 
-        /* 响应式调整 */
-        @media (max-width: 480px) {
-            .score-circle {
-                width: 80px;
-                height: 80px;
-            }
-            
-            .score-circle span {
-                font-size: 24px;
-            }
-            
-            .result-actions {
-                flex-direction: column;
-            }
-        }
-
-        /* SCL-90专用样式 */
-        .high-score {
-            border-left: 4px solid #ff4757;
-            background: #fff5f5;
-        }
-
-        .high-text {
-            color: #ff4757;
-            font-weight: bold;
-        }
-
-        .dim-desc {
-            font-size: 12px;
-            color: #888;
-            margin-bottom: 5px;
-        }
-
-        .dim-range {
-            font-size: 11px;
-            color: #999;
-            margin-top: 5px;
-        }
-
-        .scl90-summary {
+        /* 专业评估样式 */
+        .professional-assessment {
             line-height: 1.6;
         }
 
@@ -894,7 +991,7 @@
             margin-bottom: 10px;
         }
 
-        .scl90-note {
+        .professional-note {
             background: #f8f9fa;
             padding: 10px;
             border-radius: 4px;
@@ -904,18 +1001,59 @@
             border-left: 3px solid #667eea;
         }
 
+        /* 维度增强样式 */
+        .high-score {
+            border-left: 4px solid #ff4757;
+            background: #fff5f5;
+        }
+
+        .high-text {
+            color: #ff4757;
+            font-weight: bold;
+        }
+
+        .dim-desc {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 5px;
+        }
+
+        .dim-range {
+            font-size: 11px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .no-dimensions {
+            text-align: center;
+            color: #666;
+            padding: 20px;
+        }
+
         /* 响应式调整 */
         @media (max-width: 480px) {
-            .dim-desc {
-                font-size: 11px;
+            .score-circle {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .score-circle span {
+                font-size: 24px;
+            }
+            
+            .result-actions {
+                flex-direction: column;
             }
             
             .assessment-level {
                 padding: 6px 10px;
                 font-size: 14px;
             }
+            
+            .dim-desc {
+                font-size: 11px;
+            }
         }
-
     </style>
 </body>
 </html>

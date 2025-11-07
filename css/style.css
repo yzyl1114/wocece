@@ -680,6 +680,28 @@ body {
     cursor: not-allowed;
 }
 
+/* 防止页面闪烁 */
+.test-cover,
+.basic-info-section,
+.test-description,
+.theory-section,
+.requirements-section,
+.report-example-section,
+.action-section {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.content-loaded .test-cover,
+.content-loaded .basic-info-section, 
+.content-loaded .test-description,
+.content-loaded .theory-section,
+.content-loaded .requirements-section,
+.content-loaded .report-example-section,
+.content-loaded .action-section {
+    opacity: 1;
+}
+
 /* 响应式设计 */
 @media (max-width: 480px) {
     .container {
@@ -744,4 +766,281 @@ body {
     color: #666;
     font-size: 12px;
     line-height: 1.6;
+}
+
+/* SCL-90 专用样式 - 专业心理健康测试 */
+.scl90-factor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.scl90-factor-card {
+    background: white;
+    border: 2px solid #e8f4fd;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.scl90-factor-card.high-risk {
+    border-color: #ff4757;
+    background: #fff5f5;
+    box-shadow: 0 4px 12px rgba(255, 71, 87, 0.1);
+}
+
+.scl90-factor-card.medium-risk {
+    border-color: #ffa502;
+    background: #fff9e6;
+    box-shadow: 0 4px 12px rgba(255, 165, 2, 0.1);
+}
+
+.scl90-factor-card.low-risk {
+    border-color: #2ed573;
+    background: #f1fff7;
+    box-shadow: 0 4px 12px rgba(46, 213, 115, 0.1);
+}
+
+.scl90-factor-name {
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.scl90-factor-score {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.scl90-factor-score.high {
+    color: #ff4757;
+}
+
+.scl90-factor-score.medium {
+    color: #ffa502;
+}
+
+.scl90-factor-score.low {
+    color: #2ed573;
+}
+
+.scl90-factor-desc {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.4;
+}
+
+/* 临床评估指示器 */
+.clinical-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8f9fa;
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin: 10px 0;
+    border-left: 4px solid #667eea;
+}
+
+.clinical-level {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-left: 8px;
+}
+
+.clinical-level.critical {
+    background: #ff4757;
+    color: white;
+}
+
+.clinical-level.warning {
+    background: #ffa502;
+    color: white;
+}
+
+.clinical-level.attention {
+    background: #ffd32a;
+    color: #333;
+}
+
+.clinical-level.normal {
+    background: #2ed573;
+    color: white;
+}
+
+/* 症状严重程度指示条 */
+.symptom-severity {
+    margin: 15px 0;
+}
+
+.severity-scale {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 11px;
+    color: #666;
+}
+
+.severity-bar {
+    height: 8px;
+    background: linear-gradient(90deg, #2ed573, #ffd32a, #ffa502, #ff4757);
+    border-radius: 4px;
+    position: relative;
+    margin-bottom: 5px;
+}
+
+.severity-marker {
+    position: absolute;
+    top: -2px;
+    width: 12px;
+    height: 12px;
+    background: #333;
+    border-radius: 50%;
+    transform: translateX(-50%);
+}
+
+/* 因子对比图表 */
+.factor-comparison {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.comparison-bar {
+    display: flex;
+    align-items: center;
+    margin: 12px 0;
+}
+
+.comparison-label {
+    width: 120px;
+    font-size: 13px;
+    color: #333;
+    font-weight: 500;
+}
+
+.comparison-track {
+    flex: 1;
+    height: 20px;
+    background: #f1f2f6;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.comparison-value {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.8s ease;
+}
+
+.comparison-score {
+    width: 40px;
+    text-align: right;
+    font-size: 13px;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+/* 专业建议卡片 */
+.professional-advice {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+
+.advice-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.advice-title:before {
+    content: "💡";
+    margin-right: 8px;
+}
+
+.advice-list {
+    list-style: none;
+    padding: 0;
+}
+
+.advice-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    position: relative;
+    padding-left: 20px;
+}
+
+.advice-list li:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #ffd32a;
+}
+
+.advice-list li:last-child {
+    border-bottom: none;
+}
+
+/* 响应式调整 */
+@media (max-width: 480px) {
+    .scl90-factor-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .scl90-factor-card {
+        padding: 12px;
+    }
+    
+    .clinical-indicator {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .comparison-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .comparison-label {
+        width: 100%;
+    }
+    
+    .comparison-track {
+        width: 100%;
+    }
+}
+
+/* 打印优化 */
+@media print {
+    .scl90-factor-card {
+        break-inside: avoid;
+        border: 1px solid #ccc !important;
+        background: white !important;
+        box-shadow: none !important;
+    }
+    
+    .professional-advice {
+        background: #f8f9fa !important;
+        color: #333 !important;
+        border: 1px solid #667eea;
+    }
 }

@@ -125,7 +125,8 @@ class PsychTestApp {
                 title: 'SCL-90心理健康测试',
                 description: '专业心理健康筛查，评估9大心理症状维度',
                 category: 'standard',
-                price: 0,  // 免费测试
+                templateType: 'standard', // 新增字段
+                price: 0,
                 questions: 90,
                 image: 'images/scl90.jpg'
             }            

@@ -20,10 +20,41 @@
             <h1 id="testTitle" class="test-title-main"></h1>
         </div>
 
-        <!-- 测试描述 -->
-        <section class="test-description">
+        <!-- 基本信息卡片 - 标准测试特有 -->
+        <section class="basic-info-section standard-only" id="basicInfoSection" style="display: none;">
+            <div class="basic-info-cards" id="basicInfoCards">
+                <!-- 动态生成：题目数量、测试时长、报告类型 -->
+            </div>
+        </section>
+
+        <!-- 测试描述 - 趣味测试使用 -->
+        <section class="test-description fun-only" id="funDescriptionSection" style="display: none;">
             <div class="description-content">
                 <p id="testDescription"></p>
+            </div>
+        </section>
+
+        <!-- 理论依据 - 标准测试使用 -->
+        <section class="theory-section standard-only" id="theorySection" style="display: none;">
+            <h3>理论依据</h3>
+            <div class="theory-content" id="theoryContent">
+                <!-- 内容和图片 -->
+            </div>
+        </section>
+
+        <!-- 测试要求 - 标准测试使用 -->
+        <section class="requirements-section standard-only" id="requirementsSection" style="display: none;">
+            <h3>测试要求</h3>
+            <div class="requirements-content" id="requirementsContent">
+                <!-- 内容和图片 -->
+            </div>
+        </section>
+
+        <!-- 报告示例 - 标准测试使用 -->
+        <section class="report-example-section standard-only" id="reportExampleSection" style="display: none;">
+            <h3>报告示例</h3>
+            <div class="report-example-content" id="reportExampleContent">
+                <!-- 内容和图片 -->
             </div>
         </section>
 
@@ -54,62 +85,244 @@
             constructor() {
                 this.testId = null;
                 this.testData = null;
+                this.templateType = 'fun'; // 默认趣味模板
                 this.init();
             }
 
             async init() {
                 this.testId = new URLSearchParams(window.location.search).get('id');
                 await this.loadTestData();
+                this.determineTemplateType();
                 this.renderTestDetail();
                 this.bindEvents();
             }
 
             async loadTestData() {
                 try {
-                    // 尝试从本地存储或API获取测试数据
-                    const response = await fetch('data/tests.json');
-                    const data = await response.json();
-                    this.testData = data.tests[this.testId];
+                    // 实际项目中从API或JSON文件加载
+                    // 这里使用SCL-90的示例数据
+                    this.testData = {
+                        id: this.testId,
+                        title: 'SCL-90心理健康测试',
+                        description: '专业心理健康筛查，评估9大心理症状维度',
+                        templateType: 'standard',
+                        price: 0, // 免费测试
+                        image: 'images/scl90.jpg',
+                        
+                        // 标准测试特有字段
+                        basicInfo: {
+                            questions: 90,
+                            duration: 25,
+                            reportType: '专业报告'
+                        },
+                        theory: {
+                            content: `SCL-90症状自评量表是世界上最著名的心理健康测试量表之一，由L.R.Derogatis编制。\n\nSCL-90从感觉、思维、情感、意识、行为等方面全面评估心理健康程度，是当前使用最广泛的精神和心理门诊检查量表。`,
+                            image: 'images/theory-demo.jpg' // 可选图片
+                        },
+                        requirements: {
+                            content: `题目项目均采用5级评分制，评定时间是最近一个星期的实际感觉。`,
+                            items: [
+                                '没有 - 表示无该项问题',
+                                '很轻 - 表示有症状但影响轻微', 
+                                '中度 - 表示有症状且有一定影响',
+                                '偏重 - 表示有症状且有相当程度影响',
+                                '严重 - 表示症状的频度、强度、影响都十分严重'
+                            ],
+                            image: 'images/requirements-demo.jpg' // 可选图片
+                        },
+                        reportExample: {
+                            content: ``, // 报告示例内容
+                            steps: [
+                                {
+                                    title: 'Step1',
+                                    subtitle: '心理健康状态评估', 
+                                    description: '含综合状态评估和各因子得分评估'
+                                },
+                                {
+                                    title: 'Step2',
+                                    subtitle: '指标详细解读',
+                                    description: '阳性因子严重程度评估及状态解读'
+                                }
+                            ],
+                            image: 'images/report-demo.jpg' // 可选图片
+                        }
+                    };
                     
-                    if (!this.testData) {
-                        // 如果没有找到测试数据，使用默认数据
-                        this.testData = {
-                            id: this.testId,
-                            title: '心理测试',
-                            description: '这是一个基于心理学原理的测试，通过问题深入分析你的特点、行为模式和潜在优势。',
-                            price: this.testId === '6' ? 0 : 1,
-                            image: 'images/test-detail.jpg',
-                            questions: this.testId === '6' ? 90 : 10,
-                            category: 'standard'
-                        };
-                    }
                 } catch (error) {
                     console.error('加载测试数据失败:', error);
                     // 使用默认数据
                     this.testData = {
                         id: this.testId,
                         title: '心理测试',
-                        description: '这是一个基于心理学原理的测试，通过问题深入分析你的特点、行为模式和潜在优势。',
-                        price: this.testId === '6' ? 0 : 1,
-                        image: 'images/test-detail.jpg',
-                        questions: this.testId === '6' ? 90 : 10,
-                        category: 'standard'
+                        description: '这是一个基于心理学原理的测试...',
+                        templateType: 'fun',
+                        price: 1,
+                        image: 'images/test-detail.jpg'
                     };
                 }
             }
 
+            determineTemplateType() {
+                this.templateType = this.testData.templateType || 'fun';
+            }
+
             renderTestDetail() {
+                // 基础信息
                 document.getElementById('testCoverImage').src = this.testData.image;
                 document.getElementById('testTitle').textContent = this.testData.title;
-                document.getElementById('testDescription').textContent = this.testData.description;
                 document.getElementById('testPrice').textContent = this.testData.price;
+                
+                // 根据模板类型显示不同内容
+                if (this.templateType === 'standard') {
+                    this.renderStandardTemplate();
+                } else {
+                    this.renderFunTemplate();
+                }
                 
                 // 更新页面标题
                 document.title = `${this.testData.title} - 我测测`;
+
+                setTimeout(() => {
+                    document.body.classList.add('content-loaded');
+                }, 100);
+            }
+
+            renderStandardTemplate() {
+                // 隐藏趣味测试部分，显示标准测试部分
+                document.querySelectorAll('.fun-only').forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.standard-only').forEach(el => el.style.display = 'block');
+
+                // 渲染基本信息卡片
+                this.renderBasicInfoCards();
+                
+                // 渲染理论依据
+                this.renderTheorySection();
+                
+                // 渲染测试要求  
+                this.renderRequirementsSection();
+                
+                // 渲染报告示例
+                this.renderReportExampleSection();
+            }
+
+            renderFunTemplate() {
+                // 隐藏标准测试部分，显示趣味测试部分
+                document.querySelectorAll('.standard-only').forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.fun-only').forEach(el => el.style.display = 'block');
+                
+                // 渲染描述
+                document.getElementById('testDescription').textContent = this.testData.description;
+            }
+
+            renderBasicInfoCards() {
+                if (!this.testData.basicInfo) return;
+                
+                const container = document.getElementById('basicInfoCards');
+                const info = this.testData.basicInfo;
+                
+                container.innerHTML = `
+                    <div class="info-card">
+                        <div class="info-number">${info.questions}</div>
+                        <div class="info-label">道题</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-number">${info.duration}</div>
+                        <div class="info-label">分钟</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-icon">📊</div>
+                        <div class="info-label">${info.reportType}</div>
+                    </div>
+                `;
+            }
+
+            renderTheorySection() {
+                if (!this.testData.theory) return;
+                
+                const container = document.getElementById('theoryContent');
+                const theory = this.testData.theory;
+                
+                let contentHTML = `
+                    <div class="text-content">
+                        <p>${theory.content.replace(/\n/g, '</p><p>')}</p>
+                    </div>
+                `;
+                
+                // 如果有图片，添加图片
+                if (theory.image) {
+                    contentHTML += `
+                        <div class="image-content">
+                            <img src="${theory.image}" alt="理论依据示意图" class="content-image">
+                        </div>
+                    `;
+                }
+                
+                container.innerHTML = contentHTML;
+            }
+
+            renderRequirementsSection() {
+                if (!this.testData.requirements) return;
+                
+                const container = document.getElementById('requirementsContent');
+                const requirements = this.testData.requirements;
+                
+                let contentHTML = `
+                    <div class="text-content">
+                        <p>${requirements.content}</p>
+                        <ul class="requirements-list">
+                            ${requirements.items.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+                
+                // 如果有图片，添加图片
+                if (requirements.image) {
+                    contentHTML += `
+                        <div class="image-content">
+                            <img src="${requirements.image}" alt="测试要求示意图" class="content-image">
+                        </div>
+                    `;
+                }
+                
+                container.innerHTML = contentHTML;
+            }
+
+            renderReportExampleSection() {
+                if (!this.testData.reportExample) return;
+                
+                const container = document.getElementById('reportExampleContent');
+                const example = this.testData.reportExample;
+                
+                let contentHTML = `
+                    <div class="text-content">
+                        <div class="report-steps">
+                            ${example.steps.map(step => `
+                                <div class="report-step">
+                                    <div class="step-header">
+                                        <span class="step-title">${step.title}</span>
+                                        <span class="step-subtitle">${step.subtitle}</span>
+                                    </div>
+                                    <div class="step-description">${step.description}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                
+                // 如果有图片，添加图片
+                if (example.image) {
+                    contentHTML += `
+                        <div class="image-content">
+                            <img src="${example.image}" alt="报告示例示意图" class="content-image">
+                        </div>
+                    `;
+                }
+                
+                container.innerHTML = contentHTML;
             }
 
             bindEvents() {
-                // 返回按钮：
+                // 返回按钮
                 document.querySelector('.logo').addEventListener('click', () => {
                     window.location.href = 'index.html';
                 });
@@ -127,16 +340,12 @@
             }
 
             handleStartTest() {
-                // 检查是否已支付或免费测试
                 if (this.testData.price === 0 || storageManager.hasPaidForTest(this.testId)) {
-                    // 免费测试或已支付，直接开始
                     window.location.href = `testing.html?id=${this.testId}`;
                 } else {
-                    // 需要支付
                     if (window.paymentManager) {
                         window.paymentManager.initializePayment(this.testId, this.testData.price);
                     } else {
-                        // 支付未就绪时的备用方案
                         this.showToast('正在准备支付...');
                         setTimeout(() => {
                             window.location.href = `testing.html?id=${this.testId}`;
@@ -190,11 +399,153 @@
             font-size: 24px;
         }
 
+        /* 基本信息卡片样式 */
+        .basic-info-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .basic-info-cards {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+
+        .info-card {
+            flex: 1;
+            padding: 15px 5px;
+        }
+
+        .info-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .info-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .info-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* 标准测试内容区域样式 */
+        .theory-section,
+        .requirements-section,
+        .report-example-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .theory-section h3,
+        .requirements-section h3,
+        .report-example-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            padding-left: 10px;
+            font-size: 18px;
+        }
+
+        .text-content {
+            line-height: 1.8;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .text-content p {
+            margin-bottom: 10px;
+        }
+
+        .requirements-list {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+
+        .requirements-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .requirements-list li:before {
+            content: "•";
+            color: #667eea;
+            position: absolute;
+            left: 0;
+        }
+
+        .requirements-list li:last-child {
+            border-bottom: none;
+        }
+
+        .image-content {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .content-image {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* 报告步骤样式 */
+        .report-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .report-step {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 8px;
+        }
+
+        .step-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .step-subtitle {
+            font-weight: bold;
+            color: #333;
+            font-size: 15px;
+        }
+
+        .step-description {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* 趣味测试描述样式 */
         .test-description {
             background: white;
             padding: 20px;
-            border-radius: 10px;
             margin-bottom: 20px;
+            border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
@@ -203,6 +554,7 @@
             color: #666;
         }
 
+        /* 行动区域 */
         .action-section {
             background: white;
             padding: 30px 20px;
@@ -233,6 +585,31 @@
             color: #667eea;
             text-decoration: none;
             font-size: 14px;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 480px) {
+            .basic-info-cards {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .info-card {
+                padding: 10px;
+            }
+            
+            .report-steps {
+                gap: 10px;
+            }
+            
+            .step-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .step-title {
+                margin-bottom: 5px;
+            }
         }
     </style>
 </body>
