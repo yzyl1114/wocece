@@ -39,25 +39,6 @@
                     </div>
                 </div>
 
-                <!-- 图片上传 -->
-                <div class="form-group">
-                    <label class="form-label">
-                        相关截图（选填）
-                    </label>
-                    <div class="upload-section">
-                        <div class="upload-grid" id="uploadGrid">
-                            <!-- 上传按钮 -->
-                            <div class="upload-item upload-btn" id="uploadBtn">
-                                <div class="upload-icon">+</div>
-                                <div class="upload-text">添加图片</div>
-                            </div>
-                        </div>
-                        <div class="upload-tips">
-                            最多可上传4张图片 （<span id="imageCount">0</span>/4）
-                        </div>
-                    </div>
-                </div>
-
                 <!-- 联系方式 -->
                 <div class="form-group">
                     <label for="contactInfo" class="form-label">
@@ -89,22 +70,16 @@
     <!-- Toast提示 -->
     <div class="toast"></div>
 
-    <!-- 隐藏的文件输入 -->
-    <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
-
     <script src="js/app.js"></script>
     <script src="js/storage.js"></script>
     <script>
         class FeedbackManager {
             constructor() {
-                this.images = [];
-                this.maxImages = 4;
                 this.init();
             }
 
             init() {
                 this.bindEvents();
-                this.updateImageCount();
             }
 
             bindEvents() {
@@ -112,16 +87,6 @@
                 const textarea = document.getElementById('problemDescription');
                 textarea.addEventListener('input', () => {
                     this.updateCharCount();
-                });
-
-                // 上传按钮点击
-                document.getElementById('uploadBtn').addEventListener('click', () => {
-                    this.triggerFileInput();
-                });
-
-                // 文件选择变化
-                document.getElementById('fileInput').addEventListener('change', (e) => {
-                    this.handleFileSelect(e.target.files);
                 });
 
                 // 表单提交
@@ -146,90 +111,6 @@
                 } else {
                     charCount.style.color = '#666';
                 }
-            }
-
-            updateImageCount() {
-                document.getElementById('imageCount').textContent = this.images.length;
-                
-                // 隐藏上传按钮如果达到最大数量
-                const uploadBtn = document.getElementById('uploadBtn');
-                uploadBtn.style.display = this.images.length >= this.maxImages ? 'none' : 'flex';
-            }
-
-            triggerFileInput() {
-                document.getElementById('fileInput').click();
-            }
-
-            handleFileSelect(files) {
-                const remainingSlots = this.maxImages - this.images.length;
-                const filesToAdd = Array.from(files).slice(0, remainingSlots);
-
-                filesToAdd.forEach(file => {
-                    if (!file.type.startsWith('image/')) {
-                        this.showToast('请选择图片文件');
-                        return;
-                    }
-
-                    if (file.size > 5 * 1024 * 1024) {
-                        this.showToast('图片大小不能超过5MB');
-                        return;
-                    }
-
-                    this.addImage(file);
-                });
-
-                // 清空文件输入
-                document.getElementById('fileInput').value = '';
-            }
-
-            addImage(file) {
-                const reader = new FileReader();
-                
-                reader.onload = (e) => {
-                    const imageData = {
-                        id: 'img_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-                        file: file,
-                        dataUrl: e.target.result
-                    };
-
-                    this.images.push(imageData);
-                    this.renderImage(imageData);
-                    this.updateImageCount();
-                };
-
-                reader.readAsDataURL(file);
-            }
-
-            renderImage(imageData) {
-                const uploadGrid = document.getElementById('uploadGrid');
-                
-                const imageItem = document.createElement('div');
-                imageItem.className = 'upload-item image-item';
-                imageItem.innerHTML = `
-                    <img src="${imageData.dataUrl}" alt="预览图片">
-                    <button type="button" class="remove-btn" data-image-id="${imageData.id}">×</button>
-                `;
-
-                // 插入到上传按钮前面
-                uploadGrid.insertBefore(imageItem, document.getElementById('uploadBtn'));
-
-                // 绑定删除事件
-                imageItem.querySelector('.remove-btn').addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    this.removeImage(imageData.id);
-                });
-            }
-
-            removeImage(imageId) {
-                this.images = this.images.filter(img => img.id !== imageId);
-                
-                // 从DOM中移除
-                const imageItem = document.querySelector(`[data-image-id="${imageId}"]`).closest('.image-item');
-                if (imageItem) {
-                    imageItem.remove();
-                }
-                
-                this.updateImageCount();
             }
 
             async handleSubmit() {
@@ -261,8 +142,7 @@
                 try {
                     const success = await this.submitFeedback({
                         problemDescription,
-                        contactInfo,
-                        images: this.images
+                        contactInfo
                     });
 
                     if (success) {
@@ -295,23 +175,15 @@
             async submitFeedback(feedbackData) {
                 try {
                     const formData = new FormData();
-                    formData.append('problemDescription', feedbackData.problemDescription);
-                    formData.append('contactInfo', feedbackData.contactInfo || '未提供');
-                    
+                    formData.append('问题描述', feedbackData.problemDescription);
+                    formData.append('联系方式', feedbackData.contactInfo || '未提供');
+                    formData.append('提交时间', new Date().toLocaleString());
+                    formData.append('来源', '我测测反馈页面');
+
                     console.log('提交数据:', {
                         问题描述: feedbackData.problemDescription,
-                        联系方式: feedbackData.contactInfo,
-                        图片数量: feedbackData.images.length
+                        联系方式: feedbackData.contactInfo
                     });
-
-                    // 使用 Formspree 专门的文件字段
-                    if (feedbackData.images.length > 0) {
-                        feedbackData.images.forEach((image, index) => {
-                            // Formspree 使用 _attachment 字段接收文件
-                            formData.append('_attachment', image.file);
-                        });
-                        console.log('添加了', feedbackData.images.length, '个图片附件');
-                    }
 
                     const response = await fetch('https://formspree.io/f/xldargvo', {
                         method: 'POST',
@@ -322,39 +194,16 @@
                     });
 
                     if (response.ok) {
-                        console.log('Formspree提交成功（含图片）');
-                        this.showToast('提交成功！感谢您的反馈');
+                        console.log('Formspree提交成功');
+                        this.showToast('提交成功！我们会尽快处理您的反馈');
                         return { success: true };
                     } else {
-                        console.warn('Formspree提交失败，使用备用方案');
-                        this.saveFeedbackLocally(feedbackData);
-                        this.showToast('提交成功！我们已记录您的反馈');
-                        return { success: true };
+                        throw new Error('提交失败，请检查网络后重试');
                     }
                 } catch (error) {
-                    console.error('提交出错，使用备用方案:', error);
-                    this.saveFeedbackLocally(feedbackData);
-                    this.showToast('提交成功！感谢您的反馈');
-                    return { success: true };
-                }
-            }
-
-            // 本地保存备用方案
-            saveFeedbackLocally(feedbackData) {
-                try {
-                    const feedbacks = JSON.parse(localStorage.getItem('user_feedbacks') || '[]');
-                    const newFeedback = {
-                        id: 'feedback_' + Date.now(),
-                        problemDescription: feedbackData.problemDescription,
-                        contactInfo: feedbackData.contactInfo,
-                        imageCount: feedbackData.images.length,
-                        timestamp: new Date().toISOString()
-                    };
-                    feedbacks.push(newFeedback);
-                    localStorage.setItem('user_feedbacks', JSON.stringify(feedbacks));
-                    console.log('反馈已保存到本地:', newFeedback);
-                } catch (e) {
-                    console.error('本地保存失败:', e);
+                    console.error('提交失败:', error);
+                    this.showToast('提交失败，请重试');
+                    throw error;
                 }
             }
 
@@ -458,85 +307,6 @@
             outline: none;
         }
 
-        .upload-section {
-            margin-top: 10px;
-        }
-
-        .upload-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .upload-item {
-            aspect-ratio: 1;
-            border: 2px dashed #ddd;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .upload-btn {
-            background: #f8f9fa;
-            color: #666;
-        }
-
-        .upload-btn:hover {
-            border-color: #667eea;
-            color: #667eea;
-        }
-
-        .upload-icon {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-
-        .upload-text {
-            font-size: 12px;
-        }
-
-        .image-item {
-            position: relative;
-            border-style: solid;
-            border-color: #e9ecef;
-            overflow: hidden;
-        }
-
-        .image-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .remove-btn {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background: rgba(0,0,0,0.7);
-            color: white;
-            border: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            font-size: 14px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            line-height: 1;
-        }
-
-        .upload-tips {
-            font-size: 12px;
-            color: #666;
-            text-align: center;
-        }
-
         .form-actions {
             margin-top: 30px;
         }
@@ -565,22 +335,12 @@
 
         /* 响应式调整 */
         @media (max-width: 480px) {
-            .upload-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            
             .feedback-header {
                 padding: 20px 15px;
             }
             
             .feedback-header h1 {
                 font-size: 20px;
-            }
-        }
-
-        @media (max-width: 320px) {
-            .upload-grid {
-                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
