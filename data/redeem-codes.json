@@ -1,0 +1,9 @@
+{
+  "redeemCodes": {
+    "SCL9012345678": {"testId": "6", "status": "active", "createdAt": "2025-01-01"},
+    "SCL9023456789": {"testId": "6", "status": "active", "createdAt": "2025-01-01"},
+    "CHAR12345678": {"testId": "1", "status": "active", "createdAt": "2025-01-01"},
+    "CHAR23456789": {"testId": "1", "status": "active", "createdAt": "2025-01-01"},
+    "ANXI12345678": {"testId": "3", "status": "active", "createdAt": "2025-01-01"}
+  }
+}

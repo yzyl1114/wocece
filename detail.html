@@ -302,9 +302,11 @@
             }
 
             handleStartTest() {
-                if (this.testData.price === 0 || storageManager.hasPaidForTest(this.testId)) {
-                    window.location.href = `testing.html?id=${this.testId}`;
-                } else {
+                if (this.testData.price === 0 || 
+                        storageManager.hasPaidForTest(this.testId) || 
+                        this.hasRedeemedForTest(this.testId)) {
+                        window.location.href = `testing.html?id=${this.testId}`;
+                    } else {
                     if (window.paymentManager) {
                         window.paymentManager.initializePayment(this.testId, this.testData.price);
                     } else {
@@ -314,6 +316,11 @@
                         }, 1000);
                     }
                 }
+            }
+
+            hasRedeemedForTest(testId) {
+                const records = JSON.parse(localStorage.getItem('redeem_records') || '{}');
+                return Object.values(records).some(record => record.testId === testId);
             }
 
             goToRedeem() {
