@@ -304,14 +304,13 @@
                         图片数量: feedbackData.images.length
                     });
 
-                    // 只添加第一张图片测试
+                    // 使用 Formspree 专门的文件字段
                     if (feedbackData.images.length > 0) {
-                        formData.append('image', feedbackData.images[0].file);
-                        console.log('图片信息:', {
-                            文件名: feedbackData.images[0].file.name,
-                            大小: feedbackData.images[0].file.size,
-                            类型: feedbackData.images[0].file.type
+                        feedbackData.images.forEach((image, index) => {
+                            // Formspree 使用 _attachment 字段接收文件
+                            formData.append('_attachment', image.file);
                         });
+                        console.log('添加了', feedbackData.images.length, '个图片附件');
                     }
 
                     const response = await fetch('https://formspree.io/f/xldargvo', {
@@ -323,19 +322,17 @@
                     });
 
                     if (response.ok) {
-                        console.log('Formspree提交成功');
+                        console.log('Formspree提交成功（含图片）');
                         this.showToast('提交成功！感谢您的反馈');
                         return { success: true };
                     } else {
                         console.warn('Formspree提交失败，使用备用方案');
-                        // Formspree失败时使用本地记录
                         this.saveFeedbackLocally(feedbackData);
                         this.showToast('提交成功！我们已记录您的反馈');
                         return { success: true };
                     }
                 } catch (error) {
                     console.error('提交出错，使用备用方案:', error);
-                    // 网络错误时使用本地方案
                     this.saveFeedbackLocally(feedbackData);
                     this.showToast('提交成功！感谢您的反馈');
                     return { success: true };
