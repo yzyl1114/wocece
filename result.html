@@ -6,52 +6,29 @@
     <title>测试结果 - 我测测</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/report-styles.css">
     <script src="https://cdn.bootcdn.net/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <!-- 结果头部 -->
-        <section class="result-header">
-            <div class="result-title">测试完成</div>
-            <div class="result-score">
-                <div class="score-circle">
-                    <span id="totalScore">85</span>分
-                </div>
-                <div class="score-label">综合评分</div>
-            </div>
+        <!-- 结果头部 - 由模板动态渲染 -->
+        <section class="result-header" id="resultHeader">
+            <!-- 动态渲染 -->
         </section>
 
-        <!-- 详细结果分析（趣味测试） -->
-        <section class="analysis-section fun-analysis" id="funAnalysis">
-            <h3>详细结果分析</h3>
-            <div class="analysis-content" id="analysisText"></div>
+        <!-- 趣味测试报告容器 -->
+        <section class="analysis-section fun-analysis" id="funAnalysis" style="display: none;">
+            <!-- 由模板引擎动态渲染组件 -->
         </section>
 
-        <!-- 多维度报告（标准测试） -->
-        <section class="dimensions-section standard-analysis" id="standardAnalysis">
-            <h3>多维度详细报告</h3>
-            
-            <!-- 雷达图容器 -->
-            <div class="radar-chart-container">
-                <canvas id="radarChart" max-width="100%" height="auto"></canvas>
-            </div>
-
-            <!-- 维度分析 -->
-            <div class="dimensions-list" id="dimensionsList">
-                <!-- 动态生成 -->
-            </div>
-
-            <!-- 总结评语 -->
-            <div class="summary-section">
-                <h4>总结评语</h4>
-                <div class="summary-content" id="summaryText"></div>
-            </div>
+        <!-- 标准测试报告容器 -->
+        <section class="dimensions-section standard-analysis" id="standardAnalysis" style="display: none;">
+            <!-- 由模板引擎动态渲染组件 -->
         </section>
 
-        <!-- 行动按钮 -->
-        <section class="result-actions">
-            <button id="saveResultBtn" class="action-btn secondary">保存结果到本地</button>
-            <button onclick="app.navigateTo('index.html')" class="action-btn primary">回首页</button>
+        <!-- 行动按钮区域 -->
+        <section class="result-actions" id="resultActions">
+            <!-- 动态渲染 -->
         </section>
 
         <!-- 更多推荐 -->
@@ -71,841 +48,28 @@
     <!-- Toast提示 -->
     <div class="toast"></div>
 
+    <!-- 现有JS文件 -->
     <script src="js/app.js"></script>
     <script src="js/storage.js"></script>
+    <script src="js/calculation.js"></script>
+    
+    <!-- 新增的报告系统JS文件 -->
+    <script src="js/result-manager.js"></script>
+    <script src="js/template-engine.js"></script>
+    <script src="js/report-components.js"></script>
+    <script src="js/chart-renderer.js"></script>
+
     <script>
-        class ResultManager {
-            constructor() {
-                this.testId = null;
-                this.resultData = null;
-                this.testType = null;
-                this.testData = null;
-                this.resultDisplayType = 'score'; // 默认分数展示
-                this.init();
-            }
-
-            async init() {
-                this.testId = new URLSearchParams(window.location.search).get('id');
-                await this.loadTestConfig(); // 先加载配置
-                this.loadResultData();
-                this.renderResult();
-                this.bindEvents();
-                this.loadRecommendations();
-            }
-
-            // 新增方法：加载测试配置
-            async loadTestConfig() {
-                try {
-                    const response = await fetch('data/tests.json');
-                    const data = await response.json();
-                    const testConfig = data.tests[this.testId];
-                    
-                    // 获取结果展示类型，默认为 score
-                    this.resultDisplayType = testConfig?.resultDisplayType || 'score';
-                    
-                } catch (error) {
-                    console.error('加载测试配置失败:', error);
-                    this.resultDisplayType = 'score'; // 默认使用分数展示
-                }
-            }
-
-            loadResultData() {
-                // 从URL参数获取结果数据
-                const resultParam = new URLSearchParams(window.location.search).get('result');
-                if (resultParam) {
-                    this.resultData = JSON.parse(decodeURIComponent(resultParam));
-                } else {
-                    // 默认数据（测试用）
-                    this.resultData = {
-                        score: 85,
-                        analysis: '基于你的答题情况分析，你是一个善于思考且情感丰富的人。在人际交往中表现出色，但有时可能过于在意他人看法。建议多关注自己的内心需求，保持独立思考。',
-                        dimensions: [
-                            { name: '个性分析', score: 85, analysis: '你具有独特的个性魅力，善于表达自己的想法。' },
-                            { name: '控制自我', score: 72, analysis: '在情绪管理方面表现良好，但仍有提升空间。' },
-                            { name: '调节自我', score: 68, analysis: '适应能力较强，能够快速调整状态。' },
-                            { name: '平衡冲突', score: 79, analysis: '处理矛盾时能够保持理性，寻求平衡解决方案。' }
-                        ],
-                        summary: '总体而言，你是一个平衡发展的个体，在多个维度都表现出色。继续保持自我觉察，你会获得更好的个人成长。'
-                    };
-                }
-
-                // 判断测试类型：只区分趣味测试和标准测试
-                this.testType = this.resultData.dimensions ? 'standard' : 'fun';
-
-                // 初始化testData
-                this.testData = {
-                    title: document.querySelector('.test-title-main')?.textContent || '心理测试',
-                    image: document.querySelector('.cover-image')?.src || 'images/default.jpg'
-                };
-            }
-
-            renderResult() {
-                // 根据配置的结果展示类型选择展示方式
-                if (this.resultDisplayType === 'text') {
-                    this.renderTextResult(); // 文本结果展示
-                } else {
-                    this.renderScoreResult(); // 分数结果展示
-                }
-
-                // 根据测试类型显示不同的报告样式
-                if (this.testType === 'fun') {
-                    this.renderFunResult();
-                } else {
-                    this.renderStandardResult();
-                }
-            }
-
-            // 修改文本结果展示方法
-            renderTextResult() {
-                const resultHeader = document.querySelector('.result-header');
-                resultHeader.innerHTML = `
-                    <div class="result-title">测试完成</div>
-                    <div class="result-content">
-                        <div class="result-label">您的结果</div>
-                        <div class="result-text">${this.getResultText()}</div>
-                    </div>
-                `;
-            }
-
-            // 修改分数结果展示方法
-            renderScoreResult() {
-                const resultHeader = document.querySelector('.result-header');
-                resultHeader.innerHTML = `
-                    <div class="result-title">测试完成</div>
-                    <div class="result-content">
-                        <div class="score-number">${this.resultData.score}</div>
-                        <div class="score-label">综合评分</div>
-                    </div>
-                `;
-            }
-
-            // 根据测试ID获取对应的文本结果
-            getResultText() {
-                const resultTexts = {
-                    '1': '外向型人格', // 性格色彩测试
-                    '2': '心理年龄：28岁', // 心理年龄测试
-                    '3': '轻度焦虑', // 焦虑水平测试
-                    '4': '艺术型职业倾向', // 职业倾向测试
-                    '5': '情绪管理良好' // 情绪管理测试
-                };
-                
-                return resultTexts[this.testId] || '测试完成';
-            }
-
-            renderFunResult() {
-                // 显示趣味测试报告
-                document.getElementById('funAnalysis').style.display = 'block';
-                document.getElementById('standardAnalysis').style.display = 'none';
-                
-                document.getElementById('analysisText').textContent = this.resultData.analysis;
-            }
-
-            renderStandardResult() {
-                // 显示标准测试报告 - 统一模板，数据驱动
-                document.getElementById('funAnalysis').style.display = 'none';
-                document.getElementById('standardAnalysis').style.display = 'block';
-
-                // 动态渲染分析内容
-                this.renderDynamicAnalysis();
-
-                // 动态渲染维度列表
-                this.renderDynamicDimensions();
-
-                // 渲染雷达图
-                this.renderRadarChart();
-
-                // 动态渲染总结
-                this.renderDynamicSummary();
-            }
-
-            renderDynamicAnalysis() {
-                const analysisText = document.getElementById('analysisText');
-                
-                if (this.resultData.overallAssessment) {
-                    // SCL-90等专业测试的详细分析
-                    analysisText.innerHTML = `
-                        ${this.renderProfessionalAnalysis()}
-                        ${this.renderClinicalAssessment()}
-                        ${this.renderSymptomSeverity()}
-                        <div style="margin: 20px 0;">
-                            <h4 style="color: #333; margin-bottom: 15px; border-left: 3px solid #667eea; padding-left: 10px;">
-                                各因子详细分析
-                            </h4>
-                            ${this.renderSCL90Factors()}
-                        </div>
-                    `;
-                } else {
-                    // 普通标准测试的分析
-                    analysisText.textContent = this.resultData.analysis || '基于你的答题情况分析...';
-                }
-            }
-
-            renderProfessionalAnalysis() {
-                const assessment = this.resultData.overallAssessment;
-                if (!assessment) return '';
-                
-                return `
-                    <div class="professional-assessment">
-                        <div class="assessment-level ${assessment.level}">
-                            ${assessment.level}水平
-                        </div>
-                        <div class="assessment-desc">${assessment.description}</div>
-                        <div class="assessment-suggestion">${assessment.suggestion}</div>
-                        ${assessment.hasHighFactors ? `
-                            <div class="high-factors">
-                                <div class="factor-suggestion">${assessment.factorSuggestion}</div>
-                                <div>需要关注的方面：${assessment.highFactors.join('、')}</div>
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-            }
-
-            renderDynamicDimensions() {
-                const dimensionsList = document.getElementById('dimensionsList');
-                if (!this.resultData.dimensions || this.resultData.dimensions.length === 0) {
-                    dimensionsList.innerHTML = '<div class="no-dimensions">暂无维度数据</div>';
-                    return;
-                }
-
-                let dimensionsHTML = '';
-                
-                this.resultData.dimensions.forEach(dim => {
-                    // 支持不同的数据格式
-                    const score = dim.score || 0;
-                    const analysis = dim.analysis || dim.description || '';
-                    const isHigh = dim.isHigh || dim.averageScore > 2; // SCL-90阈值
-                    const showScoreDetail = dim.averageScore !== undefined; // 是否显示详细分数
-                    
-                    dimensionsHTML += `
-                        <div class="dimension-item ${isHigh ? 'high-score' : ''}">
-                            ${dim.description ? `<div class="dim-desc">${dim.description}</div>` : ''}
-                            <div class="dimension-header">
-                                <span class="dimension-name">${dim.name}</span>
-                                <span class="dimension-score ${isHigh ? 'high-text' : ''}">
-                                    ${showScoreDetail ? 
-                                        `${dim.averageScore.toFixed(2)}分 (${score}%)` : 
-                                        `${score}%`}
-                                </span>
-                            </div>
-                            <div class="dimension-bar">
-                                <div class="dimension-progress" style="width: ${score}%"></div>
-                            </div>
-                            <div class="dimension-analysis">${analysis}</div>
-                            ${showScoreDetail ? `<div class="dim-range">因子分: ${dim.averageScore.toFixed(2)}</div>` : ''}
-                        </div>
-                    `;
-                });
-                
-                dimensionsList.innerHTML = dimensionsHTML;
-            }
-
-            renderDynamicSummary() {
-                const summaryText = document.getElementById('summaryText');
-                
-                if (this.resultData.overallAssessment) {
-                    // 专业测试的总结，包含免责声明
-                    summaryText.innerHTML = `
-                        ${this.resultData.summary || ''}
-                        <div class="professional-note">
-                            * 本测试结果仅供参考，不能替代专业医疗诊断。如有需要，请咨询专业心理医生。
-                        </div>
-                    `;
-                } else {
-                    // 普通标准测试的总结
-                    summaryText.textContent = this.resultData.summary || '感谢您完成本次测试！';
-                }
-            }
-
-            renderRadarChart() {
-                if (!this.resultData.dimensions || this.resultData.dimensions.length === 0) {
-                    document.querySelector('.radar-chart-container').style.display = 'none';
-                    return;
-                }
-
-                const canvas = document.getElementById('radarChart');
-                // 设置更大的canvas尺寸
-                canvas.width = 280;
-                canvas.height = 280;
-
-                const ctx = canvas.getContext('2d');
-                
-                // 清除画布
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                const centerX = canvas.width / 2;
-                const centerY = canvas.height / 2;
-                const radius = Math.min(centerX, centerY) - 35; // 增加边距给标签
-                const dimensions = this.resultData.dimensions;
-                const angleStep = (2 * Math.PI) / dimensions.length;
-
-                // 绘制网格
-                ctx.strokeStyle = '#e0e0e0';
-                ctx.lineWidth = 1;
-                
-                // 绘制同心圆
-                for (let i = 1; i <= 5; i++) {
-                    ctx.beginPath();
-                    ctx.arc(centerX, centerY, radius * i / 5, 0, 2 * Math.PI);
-                    ctx.stroke();
-                }
-
-                // 绘制维度线
-                ctx.strokeStyle = '#ccc';
-                for (let i = 0; i < dimensions.length; i++) {
-                    const angle = i * angleStep - Math.PI / 2;
-                    const x = centerX + radius * Math.cos(angle);
-                    const y = centerY + radius * Math.sin(angle);
-                    
-                    ctx.beginPath();
-                    ctx.moveTo(centerX, centerY);
-                    ctx.lineTo(x, y);
-                    ctx.stroke();
-
-                    // 修复维度标签显示 - 使用更小的字体和更好的位置计算
-                    ctx.fillStyle = '#666';
-                    ctx.font = '10px Arial'; // 减小字体大小
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    
-                    const labelRadius = radius + 25; // 增加标签距离
-                    const labelX = centerX + labelRadius * Math.cos(angle);
-                    const labelY = centerY + labelRadius * Math.sin(angle);
-                    
-                    // 处理标签文本 - 截断过长的文本
-                    let labelText = dimensions[i].name;
-                    if (labelText.length > 4) {
-                        labelText = labelText.substring(0, 4) + '...';
-                    }
-                    
-                    ctx.fillText(labelText, labelX, labelY);
-                }
-
-                // 绘制数据多边形
-                ctx.fillStyle = 'rgba(102, 126, 234, 0.3)';
-                ctx.strokeStyle = '#667eea';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-
-                for (let i = 0; i < dimensions.length; i++) {
-                    const angle = i * angleStep - Math.PI / 2;
-                    const valueRadius = radius * (dimensions[i].score / 100);
-                    const x = centerX + valueRadius * Math.cos(angle);
-                    const y = centerY + valueRadius * Math.sin(angle);
-                    
-                    if (i === 0) {
-                        ctx.moveTo(x, y);
-                    } else {
-                        ctx.lineTo(x, y);
-                    }
-                }
-                ctx.closePath();
-                ctx.fill();
-                ctx.stroke();
-            }                
-
-            showToast(message) {
-                const toast = document.querySelector('.toast');
-                if (toast) {
-                    toast.textContent = message;
-                    toast.classList.add('show');
-                    
-                    setTimeout(() => {
-                        toast.classList.remove('show');
-                    }, 2000);
-                } else {
-                    alert(message);
-                }
-            }
-
-            bindEvents() {
-                const saveBtn = document.getElementById('saveResultBtn');
-                if (saveBtn) {
-                    saveBtn.addEventListener('click', () => {
-                        this.saveResultAsImage();
-                    });
-                }
-            }
-
-            async saveResultAsImage() {
-                const saveBtn = document.getElementById('saveResultBtn');
-                const originalText = saveBtn.textContent;
-                
-                try {
-                    if (!this.testData) {
-                        this.testData = {
-                            title: document.querySelector('.test-title-main')?.textContent || '心理测试',
-                            image: document.querySelector('.cover-image')?.src || 'images/default.jpg'
-                        };
-                    }
-                    
-                    saveBtn.disabled = true;
-                    saveBtn.textContent = '生成中...';
-                    
-                    this.showToast('正在生成图片...');
-                    
-                    const tempContainer = document.createElement('div');
-                    tempContainer.style.cssText = `
-                        position: fixed;
-                        left: -9999px;
-                        top: -9999px;
-                        width: 375px;
-                        background: #f5f6fa;
-                        padding: 20px;
-                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                    `;
-                    
-                    const originalContainer = document.querySelector('.container');
-                    const contentToSave = originalContainer.cloneNode(true);
-                    
-                    const elementsToRemove = contentToSave.querySelectorAll(
-                        '.result-actions, .recommendations, .navbar, footer'
-                    );
-                    elementsToRemove.forEach(el => el.remove());
-                    
-                    const tempRadarCanvas = contentToSave.querySelector('#radarChart');
-                    if (tempRadarCanvas) {
-                        this.renderRadarChartToCanvas(tempRadarCanvas);
-                    }
-                    
-                    const qrSection = document.createElement('section');
-                    qrSection.className = 'qr-section';
-                    qrSection.innerHTML = `
-                        <div class="qr-content">
-                            <div style="width: 100px; height: 100px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 8px; border: 1px solid #eee;">
-                                <span style="color: #666; font-size: 12px;">二维码</span>
-                            </div>
-                            <div class="qr-text">
-                                <div class="qr-line1">扫一扫</div>
-                                <div class="qr-line2">发现更多有趣测评</div>
-                            </div>
-                        </div>
-                    `;
-                    
-                    contentToSave.appendChild(qrSection);
-                    
-                    const style = document.createElement('style');
-                    style.textContent = `
-                        .qr-section {
-                            background: white;
-                            padding: 30px 20px;
-                            margin: 20px 0;
-                            border-radius: 10px;
-                            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-                            text-align: center;
-                        }
-                        .qr-content {
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            gap: 20px;
-                        }
-                        .qr-text {
-                            text-align: left;
-                        }
-                        .qr-line1 {
-                            font-size: 16px;
-                            font-weight: bold;
-                            color: #333;
-                            margin-bottom: 5px;
-                        }
-                        .qr-line2 {
-                            font-size: 12px;
-                            color: #666;
-                        }
-                        .result-header {
-                            background: linear-gradient(135deg, #667eea, #764ba2);
-                            color: white;
-                            padding: 30px 20px;
-                            text-align: center;
-                            border-radius: 0 0 20px 20px;
-                            margin: -15px -15px 20px -15px;
-                        }
-                        .analysis-section, .dimensions-section {
-                            background: white;
-                            padding: 20px;
-                            margin: 15px 0;
-                            border-radius: 10px;
-                            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-                        }
-                        .radar-chart-container {
-                            text-align: center;
-                            margin: 25px 0; /* 调整边距 */
-                            padding: 20px;
-                            background: white;
-                            border-radius: 12px;
-                            box-shadow: 0 2px 12px rgba(0,0,0,0.08); /* 同步阴影效果 */
-                        }
-                        .professional-assessment {
-                            line-height: 1.6;
-                        }
-                        .assessment-level {
-                            padding: 8px 12px;
-                            border-radius: 6px;
-                            margin-bottom: 10px;
-                            font-weight: bold;
-                        }
-                        .high-factors {
-                            background: #fff5f5;
-                            padding: 10px;
-                            border-radius: 6px;
-                            margin: 10px 0;
-                            border-left: 3px solid #ff4757;
-                        }
-                        .professional-note {
-                            background: none; /* 移除背景框 */
-                            padding: 10px 0; /* 调整内边距 */
-                            border-radius: 0; /* 移除圆角 */
-                            font-size: 12px;
-                            color: #666;
-                            margin-top: 15px;
-                            border-left: none; /* 移除蓝色左边框 */
-                        }
-                        
-                        /* 新增：结果头部字号调整 */
-                        .result-title {
-                            font-size: 16px; /* 减小字号 */
-                            margin-bottom: 15px;
-                            opacity: 0.9;
-                            font-weight: 500;
-                        }
-                        
-                        .score-number {
-                            font-size: 56px; /* 增大字号 */
-                            font-weight: bold;
-                            margin-bottom: 8px;
-                            line-height: 1;
-                        }
-                        
-                        .score-label {
-                            font-size: 16px;
-                            opacity: 0.9;
-                            font-weight: 500;
-                        }
-                        
-                        .result-label {
-                            font-size: 16px;
-                            margin-bottom: 12px;
-                            opacity: 0.9;
-                            font-weight: 500;
-                        }
-                        
-                        .result-text {
-                            font-size: 32px; /* 增大字号 */
-                            font-weight: bold;
-                            line-height: 1.2;
-                        }
-                        
-                        /* 新增：维度项样式修复 */
-                        .dimension-item {
-                            margin-bottom: 20px;
-                            padding: 15px;
-                            background: #f8f9fa;
-                            border-radius: 8px;
-                            border-left: none; /* 移除所有左边框 */
-                        }
-                        
-                        .dimension-item.high-score {
-                            border-left: none; /* 移除红色左边框 */
-                            background: #fff5f5; /* 保留背景色提示 */
-                        }
-                        
-                        /* 新增：总结评语样式修复 */
-                        .summary-section h4 {
-                            color: #333;
-                            margin-bottom: 10px;
-                            border-left: none; /* 移除蓝色左边框 */
-                            padding-left: 0;
-                        }
-                        
-                        .summary-content {
-                            color: #666;
-                            line-height: 1.8;
-                            background: none; /* 移除背景框 */
-                            padding: 0; /* 移除内边距 */
-                            border-radius: 0; /* 移除圆角 */
-                            border-left: none; /* 移除蓝色左边框 */
-                        }
-                    `;
-                    
-                    tempContainer.appendChild(style);
-                    tempContainer.appendChild(contentToSave);
-                    document.body.appendChild(tempContainer);
-                    
-                    await new Promise(resolve => setTimeout(resolve, 800));
-                    
-                    const canvas = await html2canvas(tempContainer, {
-                        backgroundColor: '#f5f6fa',
-                        scale: 2,
-                        useCORS: true,
-                        allowTaint: false,
-                        logging: false,
-                        onclone: (clonedDoc) => {
-                            const clonedRadarCanvas = clonedDoc.querySelector('#radarChart');
-                            if (clonedRadarCanvas) {
-                                this.renderRadarChartToCanvas(clonedRadarCanvas);
-                            }
-                        }
-                    });
-                    
-                    document.body.removeChild(tempContainer);
-                    
-                    const link = document.createElement('a');
-                    const fileName = `我测测-${this.testData.title || '测评'}-${new Date().toLocaleDateString().replace(/\//g, '-')}.png`;
-                    link.download = fileName;
-                    link.href = canvas.toDataURL('image/png');
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    
-                    this.showToast('结果已保存到相册');
-                    
-                } catch (error) {
-                    console.error('保存失败:', error);
-                    let errorMessage = '保存失败，请重试';
-                    if (error.message.includes('html2canvas')) {
-                        errorMessage = '图片生成失败，请检查浏览器兼容性';
-                    }
-                    this.showToast(errorMessage);
-                } finally {
-                    saveBtn.disabled = false;
-                    saveBtn.textContent = originalText;
-                }
-            }
-
-            renderRadarChartToCanvas(canvas) {
-                if (!this.resultData.dimensions || this.resultData.dimensions.length === 0) return;
-
-                const ctx = canvas.getContext('2d');
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                const centerX = canvas.width / 2;
-                const centerY = canvas.height / 2;
-                const radius = Math.min(centerX, centerY) - 20;
-                const dimensions = this.resultData.dimensions;
-                const angleStep = (2 * Math.PI) / dimensions.length;
-
-                ctx.strokeStyle = '#e0e0e0';
-                ctx.lineWidth = 1;
-                
-                for (let i = 1; i <= 5; i++) {
-                    ctx.beginPath();
-                    ctx.arc(centerX, centerY, radius * i / 5, 0, 2 * Math.PI);
-                    ctx.stroke();
-                }
-
-                ctx.strokeStyle = '#ccc';
-                for (let i = 0; i < dimensions.length; i++) {
-                    const angle = i * angleStep - Math.PI / 2;
-                    const x = centerX + radius * Math.cos(angle);
-                    const y = centerY + radius * Math.sin(angle);
-                    
-                    ctx.beginPath();
-                    ctx.moveTo(centerX, centerY);
-                    ctx.lineTo(x, y);
-                    ctx.stroke();
-
-                    ctx.fillStyle = '#666';
-                    ctx.font = '12px Arial';
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    
-                    const labelX = centerX + (radius + 20) * Math.cos(angle);
-                    const labelY = centerY + (radius + 20) * Math.sin(angle);
-                    ctx.fillText(dimensions[i].name, labelX, labelY);
-                }
-
-                ctx.fillStyle = 'rgba(102, 126, 234, 0.3)';
-                ctx.strokeStyle = '#667eea';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-
-                for (let i = 0; i < dimensions.length; i++) {
-                    const angle = i * angleStep - Math.PI / 2;
-                    const valueRadius = radius * (dimensions[i].score / 100);
-                    const x = centerX + valueRadius * Math.cos(angle);
-                    const y = centerY + valueRadius * Math.sin(angle);
-                    
-                    if (i === 0) {
-                        ctx.moveTo(x, y);
-                    } else {
-                        ctx.lineTo(x, y);
-                    }
-                }
-                ctx.closePath();
-                ctx.fill();
-                ctx.stroke();
-            }
-
-            renderSCL90Factors() {
-                if (!this.resultData.dimensions) return '';
-                
-                return `
-                    <div class="scl90-factor-grid">
-                        ${this.resultData.dimensions.map(dim => {
-                            const riskLevel = this.getSCL90RiskLevel(dim.averageScore);
-                            const scoreClass = this.getSCL90ScoreClass(dim.averageScore);
-                            return `
-                                <div class="scl90-factor-card ${riskLevel}-risk">
-                                    <div class="scl90-factor-name">${dim.name}</div>
-                                    <div class="scl90-factor-score ${scoreClass}">
-                                        ${dim.averageScore ? dim.averageScore.toFixed(2) : '0.00'}
-                                    </div>
-                                    <div class="scl90-factor-desc">${dim.description || dim.analysis || ''}</div>
-                                </div>
-                            `;
-                        }).join('')}
-                    </div>
-                `;
-            }
-
-            getSCL90RiskLevel(score) {
-                if (!score) return 'low';
-                if (score >= 3.0) return 'high';
-                if (score >= 2.0) return 'medium';
-                return 'low';
-            }
-
-            getSCL90ScoreClass(score) {
-                if (!score) return 'low';
-                if (score >= 3.0) return 'high';
-                if (score >= 2.0) return 'medium';
-                return 'low';
-            }
-
-            renderClinicalAssessment() {
-                if (!this.resultData.overallAssessment) return '';
-                
-                const assessment = this.resultData.overallAssessment;
-                const levelClass = this.getClinicalLevelClass(assessment.level);
-                
-                return `
-                    <div class="clinical-indicator">
-                        <div>
-                            <strong>临床评估：</strong>
-                            ${assessment.description}
-                        </div>
-                        <span class="clinical-level ${levelClass}">${assessment.level}</span>
-                    </div>
-                `;
-            }
-
-            getClinicalLevelClass(level) {
-                const levelMap = {
-                    '严重': 'critical',
-                    '明显': 'warning', 
-                    '关注': 'attention',
-                    '正常': 'normal'
-                };
-                return levelMap[level] || 'normal';
-            }
-
-            renderSymptomSeverity() {
-                if (!this.resultData.totalScore) return '';
-                
-                const totalScore = this.resultData.totalScore;
-                let severityLevel, markerPosition;
-                
-                if (totalScore > 250) {
-                    severityLevel = '严重';
-                    markerPosition = 95;
-                } else if (totalScore > 200) {
-                    severityLevel = '明显';
-                    markerPosition = 75;
-                } else if (totalScore > 160) {
-                    severityLevel = '关注';
-                    markerPosition = 50;
-                } else {
-                    severityLevel = '正常';
-                    markerPosition = 25;
-                }
-                
-                return `
-                    <div class="symptom-severity">
-                        <div class="severity-scale">
-                            <span>正常</span>
-                            <span>关注</span>
-                            <span>明显</span>
-                            <span>严重</span>
-                        </div>
-                        <div class="severity-bar">
-                            <div class="severity-marker" style="left: ${markerPosition}%;"></div>
-                        </div>
-                        <div style="text-align: center; font-size: 12px; color: #666;">
-                            总体症状严重程度：<strong>${severityLevel}</strong>
-                        </div>
-                    </div>
-                `;
-            }
-
-            loadRecommendations() {
-                const allTests = [
-                    { id: '1', title: '性格色彩测试', description: '了解你的性格色彩，发现真实的自己', image: 'images/test1.jpg' },
-                    { id: '2', title: '心理年龄测试', description: '测测你的心理年龄是多少', image: 'images/test2.jpg' },
-                    { id: '3', title: '焦虑水平测试', description: '评估你的焦虑程度和应对方式', image: 'images/test3.jpg' },
-                    { id: '4', title: '职业倾向测试', description: '发现最适合你的职业方向', image: 'images/test4.jpg' },
-                    { id: '5', title: '情绪管理测试', description: '了解你的情绪管理能力', image: 'images/test5.jpg' },
-                    { id: '6', title: 'SCL-90心理健康测试', description: '专业心理健康筛查，评估9大心理症状维度', image: 'images/scl90.jpg' }
-                ];
-
-                const availableTests = allTests.filter(test => test.id !== this.testId);
-                const recommendations = this.shuffleArray(availableTests).slice(0, 3);
-
-                const container = document.getElementById('recommendationList');
-                container.innerHTML = recommendations.map(rec => `
-                    <div class="test-list-item" data-test-id="${rec.id}">
-                        <div class="test-thumb" style="background: linear-gradient(135deg, #667eea, #764ba2);"></div>
-                        <div class="test-info">
-                            <div class="test-title">${rec.title}</div>
-                            <div class="test-desc">${rec.description}</div>
-                        </div>
-                        <button class="small-btn">前往</button>
-                    </div>
-                `).join('');
-
-                container.querySelectorAll('.test-list-item').forEach(item => {
-                    item.addEventListener('click', (e) => {
-                        if (!e.target.classList.contains('small-btn')) {
-                            const testId = item.dataset.testId;
-                            window.location.href = `detail.html?id=${testId}`;
-                        }
-                    });
-                });
-
-                container.querySelectorAll('.small-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        const testId = btn.closest('.test-list-item').dataset.testId;
-                        window.location.href = `detail.html?id=${testId}`;
-                    });
-                });
-            }
-
-            shuffleArray(array) {
-                const newArray = [...array];
-                for (let i = newArray.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-                }
-                return newArray;
-            }
-        }
-
+        // 简化的初始化代码
         document.addEventListener('DOMContentLoaded', () => {
             window.resultManager = new ResultManager();
         });
     </script>
 
     <style>
-        .navbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px;
-            background: white;
-            border-bottom: 1px solid var(--border-color);
-        }
-
+        /* 基础样式 - 保留在HTML中以确保兼容性 */
+        
+        /* 结果头部样式 */
         .result-header {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
@@ -922,9 +86,8 @@
             font-weight: 500;
         }
 
-        /* 分数展示样式 */
         .score-number {
-            font-size: 56px; /* 增大字号 */
+            font-size: 56px;
             font-weight: bold;
             margin-bottom: 8px;
             line-height: 1;
@@ -936,7 +99,6 @@
             font-weight: 500;
         }
 
-        /* 文本结果展示样式 */
         .result-label {
             font-size: 16px;
             margin-bottom: 12px;
@@ -945,11 +107,12 @@
         }
 
         .result-text {
-            font-size: 32px; /* 增大字号 */
+            font-size: 32px;
             font-weight: bold;
             line-height: 1.2;
         }
 
+        /* 分析区域基础样式 */
         .analysis-section, .dimensions-section {
             background: white;
             padding: 20px;
@@ -971,35 +134,16 @@
             text-align: justify;
         }
 
-        /* 修复雷达图容器 */
-        .radar-chart-container {
-            text-align: center;
-            margin: 25px 0;
-            padding: 20px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-        }
-
-        #radarChart {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: 0 auto;
-        }        
-
+        /* 维度项目基础样式 */
         .dimension-item {
             margin-bottom: 20px;
             padding: 15px;
             background: #f8f9fa;
             border-radius: 8px;
-            border-left: none; /* 移除所有左边框 */
         }
 
-        /* 特定修复高分数项的红色边框 */
         .dimension-item.high-score {
-            border-left: none; /* 移除红色左边框 */
-            background: #fff5f5; /* 保留背景色提示 */
+            background: #fff5f5;
         }
 
         .dimension-header {
@@ -1017,6 +161,10 @@
         .dimension-score {
             color: #667eea;
             font-weight: bold;
+        }
+
+        .dimension-score.high-text {
+            color: #ff4757;
         }
 
         .dimension-bar {
@@ -1040,6 +188,7 @@
             line-height: 1.6;
         }
 
+        /* 总结区域 */
         .summary-section {
             margin-top: 25px;
             padding-top: 20px;
@@ -1049,19 +198,14 @@
         .summary-section h4 {
             color: #333;
             margin-bottom: 10px;
-            border-left: none; /* 移除蓝色左边框 */
-            padding-left: 0;
         }
 
         .summary-content {
             color: #666;
             line-height: 1.8;
-            background: none; /* 移除背景框 */
-            padding: 0; /* 移除内边距 */
-            border-radius: 0; /* 移除圆角 */
-            border-left: none; /* 移除蓝色左边框 */
         }
 
+        /* 行动按钮 */
         .result-actions {
             display: flex;
             gap: 10px;
@@ -1089,6 +233,7 @@
             border: 2px solid #667eea;
         }
 
+        /* 推荐区域 */
         .recommendations {
             margin: 30px 0;
         }
@@ -1137,11 +282,6 @@
             border: 1px solid #c3e6cb;
         }
 
-        .assessment-desc, .assessment-suggestion {
-            margin-bottom: 10px;
-            padding: 8px 0;
-        }
-
         .high-factors {
             background: #fff5f5;
             padding: 10px;
@@ -1150,74 +290,25 @@
             border-left: 3px solid #ff4757;
         }
 
-        .factor-suggestion {
-            color: #ff4757;
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-
         .professional-note {
-            background: none; /* 移除背景框 */
-            padding: 10px 0; /* 调整内边距 */
-            border-radius: 0; /* 移除圆角 */
             font-size: 12px;
             color: #666;
             margin-top: 15px;
-            border-left: none; /* 移除蓝色左边框 */
-            font-style: italic; /* 可选：添加斜体强调 */
-        }
-
-        /* 维度增强样式 */
-        .high-score {
-            border-left: 4px solid #ff4757;
-            background: #fff5f5;
-        }
-
-        .high-text {
-            color: #ff4757;
-            font-weight: bold;
-        }
-
-        .dim-desc {
-            font-size: 12px;
-            color: #888;
-            margin-bottom: 5px;
-        }
-
-        .dim-range {
-            font-size: 11px;
-            color: #999;
-            margin-top: 5px;
-        }
-
-        .no-dimensions {
-            text-align: center;
-            color: #666;
-            padding: 20px;
+            font-style: italic;
         }
 
         /* 响应式调整 */
         @media (max-width: 480px) {
-            .score-circle {
-                width: 80px;
-                height: 80px;
-            }
-            
-            .score-circle span {
-                font-size: 24px;
-            }
-            
             .result-actions {
                 flex-direction: column;
             }
             
-            .assessment-level {
-                padding: 6px 10px;
-                font-size: 14px;
+            .score-number {
+                font-size: 48px;
             }
             
-            .dim-desc {
-                font-size: 11px;
+            .result-text {
+                font-size: 28px;
             }
         }
     </style>

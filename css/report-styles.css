@@ -1,0 +1,15 @@
+/* Webkit浏览器 (Chrome, Safari) */
+@media (-webkit-min-device-pixel-ratio: 0) {
+    .risk-level.high {
+        -webkit-print-color-adjust: economy;
+    }
+}
+
+/* Firefox */
+@-moz-document url-prefix() {
+    @media print {
+        .professional-indicators {
+            color-adjust: exact;
+        }
+    }
+}
