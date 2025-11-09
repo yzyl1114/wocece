@@ -1,4 +1,4 @@
-// js/template-engine.js
+// template-engine.js - 修复模板选择逻辑
 class TemplateEngine {
     static TEMPLATES = {
         // 基础趣味模板
@@ -29,23 +29,35 @@ class TemplateEngine {
     };
 
     getTemplate(testConfig) {
-        // 根据测试配置选择模板
+        console.log('🔍 获取模板, 测试配置:', testConfig);
+        
+        // 🆕 修复：对于SCL-90测试，强制使用专业模板
+        if (testConfig && testConfig.id === '6') {
+            console.log('🎯 强制使用SCL-90专业模板');
+            return this.constructor.TEMPLATES['scl90-professional'];
+        }
+        
+        // 原有逻辑作为备用
         if (testConfig?.resultTemplate) {
-            return this.constructor.TEMPLATES[testConfig.resultTemplate];
+            const template = this.constructor.TEMPLATES[testConfig.resultTemplate];
+            console.log('📋 使用指定模板:', testConfig.resultTemplate);
+            return template;
         }
         
         // 默认根据测试ID选择
         const templateMap = {
-            '1': 'fun-basic',           // 性格色彩
-            '2': 'fun-basic',           // 心理年龄
-            '3': 'standard-basic',      // 焦虑水平
-            '4': 'standard-basic',      // 职业倾向
-            '5': 'standard-basic',      // 情绪管理
-            '6': 'scl90-professional'   // SCL-90
+            '1': 'fun-basic',
+            '2': 'fun-basic', 
+            '3': 'standard-basic',
+            '4': 'standard-basic',
+            '5': 'standard-basic',
+            '6': 'scl90-professional'  // 🆕 确保这里正确
         };
         
         const templateName = templateMap[testConfig?.id] || 'standard-basic';
-        return this.constructor.TEMPLATES[templateName];
+        const template = this.constructor.TEMPLATES[templateName];
+        console.log('📋 使用默认模板:', templateName);
+        return template;
     }
 
     renderComponent(componentName, resultData, testConfig) {
