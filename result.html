@@ -60,10 +60,85 @@
     <script src="js/chart-renderer.js"></script>
 
     <script>
-        // 简化的初始化代码
-        document.addEventListener('DOMContentLoaded', () => {
-            window.resultManager = new ResultManager();
+        // 修复初始化问题
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 DOM加载完成，开始初始化');
+            
+            // 检查必要对象是否加载
+            if (typeof ResultManager === 'undefined') {
+                console.error('❌ ResultManager未定义，等待加载...');
+                setTimeout(() => {
+                    if (typeof ResultManager !== 'undefined') {
+                        initializeApp();
+                    } else {
+                        console.error('❌ ResultManager仍然未定义，检查JS文件加载');
+                        showErrorPage('JS文件加载失败，请检查网络连接');
+                    }
+                }, 500);
+                return;
+            }
+            
+            initializeApp();
         });
+
+        function initializeApp() {
+            console.log('🔧 开始初始化应用');
+            
+            try {
+                window.resultManager = new ResultManager();
+                
+                // 立即设置testId（避免异步问题）
+                const urlParams = new URLSearchParams(window.location.search);
+                window.resultManager.testId = urlParams.get('id');
+                
+                console.log('🔧 调用init方法...');
+                window.resultManager.init().catch(error => {
+                    console.error('❌ init方法失败:', error);
+                    showErrorPage('数据加载失败: ' + error.message);
+                });
+                
+            } catch (error) {
+                console.error('❌ 初始化失败:', error);
+                showErrorPage('应用初始化失败: ' + error.message);
+            }
+        }
+
+        function showErrorPage(message) {
+            const container = document.querySelector('.container');
+            if (container) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 50px 20px;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">😕</div>
+                        <h3 style="color: #333; margin-bottom: 15px;">页面加载失败</h3>
+                        <p style="color: #666; margin-bottom: 25px;">${message || '请刷新页面或重新进行测试'}</p>
+                        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                            <button onclick="location.reload()" 
+                                    style="background: #667eea; color: white; border: none; 
+                                        padding: 12px 24px; border-radius: 6px; cursor: pointer;">
+                                刷新页面
+                            </button>
+                            <button onclick="location.href='index.html'"
+                                    style="background: #f8f9fa; color: #333; border: 1px solid #ddd; 
+                                        padding: 12px 24px; border-radius: 6px; cursor: pointer;">
+                                返回首页
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // 添加一个全局的重试方法，便于调试
+        window.retryInit = function() {
+            console.log('🔄 手动重试初始化');
+            if (window.resultManager && typeof window.resultManager.init === 'function') {
+                window.resultManager.init().catch(error => {
+                    console.error('重试失败:', error);
+                });
+            } else {
+                initializeApp();
+            }
+        };
     </script>
 
     <style>
