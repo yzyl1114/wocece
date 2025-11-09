@@ -181,12 +181,45 @@ class ResultManager {
     }
 
     renderSCL90Report() {
-        const template = this.templateEngine.getTemplate('scl90-professional');
-        this.renderByTemplate(template, 'standard');
+        console.log('🎯 执行 renderSCL90Report - SCL-90专业报告');
         
-        // 渲染专业图表
+        // 强制使用SCL-90专业模板
+        const template = this.templateEngine.getTemplate('scl90-professional');
+        console.log('📋 SCL-90模板组件:', template.components);
+        
+        // 渲染模板
+        this.renderByTemplate(template, 'standard');
+        console.log('✅ 模板渲染完成');
+        
+        // 渲染雷达图
+        this.renderRadarChart();
+    }
+
+    // 新增独立的雷达图渲染方法
+    renderRadarChart() {
         if (this.resultData.dimensions && this.resultData.dimensions.length > 0) {
-            this.chartRenderer.renderSCL90RadarChart(this.resultData.dimensions, 'radarChart');
+            console.log('📊 准备渲染雷达图');
+            
+            // 使用setTimeout确保DOM已更新
+            setTimeout(() => {
+                const canvas = document.getElementById('radarChart');
+                if (canvas) {
+                    this.chartRenderer.renderSCL90RadarChart(this.resultData.dimensions, 'radarChart');
+                    console.log('✅ 雷达图渲染完成');
+                } else {
+                    console.warn('⚠️ 雷达图canvas不存在，延迟重试');
+                    // 如果canvas还不存在，再延迟重试
+                    setTimeout(() => {
+                        const retryCanvas = document.getElementById('radarChart');
+                        if (retryCanvas) {
+                            this.chartRenderer.renderSCL90RadarChart(this.resultData.dimensions, 'radarChart');
+                            console.log('✅ 雷达图重试渲染完成');
+                        }
+                    }, 500);
+                }
+            }, 300);
+        } else {
+            console.warn('⚠️ 无维度数据，跳过雷达图渲染');
         }
     }
 
@@ -196,24 +229,41 @@ class ResultManager {
     }
 
     renderByTemplate(template, type) {
-        // 清空容器
+        console.log('🔧 renderByTemplate 开始:', type);
+        
         const container = type === 'fun' ? 
             document.getElementById('funAnalysis') : 
             document.getElementById('standardAnalysis');
         
+        if (!container) {
+            console.error('❌ 渲染容器不存在:', type);
+            return;
+        }
+        
+        // 确保容器可见
+        container.style.display = 'block';
         container.innerHTML = '';
-
-        // 按顺序渲染组件
+        
+        console.log('📋 开始渲染组件...');
+        
+        // 渲染每个组件
         template.components.forEach(componentName => {
+            console.log(`   🎨 渲染: ${componentName}`);
             const componentHtml = this.templateEngine.renderComponent(
                 componentName, 
                 this.resultData,
                 this.testConfig
             );
+            
             if (componentHtml) {
                 container.innerHTML += componentHtml;
+                console.log(`   ✅ ${componentName} 成功`);
+            } else {
+                console.error(`   ❌ ${componentName} 渲染为空`);
             }
         });
+        
+        console.log('🎉 renderByTemplate 完成');
     }
 
     bindEvents() {
