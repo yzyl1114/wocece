@@ -1,4 +1,3 @@
-// js/result-manager.js
 class ResultManager {
     constructor() {
         this.testId = null;
@@ -28,20 +27,126 @@ class ResultManager {
     }
 
     loadResultData() {
-        const resultParam = new URLSearchParams(window.location.search).get('result');
+        const urlParams = new URLSearchParams(window.location.search);
+        const resultId = urlParams.get('resultId');
+        const resultParam = urlParams.get('result');
+        
+        console.log('加载结果数据:', { resultId, hasResultParam: !!resultParam });
+        
+        // ✅ 优先使用resultId从localStorage加载
+        if (resultId) {
+            const storedResult = storageManager.getTestResult(resultId);
+            if (storedResult && storedResult.data) {
+                this.resultData = storedResult.data;
+                console.log('从localStorage加载结果成功');
+                
+                // 🆕 在这里添加数据验证
+                try {
+                    this.validateResultData();
+                } catch (error) {
+                    console.error('❌ 结果数据验证失败:', error);
+                    this.showDataError('测试结果数据不完整，请重新测试');
+                    return; // ❗重要：验证失败时停止执行
+                }
+                
+                return;
+            } else {
+                console.error('❌ localStorage中未找到结果:', resultId);
+                this.showDataError('结果数据丢失，请重新测试');
+                return; // ❗重要：数据不存在时停止执行
+            }
+        }
+        
+        // ✅ 备用方案：如果还有result参数（兼容旧链接）
         if (resultParam) {
-            this.resultData = JSON.parse(decodeURIComponent(resultParam));
+            try {
+                this.resultData = JSON.parse(decodeURIComponent(resultParam));
+                console.log('从URL参数加载结果成功');
+                
+                // 🆕 在这里也添加数据验证
+                try {
+                    this.validateResultData();
+                } catch (error) {
+                    console.error('❌ 结果数据验证失败:', error);
+                    this.showDataError('测试结果数据不完整，请重新测试');
+                    return;
+                }
+                
+            } catch (error) {
+                console.error('❌ 解析结果参数失败:', error);
+                this.showDataError('结果数据格式错误，请重新测试');
+            }
         } else {
-            // 默认测试数据
-            this.resultData = {
-                score: 85,
-                analysis: '基于你的答题情况分析...',
-                dimensions: [
-                    { name: '个性分析', score: 85, analysis: '分析内容...' }
-                ]
-            };
+            console.error('❌ 未找到任何结果数据');
+            this.showDataError('未找到测试结果，请重新进行测试');
         }
     }
+
+    // 🆕 新增：数据完整性验证方法
+    validateResultData() {
+        if (!this.resultData) {
+            throw new Error('结果数据为空');
+        }
+        
+        // 基础字段检查
+        if (typeof this.resultData.score !== 'number') {
+            throw new Error('评分数据缺失或格式错误');
+        }
+        
+        // 对于SCL-90测试，检查必要字段
+        if (this.testId === '6') {
+            if (!this.resultData.dimensions || !Array.isArray(this.resultData.dimensions)) {
+                throw new Error('SCL-90维度数据缺失');
+            }
+            
+            if (this.resultData.dimensions.length === 0) {
+                throw new Error('SCL-90维度数据为空');
+            }
+            
+            // 检查每个维度是否有必要字段
+            this.resultData.dimensions.forEach((dim, index) => {
+                if (!dim.name || typeof dim.name !== 'string') {
+                    throw new Error(`维度 ${index} 名称缺失`);
+                }
+                if (typeof dim.score !== 'number') {
+                    throw new Error(`维度 ${dim.name} 分数缺失`);
+                }
+            });
+            
+            // 检查SCL-90特有字段
+            if (typeof this.resultData.totalScore !== 'number') {
+                console.warn('SCL-90总分缺失，但不影响基础展示');
+            }
+        }
+        
+        console.log('✅ 结果数据验证通过');
+    }
+
+    // 🆕 新增：显示数据错误的方法
+    showDataError(message) {
+        // 清空容器，显示错误信息
+        const container = document.querySelector('.container');
+        container.innerHTML = `
+            <div class="error-section" style="text-align: center; padding: 50px 20px;">
+                <div style="font-size: 48px; margin-bottom: 20px;">😕</div>
+                <h3 style="color: #333; margin-bottom: 15px;">数据加载失败</h3>
+                <p style="color: #666; margin-bottom: 25px; line-height: 1.6;">${message}</p>
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button onclick="window.location.href = 'index.html'" 
+                            style="background: linear-gradient(135deg, #667eea, #764ba2); 
+                                   color: white; border: none; padding: 12px 30px; 
+                                   border-radius: 8px; font-size: 16px; cursor: pointer;">
+                        返回首页
+                    </button>
+                    <button onclick="window.location.reload()" 
+                            style="background: #f8f9fa; color: #333; border: 1px solid #ddd; 
+                                   padding: 12px 30px; border-radius: 8px; font-size: 16px; cursor: pointer;">
+                        刷新重试
+                    </button>
+                </div>
+            </div>
+        `;
+    }    
 
     renderResult() {
         if (this.isFunTest()) {

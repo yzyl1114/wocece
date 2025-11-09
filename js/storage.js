@@ -3,6 +3,9 @@ class StorageManager {
         this.storage = window.localStorage;
         // 测试模式开关 - 设为true即可免费测试所有内容
         this.TEST_MODE = true;
+        
+        // 自动清理过期结果（可选）
+        this.cleanupExpiredResults();
     }
 
     // 新增：检查是否已支付（测试模式直接返回true）
@@ -33,6 +36,8 @@ class StorageManager {
         }
     }
 
+    // ========== 测试进度管理 ==========
+    
     // 保存测试进度
     saveTestProgress(testId, answers) {
         const progress = {
@@ -55,6 +60,71 @@ class StorageManager {
         this.storage.removeItem(`test_progress_${testId}`);
     }
 
+    // ========== 测试结果管理 ==========
+    
+    // 新增：保存测试结果
+    saveTestResult(resultId, resultData) {
+        const result = {
+            data: resultData,
+            timestamp: Date.now(),
+            testId: resultData.testId || 'unknown'
+        };
+        this.storage.setItem(`test_result_${resultId}`, JSON.stringify(result));
+        console.log('测试结果已保存:', resultId);
+    }
+
+    // 新增：获取测试结果
+    getTestResult(resultId) {
+        const data = this.storage.getItem(`test_result_${resultId}`);
+        if (data) {
+            try {
+                const result = JSON.parse(data);
+                console.log('测试结果已加载:', resultId);
+                return result;
+            } catch (error) {
+                console.error('解析测试结果失败:', error);
+                return null;
+            }
+        }
+        return null;
+    }
+
+    // 新增：移除测试结果
+    removeTestResult(resultId) {
+        this.storage.removeItem(`test_result_${resultId}`);
+        console.log('测试结果已移除:', resultId);
+    }
+
+    // 新增：清理过期的测试结果（24小时）
+    cleanupExpiredResults(maxAge = 24 * 60 * 60 * 1000) {
+        const now = Date.now();
+        const keysToRemove = [];
+        
+        for (let i = 0; i < this.storage.length; i++) {
+            const key = this.storage.key(i);
+            if (key && key.startsWith('test_result_')) {
+                const data = this.storage.getItem(key);
+                if (data) {
+                    try {
+                        const result = JSON.parse(data);
+                        if (now - result.timestamp > maxAge) {
+                            keysToRemove.push(key);
+                        }
+                    } catch (e) {
+                        keysToRemove.push(key);
+                    }
+                }
+            }
+        }
+        
+        if (keysToRemove.length > 0) {
+            console.log(`清理 ${keysToRemove.length} 个过期测试结果`);
+            keysToRemove.forEach(key => this.storage.removeItem(key));
+        }
+    }
+
+    // ========== 用户信息管理 ==========
+    
     // 保存用户信息
     saveUserInfo(userInfo) {
         this.storage.setItem('user_info', JSON.stringify(userInfo));

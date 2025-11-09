@@ -279,20 +279,37 @@
                 }
             }
 
+
             completeTest() {
-                // 使用统一的计分管理器计算结果
-                const result = calculationManager.calculateResult(
-                    this.testId, 
-                    this.answers, 
-                    this.testData
-                );
-                
-                // 清除进度
-                storageManager.clearTestProgress(this.testId);
-                
-                // 跳转到结果页
-                const resultStr = encodeURIComponent(JSON.stringify(result));
-                window.location.href = `result.html?id=${this.testId}&result=${resultStr}`;
+                try {
+                    // 使用统一的计分管理器计算结果
+                    const result = calculationManager.calculateResult(
+                        this.testId, 
+                        this.answers, 
+                        this.testData
+                    );
+                    
+                    // 添加测试ID到结果中，便于追踪
+                    result.testId = this.testId;
+                    
+                    // 清除进度
+                    storageManager.clearTestProgress(this.testId);
+                    
+                    // ✅ 使用localStorage存储结果
+                    const resultId = 'result_' + this.testId + '_' + Date.now();
+                    storageManager.saveTestResult(resultId, result);
+                    
+                    console.log('结果保存成功，准备跳转:', resultId);
+                    
+                    // 短暂延迟确保数据保存完成
+                    setTimeout(() => {
+                        window.location.href = `result.html?id=${this.testId}&resultId=${resultId}`;
+                    }, 100);
+                    
+                } catch (error) {
+                    console.error('❌ 完成测试时出错:', error);
+                    this.showToast('测试结果生成失败，请重试');
+                }
             }
 
             showToast(message) {
