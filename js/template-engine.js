@@ -9,7 +9,14 @@ class TemplateEngine {
         
         // 基础标准模板  
         'standard-basic': {
-            components: ['standard-header', 'detailed-score', 'multi-analysis', 'dimension-chart', 'professional-summary', 'save-actions'],
+            components: [
+                'standard-header', 
+                'detailed-score', 
+                'multi-analysis', 
+                'dimension-chart', 
+                'professional-summary', 
+                'save-actions'
+            ],
             styles: 'standard-styles'
         },
         

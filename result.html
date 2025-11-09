@@ -372,10 +372,344 @@
             font-style: italic;
         }
 
+        /* === 新增的必要CSS样式 === */
+        
+        /* 评分详情样式 */
+        .score-details {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .score-label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .score-value {
+            font-weight: bold;
+            color: #333;
+            font-size: 16px;
+        }
+
+        /* 临床指标样式 */
+        .professional-indicators {
+            margin: 20px 0;
+        }
+
+        .indicator-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .indicator-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 2px solid #e8f4fd;
+        }
+
+        .indicator-item.abnormal {
+            border-color: #ff4757;
+            background: #fff5f5;
+        }
+
+        .indicator-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .indicator-item.abnormal .indicator-value {
+            color: #ff4757;
+        }
+
+        .indicator-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 3px;
+        }
+
+        .indicator-reference {
+            font-size: 10px;
+            color: #999;
+        }
+
+        /* 临床表格样式 */
+        .clinical-table {
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .clinical-table table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .clinical-table th,
+        .clinical-table td {
+            padding: 12px 8px;
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 12px;
+        }
+
+        .clinical-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .clinical-table tr.abnormal {
+            background: #fff5f5;
+        }
+
+        .clinical-table tr.normal {
+            background: #f8f9fa;
+        }
+
+        /* 风险评估样式 */
+        .risk-assessment {
+            margin: 20px 0;
+        }
+
+        .risk-level {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .risk-level.high {
+            background: #fff5f5;
+            border: 2px solid #ff4757;
+        }
+
+        .risk-level.medium {
+            background: #fff3cd;
+            border: 2px solid #ffa502;
+        }
+
+        .risk-level.low {
+            background: #d1ecf1;
+            border: 2px solid #17a2b8;
+        }
+
+        .risk-level.normal {
+            background: #d4edda;
+            border: 2px solid #28a745;
+        }
+
+        .risk-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .risk-desc {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .abnormal-factors {
+            margin-top: 15px;
+        }
+
+        .factor-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .factor-tag {
+            padding: 6px 12px;
+            background: #ff4757;
+            color: white;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* 专业建议样式 */
+        .professional-advice {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .advice-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .advice-title:before {
+            content: "💡";
+            margin-right: 8px;
+        }
+
+        .advice-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .advice-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .advice-list li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #ffd32a;
+        }
+
+        .advice-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* 专业总结样式 */
+        .professional-summary-content {
+            line-height: 1.6;
+            color: #666;
+        }
+
+        .suggestion {
+            background: #e8f4fd;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            border-left: 4px solid #667eea;
+            font-weight: 500;
+        }
+
+        .factor-suggestion {
+            background: #fff3cd;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            border-left: 4px solid #ffa502;
+            font-weight: 500;
+        }
+
+        /* 雷达图容器 */
+        .radar-chart-container {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* 维度列表样式 */
+        .dimensions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .dimensions-list .dimension-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .dimensions-list .dimension-name {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .dimensions-list .dimension-score {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        /* 分数显示样式 */
+        .score-display {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .score-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+            margin: 0 auto 10px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        /* 备用渲染样式 */
+        .fallback-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .fallback-content h3 {
+            color: #333;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            padding-left: 10px;
+        }
+
         /* 响应式调整 */
         @media (max-width: 480px) {
-            .result-actions {
-                flex-direction: column;
+            .indicator-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .clinical-table th,
+            .clinical-table td {
+                padding: 8px 4px;
+                font-size: 11px;
+            }
+            
+            .factor-tags {
+                gap: 5px;
+            }
+            
+            .factor-tag {
+                font-size: 10px;
+                padding: 4px 8px;
             }
             
             .score-number {
@@ -384,6 +718,48 @@
             
             .result-text {
                 font-size: 28px;
+            }
+            
+            .result-actions {
+                flex-direction: column;
+            }
+            
+            .score-circle {
+                width: 80px;
+                height: 80px;
+                font-size: 24px;
+            }
+        }
+
+        /* 动画效果 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .analysis-section, .dimensions-section {
+            animation: fadeInUp 0.5s ease;
+        }
+
+        /* 打印优化 */
+        @media print {
+            .result-actions {
+                display: none;
+            }
+            
+            .recommendations {
+                display: none;
+            }
+            
+            .analysis-section, .dimensions-section {
+                box-shadow: none;
+                border: 1px solid #ddd;
             }
         }
     </style>

@@ -191,35 +191,61 @@ class ResultManager {
         this.renderByTemplate(template, 'standard');
         console.log('✅ 模板渲染完成');
         
-        // 渲染雷达图
-        this.renderRadarChart();
+        // 延迟渲染雷达图，确保DOM已更新
+        setTimeout(() => {
+            this.renderRadarChart();
+        }, 100);
     }
 
-    // 新增独立的雷达图渲染方法
     renderRadarChart() {
         if (this.resultData.dimensions && this.resultData.dimensions.length > 0) {
             console.log('📊 准备渲染雷达图');
             
-            // 使用setTimeout确保DOM已更新
-            setTimeout(() => {
-                const canvas = document.getElementById('radarChart');
-                if (canvas) {
-                    this.chartRenderer.renderSCL90RadarChart(this.resultData.dimensions, 'radarChart');
-                    console.log('✅ 雷达图渲染完成');
-                } else {
-                    console.warn('⚠️ 雷达图canvas不存在，延迟重试');
-                    // 如果canvas还不存在，再延迟重试
-                    setTimeout(() => {
-                        const retryCanvas = document.getElementById('radarChart');
-                        if (retryCanvas) {
-                            this.chartRenderer.renderSCL90RadarChart(this.resultData.dimensions, 'radarChart');
-                            console.log('✅ 雷达图重试渲染完成');
-                        }
-                    }, 500);
-                }
-            }, 300);
-        } else {
-            console.warn('⚠️ 无维度数据，跳过雷达图渲染');
+            const canvas = document.getElementById('radarChart');
+            if (canvas) {
+                this.chartRenderer.renderSCL90RadarChart(this.resultData.dimensions, 'radarChart');
+                console.log('✅ 雷达图渲染完成');
+            } else {
+                console.warn('⚠️ 雷达图canvas不存在');
+                // 如果canvas不存在，可能是组件渲染失败
+                this.fallbackRender();
+            }
+        }
+    }
+
+    // 备用渲染方案
+    fallbackRender() {
+        const container = document.getElementById('standardAnalysis');
+        if (container && this.resultData) {
+            // 简单的备用显示
+            let fallbackHTML = `
+                <section class="analysis-section">
+                    <h3>测试结果</h3>
+                    <div class="analysis-content">
+                        <p>综合评分: ${this.resultData.score || 0}</p>
+                        ${this.resultData.totalScore ? `<p>总分: ${this.resultData.totalScore}</p>` : ''}
+                        ${this.resultData.analysis ? `<p>${this.resultData.analysis}</p>` : ''}
+                    </div>
+                </section>
+            `;
+            
+            if (this.resultData.dimensions && this.resultData.dimensions.length > 0) {
+                fallbackHTML += `
+                    <section class="analysis-section">
+                        <h3>各维度得分</h3>
+                        <div class="dimensions-list">
+                            ${this.resultData.dimensions.map(dim => `
+                                <div class="dimension-item">
+                                    <span class="dimension-name">${dim.name}</span>
+                                    <span class="dimension-score">${dim.score || 0}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </section>
+                `;
+            }
+            
+            container.innerHTML += fallbackHTML;
         }
     }
 
