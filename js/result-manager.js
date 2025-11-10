@@ -315,144 +315,186 @@ class ResultManager {
             
             this.showToast('正在生成图片...');
             
-            // 创建临时容器
+            // 创建临时容器 - 关键修改：使用绝对定位避免样式污染
             const tempContainer = document.createElement('div');
             tempContainer.style.cssText = `
-                position: fixed;
-                left: -9999px;
-                top: -9999px;
+                position: absolute;
+                left: 0;
+                top: 0;
                 width: 375px;
-                background: #f5f6fa;
+                min-height: 100vh;
+                background: #f5f6fa !important;
                 padding: 20px;
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                z-index: 10000;
+                opacity: 1 !important;
+                visibility: visible !important;
             `;
             
             // 克隆报告内容
             const originalContainer = document.querySelector('.container');
             const contentToSave = originalContainer.cloneNode(true);
             
+            // 关键修改：彻底清理可能影响渲染的样式
+            contentToSave.style.cssText = `
+                opacity: 1 !important;
+                visibility: visible !important;
+                background: #f5f6fa !important;
+                color: #333 !important;
+                position: static !important;
+                transform: none !important;
+            `;
+            
             // 移除不需要的元素
             const elementsToRemove = contentToSave.querySelectorAll(
-                '.result-actions, .recommendations, footer'
+                '.result-actions, .recommendations, footer, .toast'
             );
             elementsToRemove.forEach(el => el.remove());
             
-            // 重新渲染雷达图（确保Canvas内容正确）
+            // 关键修改：清理所有可能影响渲染的样式属性
+            contentToSave.querySelectorAll('*').forEach(el => {
+                el.style.opacity = '1';
+                el.style.visibility = 'visible';
+                el.style.transform = 'none';
+                el.style.transition = 'none';
+                el.style.animation = 'none';
+                el.style.filter = 'none';
+                el.style.backdropFilter = 'none';
+                el.style.background = el.classList.contains('result-header') ? 
+                    'linear-gradient(135deg, #667eea, #764ba2) !important' : 
+                    (el.classList.contains('analysis-section') || el.classList.contains('dimensions-section')) ?
+                    'white !important' : '';
+            });
+            
+            // 重新渲染雷达图
             const tempRadarCanvas = contentToSave.querySelector('#radarChart');
             if (tempRadarCanvas && this.resultData.dimensions) {
-                this.renderRadarChartToCanvas(tempRadarCanvas, this.resultData.dimensions);
+                // 先移除旧的canvas
+                const radarContainer = tempRadarCanvas.parentElement;
+                const newCanvas = document.createElement('canvas');
+                newCanvas.id = 'radarChart';
+                newCanvas.width = 250;
+                newCanvas.height = 250;
+                radarContainer.replaceChild(newCanvas, tempRadarCanvas);
+                
+                // 重新渲染
+                this.renderRadarChartToCanvas(newCanvas, this.resultData.dimensions);
             }
             
             // 添加水印信息
             const watermarkSection = document.createElement('section');
             watermarkSection.className = 'watermark-section';
+            watermarkSection.style.cssText = `
+                background: white !important;
+                padding: 20px;
+                margin: 20px 0;
+                border-radius: 10px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                opacity: 1 !important;
+            `;
             watermarkSection.innerHTML = `
-                <div class="watermark-content">
-                    <div style="text-align: center; padding: 20px; color: #666; font-size: 12px;">
-                        <div style="margin-bottom: 8px;">--- 测试结果来自 我测测 ---</div>
-                        <div>扫描二维码发现更多有趣测评</div>
-                        <div style="width: 80px; height: 80px; background: #f0f0f0; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; margin: 10px 0; border: 1px solid #eee;">
-                            <span style="color: #999; font-size: 10px;">二维码</span>
-                        </div>
-                        <div style="color: #999;">${new Date().toLocaleDateString()} 生成</div>
+                <div class="watermark-content" style="text-align: center; color: #666 !important;">
+                    <div style="margin-bottom: 8px; color: #666 !important;">--- 测试结果来自 我测测 ---</div>
+                    <div style="color: #666 !important;">扫描二维码发现更多有趣测评</div>
+                    <div style="width: 80px; height: 80px; background: #f0f0f0; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; margin: 10px 0; border: 1px solid #eee;">
+                        <span style="color: #999 !important; font-size: 10px;">二维码</span>
                     </div>
+                    <div style="color: #999 !important;">${new Date().toLocaleDateString()} 生成</div>
                 </div>
             `;
             
             contentToSave.appendChild(watermarkSection);
             
-            // 添加必要的样式
-            const style = document.createElement('style');
-            style.textContent = `
-                .watermark-section {
-                    background: white;
-                    padding: 20px;
-                    margin: 20px 0;
-                    border-radius: 10px;
-                    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-                }
-                .result-header {
-                    background: linear-gradient(135deg, #667eea, #764ba2);
-                    color: white;
-                    padding: 30px 20px;
-                    text-align: center;
-                    border-radius: 0 0 20px 20px;
-                    margin: -15px -15px 20px -15px;
-                }
-                .analysis-section, .dimensions-section {
-                    background: white;
-                    padding: 20px;
-                    margin: 15px 0;
-                    border-radius: 10px;
-                    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-                }
-                .radar-chart-container {
-                    text-align: center;
-                    margin: 20px 0;
-                    padding: 15px;
-                    background: white;
-                    border-radius: 8px;
-                    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                }
-                .score-details {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 12px;
-                    margin-top: 15px;
-                }
-                .score-item {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    padding: 10px 0;
-                    border-bottom: 1px solid #f0f0f0;
-                }
-                .clinical-table table {
-                    width: 100%;
-                    border-collapse: collapse;
-                    background: white;
-                    border-radius: 8px;
-                    overflow: hidden;
-                }
-                .clinical-table th,
-                .clinical-table td {
-                    padding: 12px 8px;
-                    text-align: left;
-                    border-bottom: 1px solid #f0f0f0;
-                }
-                .factor-interpretation-list {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 15px;
-                }
-                .factor-item {
-                    background: #f8f9fa;
-                    padding: 15px;
-                    border-radius: 8px;
-                }
-                .professional-advice {
-                    background: linear-gradient(135deg, #667eea, #764ba2);
-                    color: white;
-                    padding: 20px;
-                    border-radius: 10px;
-                    margin: 20px 0;
-                }
+            // 关键修改：使用内联样式替代style标签
+            const criticalStyles = `
+                <style>
+                    * {
+                        opacity: 1 !important;
+                        visibility: visible !important;
+                        color: #333 !important;
+                        background: transparent !important;
+                    }
+                    .container {
+                        background: #f5f6fa !important;
+                        opacity: 1 !important;
+                    }
+                    .result-header {
+                        background: linear-gradient(135deg, #667eea, #764ba2) !important;
+                        color: white !important;
+                        padding: 30px 20px !important;
+                        text-align: center !important;
+                        border-radius: 0 0 20px 20px !important;
+                        margin: -15px -15px 20px -15px !important;
+                        opacity: 1 !important;
+                    }
+                    .analysis-section, .dimensions-section {
+                        background: white !important;
+                        padding: 20px !important;
+                        margin: 15px 0 !important;
+                        border-radius: 10px !important;
+                        box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
+                        opacity: 1 !important;
+                        color: #333 !important;
+                    }
+                    .radar-chart-container {
+                        text-align: center !important;
+                        margin: 20px 0 !important;
+                        padding: 15px !important;
+                        background: white !important;
+                        border-radius: 8px !important;
+                        box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+                        opacity: 1 !important;
+                    }
+                    .score-details, .clinical-table, .factor-interpretation-list {
+                        opacity: 1 !important;
+                        color: #333 !important;
+                    }
+                    .score-item, .clinical-table td, .clinical-table th {
+                        color: #333 !important;
+                        opacity: 1 !important;
+                    }
+                    .professional-advice {
+                        background: linear-gradient(135deg, #667eea, #764ba2) !important;
+                        color: white !important;
+                        padding: 20px !important;
+                        border-radius: 10px !important;
+                        margin: 20px 0 !important;
+                        opacity: 1 !important;
+                    }
+                    .watermark-section {
+                        background: white !important;
+                        opacity: 1 !important;
+                        color: #666 !important;
+                    }
+                    body {
+                        background: #f5f6fa !important;
+                        opacity: 1 !important;
+                    }
+                </style>
             `;
             
-            tempContainer.appendChild(style);
+            tempContainer.innerHTML = criticalStyles;
             tempContainer.appendChild(contentToSave);
             document.body.appendChild(tempContainer);
             
             // 等待渲染完成
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise(resolve => setTimeout(resolve, 1500));
             
-            // 使用html2canvas生成图片
+            // 关键修改：使用更严格的html2canvas配置
             const canvas = await html2canvas(tempContainer, {
                 backgroundColor: '#f5f6fa',
                 scale: 2,
                 useCORS: true,
-                allowTaint: false,
-                logging: false
+                allowTaint: true,
+                logging: true,
+                removeContainer: true,
+                onclone: (clonedDoc) => {
+                    // 在克隆的文档中再次确保样式正确
+                    clonedDoc.querySelectorAll('*').forEach(el => {
+                        el.style.opacity = '1';
+                        el.style.visibility = 'visible';
+                    });
+                }
             });
             
             // 清理临时元素
