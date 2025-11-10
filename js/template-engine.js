@@ -33,18 +33,35 @@ class TemplateEngine {
                 'save-actions'
             ],
             styles: 'clinical-styles'
+        },
+
+        'animal-personality': {
+            components: [
+                'animal-header',
+                'animal-similarity', 
+                'animal-description',
+                'animal-dimensions',
+                'save-actions'
+            ],
+            styles: 'fun-styles'
         }
     };
 
     getTemplate(testConfig) {
         console.log('🔍 获取模板, 测试配置:', testConfig);
         
-        // 🆕 修复：对于SCL-90测试，强制使用专业模板
+        // SCL-90测试使用专业模板
         if (testConfig && testConfig.id === '6') {
             console.log('🎯 强制使用SCL-90专业模板');
             return this.constructor.TEMPLATES['scl90-professional'];
         }
         
+        // 动物人格测试使用动物模板
+        if (testConfig && testConfig.id === '7') {
+            console.log('🎯 强制使用动物人格模板');
+            return this.constructor.TEMPLATES['animal-personality'];
+        }
+
         // 原有逻辑作为备用
         if (testConfig?.resultTemplate) {
             const template = this.constructor.TEMPLATES[testConfig.resultTemplate];
@@ -59,7 +76,8 @@ class TemplateEngine {
             '3': 'standard-basic',
             '4': 'standard-basic',
             '5': 'standard-basic',
-            '6': 'scl90-professional'  // 🆕 确保这里正确
+            '6': 'scl90-professional',
+            '7': 'animal-personality'
         };
         
         const templateName = templateMap[testConfig?.id] || 'standard-basic';

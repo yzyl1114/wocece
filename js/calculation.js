@@ -1,4 +1,3 @@
-// js/calculation.js
 class CalculationManager {
     constructor() {
         // 可以在这里初始化一些配置
@@ -9,16 +8,18 @@ class CalculationManager {
      */
     calculateResult(testId, answers, testData) {
         // 根据测试ID选择计分方法
-        if (testId === '6') {
-            return this.calculateSCL90(answers, testData);
-        } else {
-            // 其他测试使用默认的简单计分
-            return this.calculateSimpleTest(answers, testData);
+        switch(testId) {
+            case '6':
+                return this.calculateSCL90(answers, testData);
+            case '7':
+                return this.calculateAnimalPersonality(answers);
+            default:
+                throw new Error(`未找到测试ID: ${testId} 的计分方法`);
         }
     }
 
     /**
-     * SCL-90专业计分逻辑
+     * SCL-90专业计分逻辑 - 测试ID: 6
      */
     calculateSCL90(answers, testData) {
         const dimensions = testData.dimensions;
@@ -160,51 +161,191 @@ class CalculationManager {
     }
 
     /**
-     * 简单测试计分逻辑（用于非SCL-90测试）
+     * 动物人格测试计分逻辑 - 测试ID: 7
      */
-    calculateSimpleTest(answers, testData) {
-        // 简单的频率统计法
-        const scores = {
-            A: 0, B: 0, C: 0, D: 0
+    calculateAnimalPersonality(answers) {
+        // 动物人格测试评分映射 - 纯数据，不包含展示信息
+        const animalScoreMap = [
+            { A: { AES: 2 }, B: { COM: 2 }, C: { SOL: 2 }, D: { AGI: 2 } },
+            { A: { COM: 2 }, B: { SEC: 2 }, C: { AES: 2 }, D: { STR: 2 } },
+            { A: { STR: 2 }, B: { COM: 2 }, C: { SEC: 2 }, D: { DOM: 2 } },
+            { A: { STR: 2 }, B: { AGI: 2 }, C: { DOM: 2 }, D: { SOL: 2 } },
+            { A: { SOL: 2 }, B: { AGI: 2 }, C: { DOM: 2 }, D: { SEC: 2 } },
+            { A: { AES: 2 }, B: { DOM: 2 }, C: { STR: 2 }, D: { COM: 2 } },
+            { A: { SOL: 2 }, B: { COM: 2 }, C: { SEC: 2 }, D: { AES: 2 } },
+            { A: { SEC: 2 }, B: { COM: 2 }, C: { SOL: 2 }, D: { DOM: 2 } },
+            { A: { COM: 2 }, B: { SEC: 2 }, C: { STR: 2 }, D: { AGI: 2 } },
+            { A: { DOM: 2 }, B: { SEC: 2 }, C: { AES: 2 }, D: { SEC: 2 } },
+            { A: { STR: 2 }, B: { AES: 2 }, C: { DOM: 2 }, D: { AES: 2 } },
+            { A: { AES: 2 }, B: { DOM: 2 }, C: { SOL: 2 }, D: { SEC: 2 } },
+            { A: { AES: 2 }, B: { DOM: 2 }, C: { AES: 2 }, D: { SOL: 2 } },
+            { A: { AES: 2 }, B: { COM: 2 }, C: { STR: 2 }, D: { SEC: 2 } },
+            { A: { SOL: 2 }, B: { STR: 2 }, C: { COM: 2 }, D: { AGI: 2 } },
+            { A: { DOM: 2 }, B: { COM: 2 }, C: { SOL: 2 }, D: { AGI: 2 } },
+            { A: { DOM: 2 }, B: { SEC: 2 }, C: { AGI: 2 }, D: { SOL: 2 } },
+            { A: { STR: 2 }, B: { AGI: 2 }, C: { SOL: 2 }, D: { DOM: 2 } },
+            { A: { STR: 2 }, B: { DOM: 2 }, C: { COM: 2 }, D: { SOL: 2 } },
+            { A: { SOL: 2 }, B: { DOM: 2 }, C: { AES: 2 }, D: { COM: 2 } },
+            { A: { SOL: 2 }, B: { DOM: 2 }, C: { SEC: 2 }, D: { COM: 2 } },
+            { A: { DOM: 2 }, B: { SOL: 2 }, C: { COM: 2 }, D: { STR: 2 } },
+            { A: { AGI: 2 }, B: { COM: 2 }, C: { AES: 2 }, D: { SOL: 2 } },
+            { A: { SEC: 2 }, B: { AGI: 2 }, C: { SOL: 2 }, D: { DOM: 2 } },
+            { A: { AES: 2 }, B: { COM: 2 }, C: { SOL: 2 }, D: { DOM: 2 } },
+            { A: { AES: 2 }, B: { COM: 2 }, C: { DOM: 2 }, D: { STR: 2 } },
+            { A: { DOM: 2 }, B: { AGI: 2 }, C: { SEC: 2 }, D: { COM: 2 } },
+            { A: { STR: 2 }, B: { COM: 2 }, C: { SEC: 2 }, D: { DOM: 2 } },
+            { A: { SOL: 2 }, B: { COM: 2 }, C: { AES: 2 }, D: { DOM: 2 } },
+            { A: { AES: 2 }, B: { COM: 2 }, C: { DOM: 2 }, D: { STR: 2 } },
+            { A: { STR: 2 }, B: { DOM: 2 }, C: { AGI: 2 }, D: { COM: 2 } },
+            { A: { SOL: 2 }, B: { COM: 2 }, C: { AGI: 2 }, D: { STR: 2 } },
+            { A: { DOM: 2 }, B: { AES: 2 }, C: { AGI: 2 }, D: { STR: 2 } },
+            { A: { DOM: 2 }, B: { COM: 2 }, C: { AGI: 2 }, D: { STR: 2 } },
+            { A: { STR: 2 }, B: { COM: 2 }, C: { AGI: 2 }, D: { SEC: 2 } },
+            { A: { DOM: 2 }, B: { AGI: 2 }, C: { SOL: 2 }, D: { SEC: 2 } },
+            { A: { DOM: 2 }, B: { STR: 2 }, C: { SEC: 2 }, D: { AES: 2 } },
+            { A: { SOL: 2 }, B: { DOM: 2 }, C: { COM: 2 }, D: { AES: 2 } },
+            { A: { STR: 2 }, B: { COM: 2 }, C: { AES: 2 }, D: { DOM: 2 } },
+            { A: { STR: 2 }, B: { SEC: 2 }, C: { AGI: 2 }, D: { DOM: 2 } },
+            { A: { STR: 2 }, B: { DOM: 2 }, C: { SEC: 2 }, D: { AGI: 2 } },
+            { A: { SOL: 2 }, B: { DOM: 2 }, C: { COM: 2 }, D: { STR: 2 } },
+            { A: { STR: 2 }, B: { DOM: 2 }, C: { COM: 2 }, D: { AES: 2 } },
+            { A: { DOM: 2 }, B: { SEC: 2 }, C: { AES: 2 }, D: { SOL: 2 } },
+            { A: { DOM: 2 }, B: { STR: 2 }, C: { COM: 2 }, D: { AGI: 2 } },
+            { A: { DOM: 2 }, B: { AES: 2 }, C: { STR: 2 }, D: { SOL: 2 } },
+            { A: { DOM: 2 }, B: { COM: 2 }, C: { SEC: 2 }, D: { AGI: 2 } },
+            { A: { STR: 2 }, B: { COM: 2 }, C: { SEC: 2 }, D: { DOM: 2 } },
+            { A: { AES: 2 }, B: { DOM: 2 }, C: { SEC: 2 }, D: { SOL: 2 } },
+            { A: { STR: 2 }, B: { AES: 2 }, C: { COM: 2 }, D: { SOL: 2 } },
+            { A: { DOM: 2 }, B: { AES: 2 }, C: { COM: 2 }, D: { SEC: 2 } },
+            { A: { AGI: 2 }, B: { COM: 2 }, C: { SEC: 2 }, D: { STR: 2 } },
+            { A: { STR: 2 }, B: { DOM: 2 }, C: { AES: 2 }, D: { COM: 2 } },
+            { A: { STR: 2 }, B: { COM: 2 }, C: { SEC: 2 }, D: { DOM: 2 } },
+            { A: { AGI: 2 }, B: { COM: 2 }, C: { SEC: 2 }, D: { DOM: 2 } },
+            { A: { SOL: 2 }, B: { COM: 2 }, C: { SEC: 2 }, D: { AES: 2 } },
+            { A: { STR: 2 }, B: { COM: 2 }, C: { AGI: 2 }, D: { SOL: 2 } },
+            { A: { AGI: 2 }, B: { DOM: 2 }, C: { STR: 2 }, D: { AES: 2 } },
+            { A: { STR: 2 }, B: { COM: 2 }, C: { SEC: 2 }, D: { SOL: 2 } },
+            { A: { AES: 2 }, B: { COM: 2 }, C: { SEC: 2 }, D: { DOM: 2 } }
+        ];
+
+        // 动物原型向量数据 - 纯数学数据
+        const animalVectors = {
+            "狗": { DOM: 1, STR: 1, COM: 5, SOL: 0, AGI: 3, SEC: 4, AES: 1 },
+            "猫": { DOM: 1, STR: 2, COM: 0, SOL: 5, AGI: 4, SEC: 2, AES: 3 },
+            "狼": { DOM: 4, STR: 4, COM: 3, SOL: 2, AGI: 2, SEC: 1, AES: 0 },
+            "狐": { DOM: 1, STR: 5, COM: 0, SOL: 4, AGI: 4, SEC: 1, AES: 1 },
+            "狮": { DOM: 5, STR: 2, COM: 3, SOL: 3, AGI: 1, SEC: 2, AES: 2 },
+            "熊": { DOM: 3, STR: 1, COM: 1, SOL: 4, AGI: 0, SEC: 5, AES: 1 },
+            "兔": { DOM: 0, STR: 1, COM: 2, SOL: 2, AGI: 5, SEC: 5, AES: 2 },
+            "仓鼠": { DOM: 0, STR: 0, COM: 2, SOL: 4, AGI: 1, SEC: 5, AES: 1 },
+            "天鹅": { DOM: 2, STR: 1, COM: 2, SOL: 3, AGI: 1, SEC: 2, AES: 5 },
+            "鹿": { DOM: 1, STR: 1, COM: 3, SOL: 3, AGI: 3, SEC: 4, AES: 4 },
+            "鹰": { DOM: 4, STR: 3, COM: 0, SOL: 5, AGI: 2, SEC: 1, AES: 2 },
+            "乌鸦": { DOM: 2, STR: 5, COM: 4, SOL: 2, AGI: 3, SEC: 1, AES: 0 },
+            "水豚": { DOM: 0, STR: 0, COM: 5, SOL: 2, AGI: 1, SEC: 5, AES: 2 },
+            "鲸": { DOM: 2, STR: 3, COM: 4, SOL: 4, AGI: 0, SEC: 2, AES: 4 },
+            "鹦鹉": { DOM: 1, STR: 2, COM: 5, SOL: 1, AGI: 5, SEC: 1, AES: 2 },
+            "章鱼": { DOM: 2, STR: 5, COM: 0, SOL: 5, AGI: 4, SEC: 1, AES: 1 },
+            "鲨鱼": { DOM: 5, STR: 3, COM: 0, SOL: 5, AGI: 3, SEC: 0, AES: 0 },
+            "海豚": { DOM: 3, STR: 4, COM: 5, SOL: 0, AGI: 4, SEC: 1, AES: 1 },
+            "浣熊": { DOM: 1, STR: 4, COM: 2, SOL: 3, AGI: 5, SEC: 2, AES: 0 },
+            "猫鼬": { DOM: 2, STR: 3, COM: 5, SOL: 1, AGI: 3, SEC: 5, AES: 0 }
         };
 
-        answers.forEach(answer => {
-            if (scores.hasOwnProperty(answer)) {
-                scores[answer]++;
+        const dimensionKeys = ["DOM", "STR", "COM", "SOL", "AGI", "SEC", "AES"];
+        const scores = {};
+        dimensionKeys.forEach(key => scores[key] = 0);
+
+        // 计算各维度分数
+        for (let i = 0; i < answers.length && i < animalScoreMap.length; i++) {
+            const option = answers[i];
+            const mapRow = animalScoreMap[i];
+            if (!option || !mapRow) continue;
+            
+            const questionScores = mapRow[option];
+            if (!questionScores) continue;
+            
+            for (const dim of dimensionKeys) {
+                scores[dim] += (questionScores[dim] || 0);
             }
-        });
+        }
 
-        const total = answers.length;
-        const mainTrait = Object.keys(scores).reduce((a, b) => 
-            scores[a] > scores[b] ? a : b
-        );
+        // L2归一化
+        const userNormalized = this.l2Normalize(scores);
+        
+        // 寻找最佳匹配的动物
+        let bestMatchAnimal = null;
+        let bestSimilarity = -1;
 
+        for (const [animalName, animalVector] of Object.entries(animalVectors)) {
+            const animalNormalized = this.l2Normalize(animalVector);
+            const similarity = this.cosineSimilarity(userNormalized, animalNormalized);
+            
+            if (similarity > bestSimilarity) {
+                bestSimilarity = similarity;
+                bestMatchAnimal = animalName;
+            }
+        }
+        
         return {
-            score: Math.floor((scores[mainTrait] / total) * 100),
-            mainTrait: mainTrait,
-            analysis: this.generateSimpleAnalysis(mainTrait),
-            testType: 'simple'
+            animal: bestMatchAnimal,
+            similarity: bestSimilarity,
+            dimensions: scores,
+            totalScore: Object.values(scores).reduce((sum, score) => sum + score, 0),
+            testType: 'animal_personality',
+            score: Math.round(bestSimilarity * 100)
         };
     }
 
     /**
-     * 生成简单分析
+     * L2归一化函数
      */
-    generateSimpleAnalysis(trait) {
-        const analyses = {
-            'A': '你是一个独立思考者，善于分析和解决问题。在压力下保持冷静，但有时可能过于独立。',
-            'B': '你重视人际关系，善于合作。能够很好地理解他人感受，但需要注意保持个人边界。',
-            'C': '你谨慎而敏感，善于观察细节。需要更多时间来适应变化，但思考问题很全面。',
-            'D': '你行动力强，果断坚决。善于把握机会，但需要注意考虑周全再行动。'
-        };
-        return analyses[trait] || '基于你的选择，这是一个个性化的分析结果。';
+    l2Normalize(vector) {
+        let sumSquares = 0;
+        for (const key in vector) {
+            sumSquares += Math.pow(vector[key], 2);
+        }
+        const magnitude = Math.sqrt(sumSquares);
+        
+        if (magnitude === 0) return vector;
+        
+        const normalized = {};
+        for (const key in vector) {
+            normalized[key] = vector[key] / magnitude;
+        }
+        return normalized;
+    }
+
+    /**
+     * 余弦相似度计算
+     */
+    cosineSimilarity(vecA, vecB) {
+        let dotProduct = 0;
+        let magnitudeA = 0;
+        let magnitudeB = 0;
+        
+        const dimensions = Object.keys(vecA);
+        for (const dim of dimensions) {
+            const a = vecA[dim] || 0;
+            const b = vecB[dim] || 0;
+            dotProduct += a * b;
+            magnitudeA += a * a;
+            magnitudeB += b * b;
+        }
+        
+        magnitudeA = Math.sqrt(magnitudeA);
+        magnitudeB = Math.sqrt(magnitudeB);
+        
+        if (magnitudeA === 0 || magnitudeB === 0) return 0;
+        
+        return dotProduct / (magnitudeA * magnitudeB);
     }
 
     /**
      * 未来可以在这里添加其他测评的计分方法
      * 例如：
-     * calculateTest1(answers, testData) { ... }
-     * calculateTest2(answers, testData) { ... }
+     * calculateTest8(answers, testData) { ... }
+     * calculateTest9(answers, testData) { ... }
      */
 }
 
