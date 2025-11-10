@@ -185,7 +185,7 @@ const ReportComponents = {
     'dimension-radar': {
         render: (data, config) => `
             <div class="radar-chart-container">
-                <canvas id="radarChart" width="280" height="280"></canvas>
+                <canvas id="radarChart" width="270" height="270"></canvas>
             </div>
         `
     },

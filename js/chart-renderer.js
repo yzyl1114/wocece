@@ -11,8 +11,8 @@ class ChartRenderer {
         }
 
         // 设置canvas尺寸
-        canvas.width = 280;
-        canvas.height = 280;
+        canvas.width = 250;
+        canvas.height = 250;
         const ctx = canvas.getContext('2d');
         
         // 清除画布
@@ -20,7 +20,7 @@ class ChartRenderer {
 
         const centerX = canvas.width / 2;
         const centerY = canvas.height / 2;
-        const radius = Math.min(centerX, centerY) - 35;
+        const radius = Math.min(centerX, centerY) - 40;
         const angleStep = (2 * Math.PI) / dimensionsData.length;
 
         // 绘制网格和轴线
@@ -116,13 +116,13 @@ class ChartRenderer {
      */
     drawDimensionLabels(ctx, centerX, centerY, radius, dimensions, angleStep) {
         ctx.fillStyle = '#333';
-        ctx.font = 'bold 12px Arial'; // 加粗字体
+        ctx.font = '10px Arial'; 
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         
         for (let i = 0; i < dimensions.length; i++) {
             const angle = i * angleStep - Math.PI / 2;
-            const labelRadius = radius + 35; // 增加半径，避免文字被截断
+            const labelRadius = radius + 25; // 增加半径，避免文字被截断
             const x = centerX + labelRadius * Math.cos(angle);
             const y = centerY + labelRadius * Math.sin(angle);
             
