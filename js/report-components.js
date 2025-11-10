@@ -109,15 +109,15 @@ const ReportComponents = {
                 <h3>核心临床指标</h3>
                 <div class="score-details">
                     <div class="score-item">
-                        <span class="score-label">总分</span>
+                        <span class="score-label" style="color: #666;">总分</span>
                         <span class="score-value">${data.totalScore || 0}</span>
                     </div>
                     <div class="score-item">
-                        <span class="score-label">阳性项目数</span>
+                        <span class="score-label" style="color: #666;">阳性项目数</span>
                         <span class="score-value">${data.positiveItems || 0}</span>
                     </div>
                     <div class="score-item">
-                        <span class="score-label">阳性症状均分</span>
+                        <span class="score-label" style="color: #666;">阳性症状均分</span>
                         <span class="score-value">${data.positiveAverage ? data.positiveAverage.toFixed(2) : '0.00'}</span>
                     </div>
                 </div>
