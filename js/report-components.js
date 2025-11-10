@@ -672,22 +672,27 @@ const ReportComponents = {
     'animal-summary': {
         render: (data, config) => {
             const getOverallAdvice = (dimensions) => {
-                if (!dimensions) return '';
+                if (!dimensions || typeof dimensions !== 'object') {
+                    return '<div class="professional-advice"><div class="advice-title">综合建议</div><ul class="advice-list"><li>🌟 基于你的动物人格特征，在适合的环境中发挥个人优势</li><li>📈 关注各维度的平衡发展，持续个人成长</li></ul></div>';
+                }
                 
-                // 分析各维度表现
+                // 分析各维度表现 - 修复数据格式问题
+                const dimensionConfigs = {
+                    'DOM': 36, 'STR': 32, 'COM': 28, 'SOL': 32, 
+                    'AGI': 30, 'SEC': 34, 'AES': 24
+                };
+                
                 const dimensionScores = Object.entries(dimensions).map(([key, value]) => {
-                    const configs = {
-                        'DOM': 36, 'STR': 32, 'COM': 28, 'SOL': 32, 
-                        'AGI': 30, 'SEC': 34, 'AES': 24
-                    };
+                    const maxScore = dimensionConfigs[key] || 30;
+                    const percentage = value / maxScore;
                     return {
                         key,
                         value,
-                        percentage: value / configs[key],
-                        level: value / configs[key] >= 0.8 ? 'high' : 
-                            value / configs[key] >= 0.6 ? 'medium-high' :
-                            value / configs[key] >= 0.4 ? 'medium' :
-                            value / configs[key] >= 0.2 ? 'low' : 'very-low'
+                        percentage: percentage,
+                        level: percentage >= 0.8 ? 'high' : 
+                            percentage >= 0.6 ? 'medium-high' :
+                            percentage >= 0.4 ? 'medium' :
+                            percentage >= 0.2 ? 'low' : 'very-low'
                     };
                 });
 
@@ -697,42 +702,52 @@ const ReportComponents = {
                 let advice = '<div class="professional-advice"><div class="advice-title">综合建议</div><ul class="advice-list">';
                 
                 // 基于优势维度给出建议
-                if (highDimensions.some(d => d.key === 'DOM') && highDimensions.some(d => d.key === 'STR')) {
-                    advice += '<li>🎯 <strong>领导战略型</strong>：你具备优秀的领导力和战略思维，适合承担管理或决策角色，建议在团队项目中发挥主导作用</li>';
+                const hasHighDOM = highDimensions.some(d => d.key === 'DOM');
+                const hasHighSTR = highDimensions.some(d => d.key === 'STR');
+                const hasHighCOM = highDimensions.some(d => d.key === 'COM');
+                const hasHighAGI = highDimensions.some(d => d.key === 'AGI');
+                const hasHighAES = highDimensions.some(d => d.key === 'AES');
+                const hasHighSOL = highDimensions.some(d => d.key === 'SOL');
+                const hasHighSEC = highDimensions.some(d => d.key === 'SEC');
+                
+                if (hasHighDOM && hasHighSTR) {
+                    advice += '<li>🎯 <strong>领导战略型</strong>：你具备优秀的领导力和战略思维，适合承担管理或决策角色</li>';
                 }
                 
-                if (highDimensions.some(d => d.key === 'COM') && highDimensions.some(d => d.key === 'AGI')) {
-                    advice += '<li>🤝 <strong>社交适应型</strong>：你的社交能力和适应力突出，善于在不同环境中建立关系网络，适合需要频繁沟通的工作</li>';
+                if (hasHighCOM && hasHighAGI) {
+                    advice += '<li>🤝 <strong>社交适应型</strong>：你的社交能力和适应力突出，善于在不同环境中建立关系</li>';
                 }
                 
-                if (highDimensions.some(d => d.key === 'AES') && highDimensions.some(d => d.key === 'SOL')) {
-                    advice += '<li>🎨 <strong>艺术创造型</strong>：你具有强烈的审美感知和独立思考能力，适合从事创意、艺术或设计相关领域</li>';
+                if (hasHighAES && hasHighSOL) {
+                    advice += '<li>🎨 <strong>艺术创造型</strong>：你具有强烈的审美感知和独立思考能力，适合创意领域</li>';
                 }
                 
-                if (highDimensions.some(d => d.key === 'SEC') && highDimensions.some(d => d.key === 'STR')) {
-                    advice += '<li>🛡️ <strong>稳健策划型</strong>：你的安全意识和策略思维结合，适合需要谨慎规划和风险控制的工作环境</li>';
+                if (hasHighSEC && hasHighSTR) {
+                    advice += '<li>🛡️ <strong>稳健策划型</strong>：你的安全意识和策略思维结合，适合需要规划的工作</li>';
                 }
                 
                 // 基于待发展维度给出建议
                 if (lowDimensions.some(d => d.key === 'SOL')) {
-                    advice += '<li>🌱 <strong>培养独处能力</strong>：建议适当安排独处时间，这有助于深度思考、自我认知和创造力培养</li>';
+                    advice += '<li>🌱 <strong>培养独处能力</strong>：适当安排独处时间，有助于深度思考和自我认知</li>';
                 }
                 
                 if (lowDimensions.some(d => d.key === 'AGI')) {
-                    advice += '<li>🔄 <strong>提升适应能力</strong>：尝试多接触新环境和新挑战，逐步提升应对变化和不确定性的能力</li>';
+                    advice += '<li>🔄 <strong>提升适应能力</strong>：多接触新环境，提升应对变化的能力</li>';
                 }
                 
                 if (lowDimensions.some(d => d.key === 'COM')) {
-                    advice += '<li>💬 <strong>拓展社交圈</strong>：从小范围社交开始，逐步建立更广泛的人际网络，提升沟通表达能力</li>';
+                    advice += '<li>💬 <strong>拓展社交圈</strong>：逐步建立更广泛的人际网络</li>';
                 }
                 
                 if (lowDimensions.some(d => d.key === 'AES')) {
-                    advice += '<li>✨ <strong>培养审美感知</strong>：多接触艺术、音乐、自然美景，培养对美的敏感度和欣赏能力</li>';
+                    advice += '<li>✨ <strong>培养审美感知</strong>：多接触艺术和自然美景</li>';
                 }
                 
                 // 通用建议
-                advice += '<li>🌟 <strong>发挥动物特质优势</strong>：基于你的动物人格特征，在适合的环境中最大化发挥个人优势</li>';
-                advice += '<li>📈 <strong>持续个人成长</strong>：关注各维度的平衡发展，在保持优势的同时弥补相对薄弱的方面</li>';
+                if (advice === '<div class="professional-advice"><div class="advice-title">综合建议</div><ul class="advice-list">') {
+                    advice += '<li>🌟 基于你的动物人格特征，在适合的环境中发挥个人优势</li>';
+                    advice += '<li>📈 关注各维度的平衡发展，持续个人成长</li>';
+                }
                 
                 advice += '</ul></div>';
                 
