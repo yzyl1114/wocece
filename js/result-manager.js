@@ -300,13 +300,320 @@ class ResultManager {
         }
     }
 
+    /**
+     * 保存结果为图片
+     */
     async saveResultAsImage() {
-        // 图片保存逻辑（可以保持现有实现）
+        const saveBtn = document.getElementById('saveResultBtn');
+        if (!saveBtn) return;
+
+        const originalText = saveBtn.textContent;
+        
         try {
-            // 现有保存逻辑...
+            saveBtn.disabled = true;
+            saveBtn.textContent = '生成中...';
+            
+            this.showToast('正在生成图片...');
+            
+            // 创建临时容器
+            const tempContainer = document.createElement('div');
+            tempContainer.style.cssText = `
+                position: fixed;
+                left: -9999px;
+                top: -9999px;
+                width: 375px;
+                background: #f5f6fa;
+                padding: 20px;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            `;
+            
+            // 克隆报告内容
+            const originalContainer = document.querySelector('.container');
+            const contentToSave = originalContainer.cloneNode(true);
+            
+            // 移除不需要的元素
+            const elementsToRemove = contentToSave.querySelectorAll(
+                '.result-actions, .recommendations, footer'
+            );
+            elementsToRemove.forEach(el => el.remove());
+            
+            // 重新渲染雷达图（确保Canvas内容正确）
+            const tempRadarCanvas = contentToSave.querySelector('#radarChart');
+            if (tempRadarCanvas && this.resultData.dimensions) {
+                this.renderRadarChartToCanvas(tempRadarCanvas, this.resultData.dimensions);
+            }
+            
+            // 添加水印信息
+            const watermarkSection = document.createElement('section');
+            watermarkSection.className = 'watermark-section';
+            watermarkSection.innerHTML = `
+                <div class="watermark-content">
+                    <div style="text-align: center; padding: 20px; color: #666; font-size: 12px;">
+                        <div style="margin-bottom: 8px;">--- 测试结果来自 我测测 ---</div>
+                        <div>扫描二维码发现更多有趣测评</div>
+                        <div style="width: 80px; height: 80px; background: #f0f0f0; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; margin: 10px 0; border: 1px solid #eee;">
+                            <span style="color: #999; font-size: 10px;">二维码</span>
+                        </div>
+                        <div style="color: #999;">${new Date().toLocaleDateString()} 生成</div>
+                    </div>
+                </div>
+            `;
+            
+            contentToSave.appendChild(watermarkSection);
+            
+            // 添加必要的样式
+            const style = document.createElement('style');
+            style.textContent = `
+                .watermark-section {
+                    background: white;
+                    padding: 20px;
+                    margin: 20px 0;
+                    border-radius: 10px;
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                }
+                .result-header {
+                    background: linear-gradient(135deg, #667eea, #764ba2);
+                    color: white;
+                    padding: 30px 20px;
+                    text-align: center;
+                    border-radius: 0 0 20px 20px;
+                    margin: -15px -15px 20px -15px;
+                }
+                .analysis-section, .dimensions-section {
+                    background: white;
+                    padding: 20px;
+                    margin: 15px 0;
+                    border-radius: 10px;
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                }
+                .radar-chart-container {
+                    text-align: center;
+                    margin: 20px 0;
+                    padding: 15px;
+                    background: white;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                }
+                .score-details {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+                    margin-top: 15px;
+                }
+                .score-item {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 10px 0;
+                    border-bottom: 1px solid #f0f0f0;
+                }
+                .clinical-table table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    background: white;
+                    border-radius: 8px;
+                    overflow: hidden;
+                }
+                .clinical-table th,
+                .clinical-table td {
+                    padding: 12px 8px;
+                    text-align: left;
+                    border-bottom: 1px solid #f0f0f0;
+                }
+                .factor-interpretation-list {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 15px;
+                }
+                .factor-item {
+                    background: #f8f9fa;
+                    padding: 15px;
+                    border-radius: 8px;
+                }
+                .professional-advice {
+                    background: linear-gradient(135deg, #667eea, #764ba2);
+                    color: white;
+                    padding: 20px;
+                    border-radius: 10px;
+                    margin: 20px 0;
+                }
+            `;
+            
+            tempContainer.appendChild(style);
+            tempContainer.appendChild(contentToSave);
+            document.body.appendChild(tempContainer);
+            
+            // 等待渲染完成
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // 使用html2canvas生成图片
+            const canvas = await html2canvas(tempContainer, {
+                backgroundColor: '#f5f6fa',
+                scale: 2,
+                useCORS: true,
+                allowTaint: false,
+                logging: false
+            });
+            
+            // 清理临时元素
+            document.body.removeChild(tempContainer);
+            
+            // 下载图片
+            const link = document.createElement('a');
+            const testTitle = this.testConfig?.title || '心理测试';
+            const fileName = `我测测-${testTitle}-${new Date().toLocaleDateString().replace(/\//g, '-')}.png`;
+            link.download = fileName;
+            link.href = canvas.toDataURL('image/png');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            this.showToast('结果已保存到相册');
+            
         } catch (error) {
             console.error('保存失败:', error);
-            this.showToast('保存失败，请重试');
+            let errorMessage = '保存失败，请重试';
+            if (error.message.includes('html2canvas')) {
+                errorMessage = '图片生成失败，请检查浏览器兼容性';
+            }
+            this.showToast(errorMessage);
+        } finally {
+            saveBtn.disabled = false;
+            saveBtn.textContent = originalText;
+        }
+    }
+
+    /**
+     * 渲染雷达图到指定Canvas（用于截图）
+     */
+    renderRadarChartToCanvas(canvas, dimensionsData) {
+        if (!canvas || !dimensionsData) return;
+        
+        // 设置Canvas尺寸
+        canvas.width = 250;
+        canvas.height = 250;
+        const ctx = canvas.getContext('2d');
+        
+        // 清除画布
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = Math.min(centerX, centerY) - 40;
+        const angleStep = (2 * Math.PI) / dimensionsData.length;
+
+        // 绘制网格和轴线
+        this.drawRadarGrid(ctx, centerX, centerY, radius, dimensionsData, angleStep);
+        
+        // 绘制数据多边形
+        this.drawDataPolygon(ctx, centerX, centerY, radius, dimensionsData, angleStep);
+        
+        // 绘制维度标签
+        this.drawDimensionLabels(ctx, centerX, centerY, radius, dimensionsData, angleStep);
+    }
+
+    /**
+     * 雷达图网格绘制（复用chart-renderer的逻辑）
+     */
+    drawRadarGrid(ctx, centerX, centerY, radius, dimensions, angleStep) {
+        ctx.strokeStyle = '#e0e0e0';
+        ctx.lineWidth = 1;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.font = '10px Arial';
+        
+        // 绘制同心圆网格
+        for (let i = 1; i <= 5; i++) {
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius * i / 5, 0, 2 * Math.PI);
+            ctx.stroke();
+            
+            if (i === 5) {
+                ctx.fillStyle = '#999';
+                ctx.fillText(i.toString(), centerX, centerY - radius * i / 5 - 8);
+            }
+        }
+
+        // 绘制维度轴线
+        ctx.strokeStyle = '#ccc';
+        ctx.lineWidth = 1;
+        for (let i = 0; i < dimensions.length; i++) {
+            const angle = i * angleStep - Math.PI / 2;
+            const x = centerX + radius * Math.cos(angle);
+            const y = centerY + radius * Math.sin(angle);
+            
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+        }
+    }
+
+    /**
+     * 数据多边形绘制
+     */
+    drawDataPolygon(ctx, centerX, centerY, radius, dimensions, angleStep) {
+        ctx.fillStyle = 'rgba(102, 126, 234, 0.3)';
+        ctx.strokeStyle = '#667eea';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+
+        for (let i = 0; i < dimensions.length; i++) {
+            const angle = i * angleStep - Math.PI / 2;
+            const valueRadius = radius * (dimensions[i].score / 100);
+            const x = centerX + valueRadius * Math.cos(angle);
+            const y = centerY + valueRadius * Math.sin(angle);
+            
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // 绘制数据点
+        ctx.fillStyle = '#667eea';
+        for (let i = 0; i < dimensions.length; i++) {
+            const angle = i * angleStep - Math.PI / 2;
+            const valueRadius = radius * (dimensions[i].score / 100);
+            const x = centerX + valueRadius * Math.cos(angle);
+            const y = centerY + valueRadius * Math.sin(angle);
+            
+            ctx.beginPath();
+            ctx.arc(x, y, 3, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+    }
+
+    /**
+     * 维度标签绘制
+     */
+    drawDimensionLabels(ctx, centerX, centerY, radius, dimensions, angleStep) {
+        ctx.fillStyle = '#333';
+        ctx.font = '10px Arial'; 
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        for (let i = 0; i < dimensions.length; i++) {
+            const angle = i * angleStep - Math.PI / 2;
+            const labelRadius = radius + 25;
+            const x = centerX + labelRadius * Math.cos(angle);
+            const y = centerY + labelRadius * Math.sin(angle);
+            
+            const dim = dimensions[i];
+            const dimensionTotal = dim.totalScore || dim.rawScore || 0;
+            const labelText = `${dim.name}\n${dimensionTotal}`;
+            
+            const lines = labelText.split('\n');
+            lines.forEach((line, index) => {
+                ctx.fillStyle = 'white';
+                ctx.fillText(line, x + 1, y + (index * 14) + 1);
+                ctx.fillStyle = '#333';
+                ctx.fillText(line, x, y + (index * 14));
+            });
         }
     }
 
@@ -320,7 +627,65 @@ class ResultManager {
         }
     }
 
-    loadRecommendations() {
-        // 推荐测试加载逻辑（保持现有实现）
+    /**
+     * 加载推荐测试
+     */
+    async loadRecommendations() {
+        try {
+            const recommendations = await this.getRandomRecommendations(3);
+            this.renderRecommendations(recommendations);
+        } catch (error) {
+            console.error('加载推荐失败:', error);
+        }
+    }
+
+    /**
+     * 获取随机推荐测试
+     */
+    async getRandomRecommendations(count = 3) {
+        try {
+            const response = await fetch('data/tests.json');
+            const data = await response.json();
+            const allTests = Object.values(data.tests);
+            
+            // 过滤掉当前测试
+            const availableTests = allTests.filter(test => test.id !== this.testId);
+            
+            // 随机选择
+            const shuffled = availableTests.sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        } catch (error) {
+            console.error('获取推荐测试失败:', error);
+            return [];
+        }
+    }
+
+    /**
+     * 渲染推荐测试
+     */
+    renderRecommendations(recommendations) {
+        const container = document.getElementById('recommendationList');
+        if (!container || !recommendations.length) return;
+
+        container.innerHTML = recommendations.map(test => `
+            <div class="test-list-item" data-test-id="${test.id}">
+                <div class="test-thumb" style="background: linear-gradient(135deg, #667eea, #764ba2);"></div>
+                <div class="test-info">
+                    <div class="test-title">${test.title}</div>
+                    <div class="test-desc">${test.description}</div>
+                </div>
+                <button class="small-btn" onclick="window.location.href='detail.html?id=${test.id}'">前往</button>
+            </div>
+        `).join('');
+
+        // 绑定点击事件
+        container.querySelectorAll('.test-list-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                if (!e.target.classList.contains('small-btn')) {
+                    const testId = item.dataset.testId;
+                    window.location.href = `detail.html?id=${testId}`;
+                }
+            });
+        });
     }
 }
