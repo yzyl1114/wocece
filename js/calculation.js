@@ -102,7 +102,6 @@ class CalculationManager {
         return result;
     }
 
-    // 新增：生成详细分析方法
     generateDetailedAnalysis(result) {
         const totalQuestions = 90;
         const positivePercentage = Math.round((result.positiveItems / totalQuestions) * 100);

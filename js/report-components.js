@@ -325,15 +325,13 @@ const ReportComponents = {
 
     'professional-summary': {
         render: (data, config) => {
-            const summary = data.overallAssessment || { description: '测试完成，感谢您的参与。' };
+            const summary = data.overallAssessment || {};
             const highDimensions = (data.dimensions || []).filter(dim => dim.isHigh);
             
             return `
                 <section class="analysis-section">
                     <h3>专业总结</h3>
                     <div class="professional-summary-content">
-                        <p>${summary.description || summary}</p>
-                        
                         ${summary.suggestion ? `
                         <div class="summary-point">
                             <strong>主要建议：</strong>${summary.suggestion}

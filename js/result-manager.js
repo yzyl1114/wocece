@@ -183,8 +183,8 @@ class ResultManager {
     renderSCL90Report() {
         console.log('🎯 执行 renderSCL90Report - SCL-90专业报告');
         
-        // 强制使用SCL-90专业模板
-        const template = this.templateEngine.getTemplate('scl90-professional');
+        // 使用正确的模板获取方式
+        const template = this.templateEngine.getTemplate(this.testConfig);
         console.log('📋 SCL-90模板组件:', template.components);
         
         // 渲染模板

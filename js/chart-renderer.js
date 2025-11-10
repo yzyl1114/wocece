@@ -43,16 +43,16 @@ class ChartRenderer {
         ctx.textBaseline = 'middle';
         ctx.font = '10px Arial';
         
-        // 绘制同心圆网格
+        // 绘制同心圆网格 - 改为5个等级，对应1-5分
         for (let i = 1; i <= 5; i++) {
             ctx.beginPath();
             ctx.arc(centerX, centerY, radius * i / 5, 0, 2 * Math.PI);
             ctx.stroke();
             
-            // 绘制刻度值 (0-100)
+            // 绘制刻度值 (1-5分)
             if (i === 5) {
                 ctx.fillStyle = '#999';
-                ctx.fillText((i * 20).toString(), centerX, centerY - radius * i / 5 - 8);
+                ctx.fillText(i.toString(), centerX, centerY - radius * i / 5 - 8);
             }
         }
 
