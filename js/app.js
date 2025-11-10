@@ -73,7 +73,7 @@ class PsychTestApp {
     }
 
     loadTestData() {
-        // 测试数据 - 包含6个测试
+        // 测试数据
         this.tests = [
             {
                 id: '1',
@@ -129,6 +129,16 @@ class PsychTestApp {
                 price: 0,
                 questions: 90,
                 image: 'images/scl90.jpg'
+            },
+            {
+                id: '7',  // 动物塑测试
+                title: '动物人格测试',
+                description: '揭秘你的灵魂动物原型，发现隐藏人格特质',
+                category: 'fun',
+                templateType: 'fun', // 新增字段
+                price: 1,
+                questions: 60,
+                image: 'images/test7.jpg'
             }            
         ];
     }
