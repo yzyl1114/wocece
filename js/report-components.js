@@ -40,10 +40,11 @@ const ReportComponents = {
     // 修改 professional-header 组件
     'professional-header': {
         render: (data, config) => `
-            <section class="result-header">
+            <section class="result-header" style="padding: 20px;">
+                <div class="result-title" style="margin-bottom: 10px; font-size: 18px; font-weight: bold;">测评报告</div>
                 <div class="result-content">
-                    <div class="score-number">${data.score || 0}</div>
-                    <div class="score-label">总分</div>
+                    <div class="score-number" style="font-size: 48px;">${data.score || 0}</div>
+                    <div class="score-label" style="color: white; opacity: 0.9;">总分</div>
                 </div>
             </section>
         `
