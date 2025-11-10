@@ -358,43 +358,136 @@ const ReportComponents = {
 
     'animal-dimensions': {
         render: (data, config) => {
-            if (!data.dimensions) return '';
-            
-            const dimensionsMap = {
-                'DOM': { name: '支配性', desc: '领导力与掌控欲' },
-                'STR': { name: '策略性', desc: '智慧与谋略' },
-                'COM': { name: '社交性', desc: '亲和力与沟通' },
-                'SOL': { name: '孤独性', desc: '独立与内省' },
-                'AGI': { name: '灵活性', desc: '适应与变通' },
-                'SEC': { name: '安全性', desc: '稳定与守护' },
-                'AES': { name: '审美性', desc: '艺术与美感' }
+            const dimensionConfigs = {
+                'DOM': { max: 36, name: '支配性', desc: '领导力与掌控欲' },
+                'STR': { max: 32, name: '策略性', desc: '智慧与谋略' },
+                'COM': { max: 28, name: '社交性', desc: '亲和力与沟通' },
+                'SOL': { max: 32, name: '孤独性', desc: '独立与内省' },
+                'AGI': { max: 30, name: '灵活性', desc: '适应与变通' },
+                'SEC': { max: 34, name: '安全性', desc: '稳定与守护' },
+                'AES': { max: 24, name: '审美性', desc: '艺术与美感' }
             };
             
+            // 获取维度等级
+            const getDimensionLevel = (percentage) => {
+                if (percentage >= 80) return 'high';
+                if (percentage >= 60) return 'medium-high';
+                if (percentage >= 40) return 'medium';
+                if (percentage >= 20) return 'low';
+                return 'very-low';
+            };
+            
+            // 获取等级文本
+            const getLevelText = (level) => {
+                const levels = {
+                    'high': '高',
+                    'medium-high': '中高', 
+                    'medium': '中等',
+                    'low': '低',
+                    'very-low': '很低'
+                };
+                return levels[level] || '中等';
+            };
+            
+            // 获取详细分析
+            const getDetailedDimensionAnalysis = (key, value, percentage) => {
+                const analyses = {
+                    'DOM': {
+                        high: '你具有很强的领导潜质和决策能力，在群体中往往扮演主导角色，善于掌控局面并推动事情发展',
+                        'medium-high': '你具备良好的领导能力，能够在需要时承担领导责任，但也会尊重他人意见',
+                        medium: '你在领导力方面表现均衡，既不过分强势也不过分被动，善于团队协作',
+                        low: '你更倾向于合作而非主导，享受团队协作的过程，愿意跟随有能力的领导者',
+                        'very-low': '你偏好跟随而非领导，在团队中通常扮演支持角色，避免承担领导责任'
+                    },
+                    'STR': {
+                        high: '你拥有出色的策略思维和问题解决能力，善于制定长远计划并预见潜在问题',
+                        'medium-high': '你具备良好的分析能力和策略思维，能够有效解决复杂问题并制定合理计划',
+                        medium: '你在策略思考方面表现均衡，能够应对大多数日常情况，具备基本的问题解决能力',
+                        low: '你更注重直觉和感性，策略思维相对保守，倾向于简单直接的解决方案',
+                        'very-low': '你倾向于简单直接的解决方案，避免复杂策略思考，更相信直觉和运气'
+                    },
+                    'COM': {
+                        high: '你拥有卓越的社交能力和沟通技巧，善于建立广泛的人际关系网络，是人群中的焦点',
+                        'medium-high': '你具备良好的社交能力，能够轻松与人建立联系，在社交场合中游刃有余',
+                        medium: '你在社交方面表现均衡，能够维持稳定的社交圈，在需要时展现良好的沟通能力',
+                        low: '你的社交圈相对较小但质量很高，更注重深度关系而非广泛社交',
+                        'very-low': '你倾向于小范围深度社交或独处，在大型社交场合可能感到不适'
+                    },
+                    'SOL': {
+                        high: '你非常享受独处时光，拥有丰富的内心世界，独立思考能力强且不依赖外部认可',
+                        'medium-high': '你具备较强的独立能力，经常需要独处时间来充电和思考，享受个人空间',
+                        medium: '你在独处和社交间保持良好平衡，既能享受群体活动，也需要适当的个人时间',
+                        low: '你更倾向于群体活动，享受与他人相处的时光，独处时间相对较少',
+                        'very-low': '你非常依赖社交环境，很少感到需要独处，在群体中才能获得能量'
+                    },
+                    'AGI': {
+                        high: '你具有极强的适应能力和灵活性，能够快速适应环境变化并找到最优解决方案',
+                        'medium-high': '你具备良好的适应能力，面对变化时能够保持冷静并快速调整策略',
+                        medium: '你在适应性方面表现稳定，能够应对大多数变化，但需要一定时间来完全适应',
+                        low: '你偏好稳定和可预测的环境，面对变化时需要更多时间来适应和调整',
+                        'very-low': '你非常依赖固定模式和熟悉环境，面对变化时容易感到焦虑和不适'
+                    },
+                    'SEC': {
+                        high: '你具有强烈的安全意识和守护本能，非常重视稳定性和可预测性，善于建立安全环境',
+                        'medium-high': '你具备良好的安全意识，重视稳定和秩序，但也能在必要时接受适度风险',
+                        medium: '你在安全需求方面表现均衡，既重视稳定性也愿意在可控范围内尝试新事物',
+                        low: '你对安全性的需求相对较低，更愿意尝试新事物和接受挑战，不太担心风险',
+                        'very-low': '你非常喜欢冒险和变化，对安全稳定的需求很低，享受不确定性和新鲜感'
+                    },
+                    'AES': {
+                        high: '你具有极高的审美敏感度和艺术感知力，对美有独到见解，善于发现和创造美',
+                        'medium-high': '你具备良好的审美能力，对艺术和美有较强感知，重视生活品质和美感',
+                        medium: '你在审美方面表现均衡，能够欣赏美的事物，但不会过度追求艺术表达',
+                        low: '你对美的感知相对实用主义，更注重功能性而非纯粹的美学价值',
+                        'very-low': '你非常注重实用性，对艺术和美学的兴趣较低，更关注事物的实际功能'
+                    }
+                };
+                
+                const dimAnalysis = analyses[key] || analyses['DOM'];
+                return dimAnalysis[getDimensionLevel(percentage)] || '该维度表现均衡';
+            };
+
             let html = `
                 <section class="analysis-section">
                     <h3>📊 人格维度分析</h3>
-                    <div class="dimensions-list">
+                    <div class="dimensions-detail">
             `;
             
-            Object.entries(data.dimensions).forEach(([key, value]) => {
-                const dimInfo = dimensionsMap[key] || { name: key, desc: '' };
-                const percentage = Math.min(100, (value / 40) * 100); // 假设满分40
-                const isHigh = value > 20; // 超过20分算高分
+            Object.entries(data.dimensions || {}).forEach(([key, value]) => {
+                const dimConfig = dimensionConfigs[key];
+                if (!dimConfig) return;
+                
+                const percentage = Math.min(100, (value / dimConfig.max) * 100);
+                const level = getDimensionLevel(percentage);
+                const levelText = getLevelText(level);
                 
                 html += `
-                    <div class="dimension-item ${isHigh ? 'high-score' : ''}">
+                    <div class="dimension-card ${level}">
                         <div class="dimension-header">
-                            <div>
-                                <span class="dimension-name">${dimInfo.name}</span>
-                                <div class="dimension-desc" style="font-size: 12px; color: #666; margin-top: 2px;">${dimInfo.desc}</div>
+                            <div class="dimension-title">
+                                <h4>${dimConfig.name}</h4>
+                                <span class="dimension-desc">${dimConfig.desc}</span>
                             </div>
-                            <span class="dimension-score ${isHigh ? 'high-text' : ''}">${value}</span>
+                            <div class="dimension-score-display">
+                                <span class="score">${value}<small>/${dimConfig.max}</small></span>
+                                <span class="level-badge ${level}">${levelText}</span>
+                            </div>
                         </div>
-                        <div class="dimension-bar">
-                            <div class="dimension-progress" style="width: ${percentage}%"></div>
+                        
+                        <div class="dimension-progress-container">
+                            <div class="progress-labels">
+                                <span>低</span>
+                                <span>中</span>
+                                <span>高</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill ${level}" style="width: ${percentage}%"></div>
+                                <div class="progress-marker" style="left: ${percentage}%"></div>
+                            </div>
                         </div>
-                        <div class="dimension-analysis" style="font-size: 13px; color: #666; margin-top: 5px;">
-                            ${getDimensionAnalysis(key, value)}
+                        
+                        <div class="dimension-analysis">
+                            ${getDetailedDimensionAnalysis(key, value, percentage)}
                         </div>
                     </div>
                 `;
@@ -572,6 +665,81 @@ const ReportComponents = {
                     </ul>
                 </div>
             `;
+        }
+    },
+
+    // 动物测试报告建议
+    'animal-summary': {
+        render: (data, config) => {
+            const getOverallAdvice = (dimensions) => {
+                if (!dimensions) return '';
+                
+                // 分析各维度表现
+                const dimensionScores = Object.entries(dimensions).map(([key, value]) => {
+                    const configs = {
+                        'DOM': 36, 'STR': 32, 'COM': 28, 'SOL': 32, 
+                        'AGI': 30, 'SEC': 34, 'AES': 24
+                    };
+                    return {
+                        key,
+                        value,
+                        percentage: value / configs[key],
+                        level: value / configs[key] >= 0.8 ? 'high' : 
+                            value / configs[key] >= 0.6 ? 'medium-high' :
+                            value / configs[key] >= 0.4 ? 'medium' :
+                            value / configs[key] >= 0.2 ? 'low' : 'very-low'
+                    };
+                });
+
+                const highDimensions = dimensionScores.filter(d => d.level === 'high' || d.level === 'medium-high');
+                const lowDimensions = dimensionScores.filter(d => d.level === 'low' || d.level === 'very-low');
+
+                let advice = '<div class="professional-advice"><div class="advice-title">综合建议</div><ul class="advice-list">';
+                
+                // 基于优势维度给出建议
+                if (highDimensions.some(d => d.key === 'DOM') && highDimensions.some(d => d.key === 'STR')) {
+                    advice += '<li>🎯 <strong>领导战略型</strong>：你具备优秀的领导力和战略思维，适合承担管理或决策角色，建议在团队项目中发挥主导作用</li>';
+                }
+                
+                if (highDimensions.some(d => d.key === 'COM') && highDimensions.some(d => d.key === 'AGI')) {
+                    advice += '<li>🤝 <strong>社交适应型</strong>：你的社交能力和适应力突出，善于在不同环境中建立关系网络，适合需要频繁沟通的工作</li>';
+                }
+                
+                if (highDimensions.some(d => d.key === 'AES') && highDimensions.some(d => d.key === 'SOL')) {
+                    advice += '<li>🎨 <strong>艺术创造型</strong>：你具有强烈的审美感知和独立思考能力，适合从事创意、艺术或设计相关领域</li>';
+                }
+                
+                if (highDimensions.some(d => d.key === 'SEC') && highDimensions.some(d => d.key === 'STR')) {
+                    advice += '<li>🛡️ <strong>稳健策划型</strong>：你的安全意识和策略思维结合，适合需要谨慎规划和风险控制的工作环境</li>';
+                }
+                
+                // 基于待发展维度给出建议
+                if (lowDimensions.some(d => d.key === 'SOL')) {
+                    advice += '<li>🌱 <strong>培养独处能力</strong>：建议适当安排独处时间，这有助于深度思考、自我认知和创造力培养</li>';
+                }
+                
+                if (lowDimensions.some(d => d.key === 'AGI')) {
+                    advice += '<li>🔄 <strong>提升适应能力</strong>：尝试多接触新环境和新挑战，逐步提升应对变化和不确定性的能力</li>';
+                }
+                
+                if (lowDimensions.some(d => d.key === 'COM')) {
+                    advice += '<li>💬 <strong>拓展社交圈</strong>：从小范围社交开始，逐步建立更广泛的人际网络，提升沟通表达能力</li>';
+                }
+                
+                if (lowDimensions.some(d => d.key === 'AES')) {
+                    advice += '<li>✨ <strong>培养审美感知</strong>：多接触艺术、音乐、自然美景，培养对美的敏感度和欣赏能力</li>';
+                }
+                
+                // 通用建议
+                advice += '<li>🌟 <strong>发挥动物特质优势</strong>：基于你的动物人格特征，在适合的环境中最大化发挥个人优势</li>';
+                advice += '<li>📈 <strong>持续个人成长</strong>：关注各维度的平衡发展，在保持优势的同时弥补相对薄弱的方面</li>';
+                
+                advice += '</ul></div>';
+                
+                return advice;
+            };
+
+            return getOverallAdvice(data.dimensions);
         }
     },
 

@@ -41,6 +41,7 @@ class TemplateEngine {
                 'animal-similarity', 
                 'animal-description',
                 'animal-dimensions',
+                'animal-summary',
                 'save-actions'
             ],
             styles: 'fun-styles'

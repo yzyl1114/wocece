@@ -914,6 +914,210 @@ body {
     border-bottom: none;
 }
 
+/* 人格维度分析样式 */
+.dimensions-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.dimension-card {
+    background: white;
+    padding: 18px;
+    border-radius: 12px;
+    border-left: 4px solid #e0e0e0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+.dimension-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.dimension-card.high {
+    border-left-color: #ff4757;
+    background: linear-gradient(135deg, #fff5f5, #fff);
+}
+
+.dimension-card.medium-high {
+    border-left-color: #ffa502;
+    background: linear-gradient(135deg, #fff9e6, #fff);
+}
+
+.dimension-card.medium {
+    border-left-color: #ffd32a;
+    background: linear-gradient(135deg, #fffde6, #fff);
+}
+
+.dimension-card.low {
+    border-left-color: #2ed573;
+    background: linear-gradient(135deg, #f1fff7, #fff);
+}
+
+.dimension-card.very-low {
+    border-left-color: #dfe4ea;
+    background: linear-gradient(135deg, #f8f9fa, #fff);
+}
+
+.dimension-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.dimension-title h4 {
+    margin: 0 0 4px 0;
+    color: #333;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.dimension-desc {
+    color: #666;
+    font-size: 13px;
+}
+
+.dimension-score-display {
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.score {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    display: block;
+}
+
+.score small {
+    font-size: 12px;
+    color: #999;
+    font-weight: normal;
+}
+
+.level-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: bold;
+    margin-top: 4px;
+    text-align: center;
+    min-width: 40px;
+}
+
+.level-badge.high {
+    background: #ff4757;
+    color: white;
+}
+
+.level-badge.medium-high {
+    background: #ffa502;
+    color: white;
+}
+
+.level-badge.medium {
+    background: #ffd32a;
+    color: #333;
+}
+
+.level-badge.low {
+    background: #2ed573;
+    color: white;
+}
+
+.level-badge.very-low {
+    background: #dfe4ea;
+    color: #666;
+}
+
+.dimension-progress-container {
+    margin: 15px 0;
+}
+
+.progress-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #999;
+    margin-bottom: 6px;
+}
+
+.progress-bar {
+    height: 8px;
+    background: #f0f0f0;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 1s ease;
+}
+
+.progress-fill.high {
+    background: linear-gradient(90deg, #ff4757, #ff6b81);
+}
+
+.progress-fill.medium-high {
+    background: linear-gradient(90deg, #ffa502, #ffb142);
+}
+
+.progress-fill.medium {
+    background: linear-gradient(90deg, #ffd32a, #ffdd59);
+}
+
+.progress-fill.low {
+    background: linear-gradient(90deg, #2ed573, #26de81);
+}
+
+.progress-fill.very-low {
+    background: linear-gradient(90deg, #a4b0be, #dfe4ea);
+}
+
+.progress-marker {
+    position: absolute;
+    top: -2px;
+    width: 12px;
+    height: 12px;
+    background: #333;
+    border: 2px solid white;
+    border-radius: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.dimension-analysis {
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #555;
+    border-left: 3px solid #667eea;
+}
+
+/* 响应式调整 */
+@media (max-width: 480px) {
+    .dimension-header {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .dimension-score-display {
+        text-align: left;
+        width: 100%;
+    }
+    
+    .dimension-card {
+        padding: 15px;
+    }
+}
+
 /* 响应式调整 */
 @media (max-width: 480px) {
     .scl90-factor-grid {
