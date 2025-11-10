@@ -116,23 +116,28 @@ class ChartRenderer {
      */
     drawDimensionLabels(ctx, centerX, centerY, radius, dimensions, angleStep) {
         ctx.fillStyle = '#333';
-        ctx.font = '12px Arial';
+        ctx.font = 'bold 12px Arial'; // 加粗字体
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         
         for (let i = 0; i < dimensions.length; i++) {
             const angle = i * angleStep - Math.PI / 2;
-            const labelRadius = radius + 30;
+            const labelRadius = radius + 35; // 增加半径，避免文字被截断
             const x = centerX + labelRadius * Math.cos(angle);
             const y = centerY + labelRadius * Math.sin(angle);
             
-            // 显示维度名称和因子分
+            // 显示维度名称和维度总分
             const dim = dimensions[i];
-            const labelText = `${dim.name}\n${dim.averageScore ? dim.averageScore.toFixed(2) : '0.00'}`;
+            const dimensionTotal = dim.totalScore || dim.rawScore || 0;
+            const labelText = `${dim.name}\n${dimensionTotal}`;
             
             // 绘制多行文本
             const lines = labelText.split('\n');
             lines.forEach((line, index) => {
+                // 设置文字阴影提高可读性
+                ctx.fillStyle = 'white';
+                ctx.fillText(line, x + 1, y + (index * 14) + 1);
+                ctx.fillStyle = '#333';
                 ctx.fillText(line, x, y + (index * 14));
             });
         }

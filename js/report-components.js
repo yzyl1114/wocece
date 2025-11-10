@@ -41,7 +41,6 @@ const ReportComponents = {
     'professional-header': {
         render: (data, config) => `
             <section class="result-header">
-                <div class="result-title">专业评估报告</div>
                 <div class="result-content">
                     <div class="score-number">${data.score || 0}</div>
                     <div class="score-label">总分</div>
@@ -105,26 +104,23 @@ const ReportComponents = {
 
     'clinical-indicators': {
         render: (data, config) => `
-            <div class="professional-indicators">
+            <section class="analysis-section">
                 <h3>核心临床指标</h3>
-                <div class="indicator-grid">
-                    <div class="indicator-item ${data.totalScore > 160 ? 'abnormal' : ''}">
-                        <div class="indicator-value">${data.totalScore || 0}</div>
-                        <div class="indicator-label">总分</div>
-                        <div class="indicator-reference">参考: &lt;160</div>
+                <div class="score-details">
+                    <div class="score-item">
+                        <span class="score-label">总分</span>
+                        <span class="score-value">${data.totalScore || 0}</span>
                     </div>
-                    <div class="indicator-item">
-                        <div class="indicator-value">${data.positiveItems || 0}</div>
-                        <div class="indicator-label">阳性项目</div>
-                        <div class="indicator-reference">参考: &lt;43</div>
+                    <div class="score-item">
+                        <span class="score-label">阳性项目数</span>
+                        <span class="score-value">${data.positiveItems || 0}</span>
                     </div>
-                    <div class="indicator-item">
-                        <div class="indicator-value">${data.positiveAverage ? data.positiveAverage.toFixed(2) : '0.00'}</div>
-                        <div class="indicator-label">阳性均分</div>
-                        <div class="indicator-reference">-</div>
+                    <div class="score-item">
+                        <span class="score-label">阳性症状均分</span>
+                        <span class="score-value">${data.positiveAverage ? data.positiveAverage.toFixed(2) : '0.00'}</span>
                     </div>
                 </div>
-            </div>
+            </section>
         `
     },
 
@@ -156,31 +152,31 @@ const ReportComponents = {
         render: (data, config) => {
             const dimensions = data.dimensions || [];
             return `
-                <div class="clinical-table">
+                <section class="analysis-section">
                     <h3>各维度详细分析</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>维度</th>
-                                <th>因子分</th>
-                                <th>总分</th>
-                                <th>状态</th>
-                                <th>参考范围</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${dimensions.map(dim => `
-                                <tr class="${dim.isHigh ? 'abnormal' : 'normal'}">
-                                    <td>${dim.name}</td>
-                                    <td>${dim.averageScore ? dim.averageScore.toFixed(2) : '0.00'}</td>
-                                    <td>${dim.totalScore || dim.score}</td>
-                                    <td>${dim.isHigh ? '⚠️ 异常' : '✅ 正常'}</td>
-                                    <td>${dim.scoreRange || '-'}</td>
+                    <div class="clinical-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>维度</th>
+                                    <th>因子分</th>
+                                    <th>总分</th>
+                                    <th>状态</th>
                                 </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                ${dimensions.map(dim => `
+                                    <tr class="${dim.isHigh ? 'abnormal' : 'normal'}">
+                                        <td>${dim.name}</td>
+                                        <td>${dim.averageScore ? dim.averageScore.toFixed(2) : '0.00'}</td>
+                                        <td>${dim.totalScore || dim.rawScore || 0}</td>
+                                        <td>${dim.isHigh ? '⚠️ 异常' : '✅ 正常'}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
             `;
         }
     },
@@ -286,7 +282,7 @@ const ReportComponents = {
                             <div class="factor-item ${dim.isHigh ? 'high-factor' : ''}">
                                 <div class="factor-header">
                                     <div class="factor-name">${dim.name}</div>
-                                    <div class="factor-score">${dim.averageScore ? dim.averageScore.toFixed(2) : '0.00'}</div>
+                                    <div class="factor-score">${dim.totalScore || dim.rawScore || 0}</div>
                                     <div class="factor-assessment ${dim.isHigh ? 'high' : 'normal'}">
                                         ${dim.isHigh ? '需关注' : '正常'}
                                     </div>
@@ -328,33 +324,29 @@ const ReportComponents = {
             const summary = data.overallAssessment || {};
             const highDimensions = (data.dimensions || []).filter(dim => dim.isHigh);
             
+            const adviceItems = [];
+            
+            if (summary.suggestion) {
+                adviceItems.push(summary.suggestion);
+            }
+            
+            if (highDimensions.length > 0) {
+                adviceItems.push(`重点关注维度：${highDimensions.map(dim => dim.name).join('、')}`);
+            }
+            
+            if (summary.factorSuggestion) {
+                adviceItems.push(summary.factorSuggestion);
+            }
+            
+            adviceItems.push('本测试结果仅供参考，不能替代专业医疗诊断。如有需要，请咨询专业心理医生或精神科医生。');
+            
             return `
-                <section class="analysis-section">
-                    <h3>专业总结</h3>
-                    <div class="professional-summary-content">
-                        ${summary.suggestion ? `
-                        <div class="summary-point">
-                            <strong>主要建议：</strong>${summary.suggestion}
-                        </div>
-                        ` : ''}
-                        
-                        ${highDimensions.length > 0 ? `
-                        <div class="summary-point">
-                            <strong>重点关注维度：</strong>${highDimensions.map(dim => dim.name).join('、')}
-                        </div>
-                        ` : ''}
-                        
-                        ${summary.factorSuggestion ? `
-                        <div class="summary-point">
-                            <strong>维度建议：</strong>${summary.factorSuggestion}
-                        </div>
-                        ` : ''}
-                        
-                        <div class="summary-point">
-                            <strong>温馨提示：</strong>本测试结果仅供参考，不能替代专业医疗诊断。如有需要，请咨询专业心理医生或精神科医生。
-                        </div>
-                    </div>
-                </section>
+                <div class="professional-advice">
+                    <div class="advice-title">专业总结</div>
+                    <ul class="advice-list">
+                        ${adviceItems.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
             `;
         }
     },

@@ -29,9 +29,7 @@ class TemplateEngine {
                 'dimension-radar', 
                 'clinical-table',
                 'factor-interpretation', 
-                'risk-assessment',
                 'professional-summary', 
-                'professional-advice',
                 'save-actions'
             ],
             styles: 'clinical-styles'
