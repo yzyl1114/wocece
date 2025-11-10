@@ -115,22 +115,26 @@ class ChartRenderer {
      * 绘制维度标签
      */
     drawDimensionLabels(ctx, centerX, centerY, radius, dimensions, angleStep) {
-        ctx.fillStyle = '#666';
-        ctx.font = '10px Arial';
+        ctx.fillStyle = '#333';
+        ctx.font = '12px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
         
         for (let i = 0; i < dimensions.length; i++) {
-            const angle = i * angleStep - Math.PPI / 2;
-            const labelRadius = radius + 25;
+            const angle = i * angleStep - Math.PI / 2;
+            const labelRadius = radius + 30;
             const x = centerX + labelRadius * Math.cos(angle);
             const y = centerY + labelRadius * Math.sin(angle);
             
-            // 处理标签文本 - 截断过长的文本
-            let labelText = dimensions[i].name;
-            if (labelText.length > 4) {
-                labelText = labelText.substring(0, 4);
-            }
+            // 显示维度名称和因子分
+            const dim = dimensions[i];
+            const labelText = `${dim.name}\n${dim.averageScore ? dim.averageScore.toFixed(2) : '0.00'}`;
             
-            ctx.fillText(labelText, x, y);
+            // 绘制多行文本
+            const lines = labelText.split('\n');
+            lines.forEach((line, index) => {
+                ctx.fillText(line, x, y + (index * 14));
+            });
         }
     }
 

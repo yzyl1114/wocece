@@ -25,9 +25,12 @@ class TemplateEngine {
             components: [
                 'professional-header',
                 'clinical-indicators',
+                'detailed-analysis', 
                 'dimension-radar', 
                 'clinical-table',
+                'factor-interpretation', 
                 'risk-assessment',
+                'professional-summary', 
                 'professional-advice',
                 'save-actions'
             ],

@@ -1,4 +1,3 @@
-// js/report-components.js - 完整修复版
 const ReportComponents = {
     // === 头部组件 ===
     'fun-header': {
@@ -26,28 +25,46 @@ const ReportComponents = {
         }
     },
 
-    'professional-header': {
-        render: (data, config) => `
-            <section class="result-header">
-                <div class="result-title">专业评估报告</div>
-                <div class="result-content">
-                    <div class="score-number">${data.score || 0}</div>
-                    <div class="score-label">综合评分</div>
-                </div>
-            </section>
-        `
-    },
-
     'standard-header': {
         render: (data, config) => `
             <section class="result-header">
                 <div class="result-title">测试完成</div>
                 <div class="result-content">
                     <div class="score-number">${data.score || 0}</div>
-                    <div class="score-label">综合评分</div>
+                    <div class="score-label">总分</div>
                 </div>
             </section>
         `
+    },
+
+    // 修改 professional-header 组件
+    'professional-header': {
+        render: (data, config) => `
+            <section class="result-header">
+                <div class="result-title">专业评估报告</div>
+                <div class="result-content">
+                    <div class="score-number">${data.score || 0}</div>
+                    <div class="score-label">总分</div>
+                </div>
+            </section>
+        `
+    },
+
+    // 新增详细分析组件
+    'detailed-analysis': {
+        render: (data, config) => {
+            if (data.detailedAnalysis) {
+                return `
+                    <section class="analysis-section">
+                        <h3>结果分析</h3>
+                        <div class="analysis-content">
+                            <p>${data.detailedAnalysis}</p>
+                        </div>
+                    </section>
+                `;
+            }
+            return '';
+        }
     },
 
     // === 分数展示组件 ===
@@ -242,6 +259,49 @@ const ReportComponents = {
         }
     },
 
+    // 新增指标解读组件
+    'factor-interpretation': {
+        render: (data, config) => {
+            const dimensions = data.dimensions || [];
+            
+            // 维度解释文案
+            const dimensionInterpretations = {
+                '躯体化': '主要反映身体不适感，包括心血管、胃肠道、呼吸和其他系统的不适，和头痛、背痛、肌肉酸痛，焦虑等躯体不适表现。该分量表得分在12-60分之间。36分以上表明个体在身体上有较明显的不适感，24分以下躯体症状表现不明显。',
+                '强迫症状': '主要指那些明知没有必要，但又无法摆脱的无意义的思想、冲动和行为，还有一些比较一般的认知障碍的行为征象也在这一因子中反映。该分量表得分在10-50分之间。得分在30分以上，强迫症状较明显。20分以下强迫症状不明显。',
+                '人际关系敏感': '主要是指某些人际的不自在与自卑感，以及人际交流中的不良自我暗示，消极的期待等是这方面症状的典型原因。该分量表得分在9-45分之间。得分在27分以上表明个体人际关系较为敏感，人际交往中自卑感较强，并伴有行为症状（如坐立不安，退缩等）。18分以下表明个体在人际关系上较为正常。',
+                '抑郁': '苦闷的情感与心境为代表性症状，还以生活兴趣的减退，动力缺乏，活力丧失等为特征。还表现出失望、悲观以及与抑郁相联系的认知和躯体方面的感受。该分量表得分在13-65分之间。得分在39分以上表明个体的抑郁程度较强，生活缺乏足够的兴趣，缺乏运动活力，极端情况下可能会有自杀的观念。26分以下表明个体抑郁程度较弱，生活态度乐观积极，充满活力，心境愉快。',
+                '焦虑': '一般指那些烦躁，坐立不安，神经过敏，紧张以及由此产生的躯体征象如震颤等。该分量表得分在10-50分之间。得分在30分以上表明个体较易焦虑，易表现出烦躁、不安静和神经过敏，极端时可能导致惊恐发作。20分以下表明个体不易焦虑，易表现出安定的状态。',
+                '敌对': '主要从三方面来反映敌对的表现：思想、感情及行为。其项目包括厌烦的感觉，摔物，争论直到不可控制的脾气暴发等各方面。该分量表得分在6-30分之间。得分在18分以上表明个体易表现出敌对的思想、情感和行为。12分以下表明个体容易表现出友好的思想、情感和行为，脾气温和无破坏行为。',
+                '恐怖': '害怕的对象包括出门旅行，空旷场地，人群或公共场所和交通工具。此外，还有社交恐怖。该分量表得分在7-35分之间。得分在21分以上表明个体恐怖症状较为明显，常表现出社交、广场和人群恐惧，14分以下表明个体的恐怖症状不明显，能正常交往和活动。',
+                '偏执': '主要指投射性思维，敌对，猜疑，妄想，被动体验和夸大等。该分量表的得分在6-30分之间。得分在18分以上，表明个体的偏执症状明显，较易猜疑和敌对，得分在12分以下，表明个体的偏执症状不明显，个体思维越不易走极端。',
+                '精神病性': '反映各式各样的急性症状和行为，即限定不严的精神病性过程的症状表现。该分量表得分在10-50分之间。得分在30分以上表明个体的精神病性症状较为明显，20分以下表明个体的精神病性症状不明显。',
+                '其他': '包含一些无法归入前面9个因子的7个项目，主要反映睡眠及饮食情况。得分在21分以上表明个体可能存在睡眠障碍（入睡困难、多梦、易醒等）、饮食不规律或食欲异常（如食欲不振、暴饮暴食等）。14分以下表明个体无明显不适。'
+            };
+            
+            return `
+                <section class="analysis-section">
+                    <h3>指标解读</h3>
+                    <div class="factor-interpretation-list">
+                        ${dimensions.map(dim => `
+                            <div class="factor-item ${dim.isHigh ? 'high-factor' : ''}">
+                                <div class="factor-header">
+                                    <div class="factor-name">${dim.name}</div>
+                                    <div class="factor-score">${dim.averageScore ? dim.averageScore.toFixed(2) : '0.00'}</div>
+                                    <div class="factor-assessment ${dim.isHigh ? 'high' : 'normal'}">
+                                        ${dim.isHigh ? '需关注' : '正常'}
+                                    </div>
+                                </div>
+                                <div class="factor-interpretation">
+                                    ${dimensionInterpretations[dim.name] || '暂无详细解释。'}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+            `;
+        }
+    },
+
     // === 专业建议组件 ===
     'professional-advice': {
         render: (data, config) => {
@@ -266,13 +326,35 @@ const ReportComponents = {
     'professional-summary': {
         render: (data, config) => {
             const summary = data.overallAssessment || { description: '测试完成，感谢您的参与。' };
+            const highDimensions = (data.dimensions || []).filter(dim => dim.isHigh);
+            
             return `
                 <section class="analysis-section">
                     <h3>专业总结</h3>
                     <div class="professional-summary-content">
                         <p>${summary.description || summary}</p>
-                        ${summary.suggestion ? `<p class="suggestion">${summary.suggestion}</p>` : ''}
-                        ${summary.factorSuggestion ? `<p class="factor-suggestion">${summary.factorSuggestion}</p>` : ''}
+                        
+                        ${summary.suggestion ? `
+                        <div class="summary-point">
+                            <strong>主要建议：</strong>${summary.suggestion}
+                        </div>
+                        ` : ''}
+                        
+                        ${highDimensions.length > 0 ? `
+                        <div class="summary-point">
+                            <strong>重点关注维度：</strong>${highDimensions.map(dim => dim.name).join('、')}
+                        </div>
+                        ` : ''}
+                        
+                        ${summary.factorSuggestion ? `
+                        <div class="summary-point">
+                            <strong>维度建议：</strong>${summary.factorSuggestion}
+                        </div>
+                        ` : ''}
+                        
+                        <div class="summary-point">
+                            <strong>温馨提示：</strong>本测试结果仅供参考，不能替代专业医疗诊断。如有需要，请咨询专业心理医生或精神科医生。
+                        </div>
                     </div>
                 </section>
             `;

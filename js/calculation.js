@@ -48,6 +48,8 @@ class CalculationManager {
         });
         
         result.totalScore = totalScore;
+        result.score = totalScore; // 综合评分直接等于总分
+        
         // 计算阳性症状均分
         result.positiveAverage = result.positiveItems > 0 ? 
             (totalScore - scoreOneCount) / result.positiveItems : 0;
@@ -77,28 +79,48 @@ class CalculationManager {
             
             result.dimensions.push({
                 name: dimension.name,
-                score: Math.round((averageScore - 1) / 4 * 100), // 转换为百分制用于显示
-                analysis: dimension.description,
+                score: Math.round(averageScore * 20), // 转换为20分制用于显示
                 rawScore: dimensionScore,
                 averageScore: averageScore, // 因子分
                 totalScore: totalDimensionScore, // 维度总分
                 isHigh: averageScore > 2, // 因子分超过2
                 description: averageScore > 2 ? dimension.highDescription : dimension.lowDescription,
                 interpretation: dimension.interpretation,
-                scoreRange: dimension.scoreRange
+                scoreRange: dimension.scoreRange,
+                threshold: dimension.threshold || 2.0
             });
             
             result.factorScores[dimKey] = averageScore;
         });
         
-        // 计算总体评分（基于因子分的平均值转换为百分制）
-        const totalAverage = result.dimensions.reduce((sum, dim) => sum + dim.averageScore, 0) / result.dimensions.length;
-        result.score = Math.round((totalAverage - 1) / 4 * 100);
-        
         // 生成总体评估
         result.overallAssessment = this.getSCL90Assessment(result.totalScore, result.factorScores, result.positiveItems);
         
+        // 生成详细分析
+        result.detailedAnalysis = this.generateDetailedAnalysis(result);
+        
         return result;
+    }
+
+    // 新增：生成详细分析方法
+    generateDetailedAnalysis(result) {
+        const totalQuestions = 90;
+        const positivePercentage = Math.round((result.positiveItems / totalQuestions) * 100);
+        
+        let assessmentText = '';
+        if (result.totalScore <= 160) {
+            assessmentText = '≤160分，初步评估无明显心理问题';
+        } else if (result.totalScore <= 250) {
+            assessmentText = '≤250分，初步评估无明显心理问题';
+        } else if (result.totalScore <= 290) {
+            assessmentText = '得分在251~290分之间，有心理问题的可能性';
+        } else if (result.totalScore <= 340) {
+            assessmentText = '得分在291~340分之间，有明显心理问题的可能性';
+        } else {
+            assessmentText = '得分超过340分，初步评估心理问题比较严重';
+        }
+        
+        return `您的阳性症状（单项得分≥2）共${result.positiveItems}项，占比${positivePercentage}%。您的总分为${result.totalScore}分，按照SCL-90中国版常模，${assessmentText}。`;
     }
 
     /**
