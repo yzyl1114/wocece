@@ -925,7 +925,7 @@ body {
     background: white;
     padding: 18px;
     border-radius: 12px;
-    border-left: 4px solid #e0e0e0;
+    border-left: none !important;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     transition: all 0.3s ease;
 }
@@ -936,28 +936,28 @@ body {
 }
 
 .dimension-card.high {
-    border-left-color: #ff4757;
-    background: linear-gradient(135deg, #fff5f5, #fff);
+    background: white !important;
+    border-left: none !important;
 }
 
 .dimension-card.medium-high {
-    border-left-color: #ffa502;
-    background: linear-gradient(135deg, #fff9e6, #fff);
+    background: white !important;
+    border-left: none !important;
 }
 
 .dimension-card.medium {
-    border-left-color: #ffd32a;
-    background: linear-gradient(135deg, #fffde6, #fff);
+    background: white !important;
+    border-left: none !important;
 }
 
 .dimension-card.low {
-    border-left-color: #2ed573;
-    background: linear-gradient(135deg, #f1fff7, #fff);
+    background: white !important;
+    border-left: none !important;
 }
 
 .dimension-card.very-low {
-    border-left-color: #dfe4ea;
-    background: linear-gradient(135deg, #f8f9fa, #fff);
+    background: white !important;
+    border-left: none !important;
 }
 
 .dimension-header {
@@ -1006,34 +1006,34 @@ body {
     margin-top: 4px;
     text-align: center;
     min-width: 35px;
-    background: none !important;
+    background: transparent !important;
     color: #666;
     border: 1px solid #e0e0e0;
 }
 
 .level-badge.high {
-    background: #ff4757;
-    color: white;
+    color: #ff4757 !important;
+    border-color: #ff4757;
 }
 
 .level-badge.medium-high {
-    background: #ffa502;
-    color: white;
+    color: #ffa502 !important;
+    border-color: #ffa502;
 }
 
 .level-badge.medium {
-    background: #ffd32a;
-    color: #333;
+    color: #ffd32a !important;
+    border-color: #ffd32a;
 }
 
 .level-badge.low {
-    background: #2ed573;
-    color: white;
+    color: #2ed573 !important;
+    border-color: #2ed573;
 }
 
 .level-badge.very-low {
-    background: #dfe4ea;
-    color: #666;
+    color: #a4b0be !important;
+    border-color: #a4b0be;
 }
 
 .dimension-progress-container {
@@ -1095,9 +1095,9 @@ body {
 }
 
 .dimension-analysis {
-    background: none;
-    padding: 0;
-    border-radius: 0;
+    background: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
     font-size: 14px;
     line-height: 1.5;
     color: #555;
@@ -1147,6 +1147,7 @@ body {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        width: 100%;
     }
     
     .dimension-card {
