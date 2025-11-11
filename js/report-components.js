@@ -758,6 +758,125 @@ const ReportComponents = {
         }
     },
 
+    // 精神需求测试专用组件
+    'spiritual-header': {
+        render: (data, config) => {
+            const topDim = data.topDimensions[0];
+            return `
+                <section class="result-header" style="background: linear-gradient(135deg, ${topDim.color}, #764ba2);">
+                    <div class="result-title">精神需求测试完成</div>
+                    <div class="result-content">
+                        <div class="result-label">你的核心精神需求</div>
+                        <div class="result-text">${topDim.name}</div>
+                        <div class="score-number">${data.score}%</div>
+                        <div class="score-label">综合匹配度</div>
+                    </div>
+                </section>
+            `;
+        }
+    },
+
+    'spiritual-dimensions-chart': {
+        render: (data, config) => {
+            return `
+                <section class="analysis-section">
+                    <h3>10大精神维度分析</h3>
+                    <div class="radar-chart-container">
+                        <canvas id="spiritualRadarChart" width="300" height="300"></canvas>
+                    </div>
+                    <div class="dimensions-legend">
+                        ${data.dimensions.map(dim => `
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: ${dim.color};"></span>
+                                <span class="legend-name">${dim.name}</span>
+                                <span class="legend-score">${dim.score}%</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+            `;
+        }
+    },
+
+    'spiritual-top-dimensions': {
+        render: (data, config) => {
+            return `
+                <section class="analysis-section">
+                    <h3>主导需求分析</h3>
+                    <div class="top-dimensions-grid">
+                        ${data.topDimensions.map((dim, index) => `
+                            <div class="dimension-card" style="border-left: 4px solid ${dim.color};">
+                                <div class="dimension-rank">${index + 1}</div>
+                                <div class="dimension-info">
+                                    <h4>${dim.name}</h4>
+                                    <div class="dimension-score">${dim.score}%</div>
+                                    <p class="dimension-desc">${dim.interpretation}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+            `;
+        }
+    },
+
+    'spiritual-detailed-analysis': {
+        render: (data, config) => {
+            return `
+                <section class="analysis-section">
+                    <h3>深度解读</h3>
+                    <div class="analysis-content">
+                        <p>${data.detailedAnalysis}</p>
+                        <div class="dimension-details">
+                            ${data.topDimensions.map(dim => `
+                                <div class="dimension-detail">
+                                    <h4 style="color: ${dim.color};">${dim.name}需求</h4>
+                                    <p>${dim.description}</p>
+                                    <div class="dimension-strength">
+                                        <span>需求强度: </span>
+                                        <div class="strength-bar">
+                                            <div class="strength-fill" style="width: ${dim.score}%; background: ${dim.color};"></div>
+                                        </div>
+                                        <span>${dim.score}%</span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </section>
+            `;
+        }
+    },
+
+    'spiritual-balance-advice': {
+        render: (data, config) => {
+            const lowDimensions = data.dimensions.filter(dim => dim.score < 40).slice(0, 2);
+            if (lowDimensions.length === 0) return '';
+            
+            return `
+                <section class="analysis-section">
+                    <h3>平衡发展建议</h3>
+                    <div class="balance-advice">
+                        <p>你的精神需求相对均衡，但在以下方面可以进一步培养：</p>
+                        <div class="improvement-areas">
+                            ${lowDimensions.map(dim => `
+                                <div class="improvement-item">
+                                    <h4 style="color: ${dim.color};">${dim.name}</h4>
+                                    <p>${dim.interpretation}</p>
+                                    <ul class="suggestions">
+                                        <li>尝试相关的新活动和体验</li>
+                                        <li>设定小目标逐步培养兴趣</li>
+                                        <li>寻找这方面的榜样或导师</li>
+                                    </ul>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </section>
+            `;
+        }
+    },
+
     // === 行动组件 ===
     'save-actions': {
         render: (data, config) => `

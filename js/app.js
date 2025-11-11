@@ -139,6 +139,16 @@ class PsychTestApp {
                 price: 1,
                 questions: 60,
                 image: 'images/test7.jpg'
+            },
+            {
+            id: '8',
+            title: '精神需求测试',
+            description: '探索10大精神维度，发现内心最深处的驱动力',
+            category: 'standard',
+            templateType: 'standard',
+            price: 1,
+            questions: 60,
+            image: 'images/spiritual-needs.jpg'
             }            
         ];
     }

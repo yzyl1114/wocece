@@ -216,4 +216,73 @@ class ChartRenderer {
             </div>
         `;
     }
+
+    /**
+     * 渲染精神需求测试雷达图
+     */
+    renderSpiritualRadarChart(dimensionsData, canvasId) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        
+        canvas.width = 300;
+        canvas.height = 300;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = Math.min(centerX, centerY) - 50;
+        const angleStep = (2 * Math.PI) / dimensionsData.length;
+        
+        // 绘制网格
+        this.drawRadarGrid(ctx, centerX, centerY, radius, dimensionsData, angleStep);
+        
+        // 绘制数据多边形
+        ctx.fillStyle = 'rgba(102, 126, 234, 0.2)';
+        ctx.strokeStyle = '#667eea';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        
+        dimensionsData.forEach((dim, i) => {
+            const angle = i * angleStep - Math.PI / 2;
+            const valueRadius = radius * (dim.score / 100);
+            const x = centerX + valueRadius * Math.cos(angle);
+            const y = centerY + valueRadius * Math.sin(angle);
+            
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        });
+        
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        
+        // 绘制维度和标签
+        this.drawSpiritualDimensionLabels(ctx, centerX, centerY, radius, dimensionsData, angleStep);
+    }
+
+    /**
+     * 绘制精神需求测试的维度标签
+     */
+    drawSpiritualDimensionLabels(ctx, centerX, centerY, radius, dimensions, angleStep) {
+        ctx.fillStyle = '#333';
+        ctx.font = '12px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        dimensions.forEach((dim, i) => {
+            const angle = i * angleStep - Math.PI / 2;
+            const labelRadius = radius + 30;
+            const x = centerX + labelRadius * Math.cos(angle);
+            const y = centerY + labelRadius * Math.sin(angle);
+            
+            // 绘制维度名称
+            ctx.fillStyle = dim.color;
+            ctx.fillText(dim.name, x, y);
+            
+            // 绘制分数
+            ctx.fillStyle = '#666';
+            ctx.fillText(`${dim.score}%`, x, y + 15);
+        });
+    }
 }

@@ -45,7 +45,19 @@ class TemplateEngine {
                 'save-actions'
             ],
             styles: 'fun-styles'
-        }
+        },
+
+        'spiritual-needs': {
+            components: [
+                'spiritual-header',
+                'spiritual-dimensions-chart',
+                'spiritual-top-dimensions', 
+                'spiritual-detailed-analysis',
+                'spiritual-balance-advice',
+                'save-actions'
+            ],
+            styles: 'spiritual-styles'
+        }        
     };
 
     getTemplate(testConfig) {
@@ -63,6 +75,11 @@ class TemplateEngine {
             return this.constructor.TEMPLATES['animal-personality'];
         }
 
+        if (testConfig && testConfig.id === '8') {
+            console.log('🎯 使用精神需求测试模板');
+            return this.constructor.TEMPLATES['spiritual-needs'];
+        }    
+
         // 原有逻辑作为备用
         if (testConfig?.resultTemplate) {
             const template = this.constructor.TEMPLATES[testConfig.resultTemplate];
@@ -78,7 +95,8 @@ class TemplateEngine {
             '4': 'standard-basic',
             '5': 'standard-basic',
             '6': 'scl90-professional',
-            '7': 'animal-personality'
+            '7': 'animal-personality',
+            '8': 'spiritual-needs' 
         };
         
         const templateName = templateMap[testConfig?.id] || 'standard-basic';

@@ -13,6 +13,8 @@ class CalculationManager {
                 return this.calculateSCL90(answers, testData);
             case '7':
                 return this.calculateAnimalPersonality(answers);
+            case '8': // 新增精神需求测试
+                return this.calculateSpiritualNeeds(answers, testData);            
             default:
                 throw new Error(`未找到测试ID: ${testId} 的计分方法`);
         }
@@ -295,6 +297,144 @@ class CalculationManager {
             testType: 'animal_personality',
             score: Math.round(bestSimilarity * 100)
         };
+    }
+
+    /**
+     * 精神需求测试计分逻辑 - 测试ID: 8
+     */
+    calculateSpiritualNeeds(answers, testData) {
+        const dimensions = testData.dimensions;
+        const result = {
+            score: 0,
+            totalScore: 0,
+            dimensions: [],
+            testType: 'spiritual_needs',
+            dimensionScores: {},
+            topDimensions: []
+        };
+        
+        // 初始化维度分数
+        Object.keys(dimensions).forEach(dimKey => {
+            result.dimensionScores[dimKey] = 0;
+        });
+        
+        // 计算各维度分数
+        answers.forEach((answer, index) => {
+            const question = testData.questions[index];
+            if (!question || !answer) return;
+            
+            switch(question.type) {
+                case 'binary':
+                case 'single':
+                    // 单选题直接计分
+                    const selectedOption = question.options.find(opt => opt.id === answer);
+                    if (selectedOption && selectedOption.score) {
+                        this.addScores(result.dimensionScores, selectedOption.score);
+                    }
+                    break;
+                    
+                case 'sort':
+                    // 排序题特殊计分逻辑
+                    if (Array.isArray(answer)) {
+                        answer.forEach((itemId, position) => {
+                            const itemOption = question.options.find(opt => opt.id === itemId);
+                            if (itemOption && itemOption.score) {
+                                // 第1位得满分，第2位得1/2分，第3位得1/3分...
+                                const sortedScores = {};
+                                Object.entries(itemOption.score).forEach(([dim, score]) => {
+                                    sortedScores[dim] = Math.round(score / Math.pow(2, position));
+                                });
+                                this.addScores(result.dimensionScores, sortedScores);
+                            }
+                        });
+                    }
+                    break;
+                    
+                case 'multiple':
+                    // 多选题累加计分
+                    if (Array.isArray(answer)) {
+                        answer.forEach(itemId => {
+                            const itemOption = question.options.find(opt => opt.id === itemId);
+                            if (itemOption && itemOption.score) {
+                                this.addScores(result.dimensionScores, itemOption.score);
+                            }
+                        });
+                    }
+                    break;
+            }
+        });
+        
+        // 构建维度结果数组
+        Object.keys(dimensions).forEach(dimKey => {
+            const dim = dimensions[dimKey];
+            const score = result.dimensionScores[dimKey];
+            const percentage = Math.min(100, (score / 100) * 100);
+            
+            result.dimensions.push({
+                code: dimKey,
+                name: dim.name,
+                score: percentage,
+                rawScore: score,
+                color: dim.color,
+                description: dim.description,
+                interpretation: score > 50 ? dim.highDescription : dim.lowDescription,
+                isHigh: score > 50
+            });
+        });
+        
+        // 按分数排序
+        result.dimensions.sort((a, b) => b.score - a.score);
+        
+        // 识别前3个最高分维度
+        result.topDimensions = result.dimensions.slice(0, 3);
+        
+        // 计算综合评分（平均分）
+        result.score = Math.round(result.dimensions.reduce((sum, dim) => sum + dim.score, 0) / result.dimensions.length);
+        
+        // 生成详细分析
+        result.detailedAnalysis = this.generateSpiritualAnalysis(result);
+        
+        return result;
+    }
+
+    /**
+     * 辅助方法：累加分数到维度
+     */
+    addScores(dimensionScores, scoresToAdd) {
+        Object.entries(scoresToAdd).forEach(([dim, score]) => {
+            dimensionScores[dim] = (dimensionScores[dim] || 0) + score;
+            // 上限100分
+            dimensionScores[dim] = Math.min(100, dimensionScores[dim]);
+        });
+    }
+
+    /**
+     * 生成精神需求测试的详细分析
+     */
+    generateSpiritualAnalysis(result) {
+        const topDim = result.topDimensions[0];
+        const analysisTemplates = {
+            'A': `你的核心精神需求是「意义」。你渴望生活有明确的目标和方向，追求超越日常琐事的深层价值。建议寻找能体现你价值观的事业或使命。`,
+            'B': `你的核心精神需求是「爱」。情感连接和亲密关系对你至关重要。建议投入时间培养深度关系，表达和接受爱与关怀。`,
+            'C': `你的核心精神需求是「连接」。你渴望归属感和群体认同。建议参与社区活动，建立广泛的社交网络。`,
+            'D': `你的核心精神需求是「成长」。你持续追求自我提升和能力拓展。建议设定学习目标，不断挑战自我。`,
+            'E': `你的核心精神需求是「创造」。你有强烈的表达欲和创新冲动。建议通过艺术、写作或其他创造性渠道表达自我。`,
+            'F': `你的核心精神需求是「权力」。你渴望影响力和掌控感。建议寻找能发挥领导力的机会，但注意平衡。`,
+            'G': `你的核心精神需求是「乐趣」。你重视生活中的快乐和愉悦体验。建议培养兴趣爱好，保持生活的趣味性。`,
+            'H': `你的核心精神需求是「安全感」。你需要稳定和可预测的环境。建议建立可靠的支持系统，但也要适度冒险。`,
+            'I': `你的核心精神需求是「自由」。你极度重视独立性和自主权。建议创造能自主决策的空间，保持个人边界。`,
+            'J': `你的核心精神需求是「贡献」。你有强烈的利他主义倾向。建议参与志愿服务，帮助他人实现价值。`
+        };
+        
+        let analysis = analysisTemplates[topDim.code] || `基于你的测试结果，你在多个精神维度都有显著需求。`;
+        
+        // 添加平衡建议
+        const lowDimensions = result.dimensions.filter(dim => !dim.isHigh).slice(0, 2);
+        if (lowDimensions.length > 0) {
+            analysis += ` 同时，你可以关注${lowDimensions.map(dim => dim.name).join('和')}方面的成长，以获得更平衡的精神满足。`;
+        }
+        
+        return analysis;
     }
 
     /**
