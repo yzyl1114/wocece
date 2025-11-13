@@ -1,6 +1,17 @@
 class PaymentManager {
     constructor() {
         this.paymentInProgress = false;
+        // 根据环境配置API地址
+        this.apiBase = this.isProduction() 
+            ? 'https://wocece.com/api' 
+            : 'https://yzyl1114.github.io/wocece/api'; // GitHub Pages 测试环境
+        
+        this.isProd = this.isProduction();
+    }
+
+    // 环境检测
+    isProduction() {
+        return window.location.hostname === 'wocece.com';
     }
 
     // 初始化支付
@@ -10,25 +21,150 @@ class PaymentManager {
             return;
         }
 
+        // 测试环境直接模拟支付成功
+        if (!this.isProd && storageManager.TEST_MODE) {
+            this.showToast('测试模式：已免费解锁测试');
+            storageManager.savePaymentRecord(testId);
+            setTimeout(() => {
+                window.location.href = `testing.html?id=${testId}`;
+            }, 1000);
+            return;
+        }
+
         this.paymentInProgress = true;
         
         try {
-            // 调用后端创建支付订单
             const orderInfo = await this.createOrder(testId, amount);
             
-            // 调用支付宝支付
-            await this.callAlipay(orderInfo);
+            if (this.isProd) {
+                // 正式环境：跳转到支付宝
+                this.redirectToAlipay(orderInfo.paymentUrl, testId);
+            } else {
+                // 测试环境：模拟支付流程
+                this.mockPaymentFlow(testId, orderInfo.tradeNo);
+            }
             
         } catch (error) {
             console.error('支付失败:', error);
-            this.showToast('支付失败，请重试');
+            this.showToast('支付失败: ' + (error.message || '请重试'));
             this.paymentInProgress = false;
         }
     }
 
-    // 创建支付订单
+    // 正式环境支付流程
+    redirectToAlipay(paymentUrl, testId) {
+        // 保存支付状态到本地
+        const paymentSession = {
+            testId: testId,
+            timestamp: Date.now(),
+            status: 'pending'
+        };
+        sessionStorage.setItem('current_payment', JSON.stringify(paymentSession));
+        
+        // 新窗口打开支付页面
+        const payWindow = window.open(paymentUrl, '_blank', 'width=400,height=600');
+        
+        if (!payWindow) {
+            this.showToast('请允许弹出窗口以完成支付');
+            this.paymentInProgress = false;
+            return;
+        }
+        
+        // 轮询检查支付结果
+        this.startPaymentPolling(testId);
+    }
+
+    // 开始轮询支付结果
+    startPaymentPolling(testId) {
+        const pollInterval = setInterval(async () => {
+            try {
+                const paid = await this.verifyPayment(testId);
+                
+                if (paid) {
+                    clearInterval(pollInterval);
+                    this.handlePaymentSuccess(testId);
+                }
+                
+                // 10分钟后超时
+                const paymentSession = JSON.parse(sessionStorage.getItem('current_payment') || '{}');
+                if (Date.now() - paymentSession.timestamp > 10 * 60 * 1000) {
+                    clearInterval(pollInterval);
+                    this.paymentInProgress = false;
+                    this.showToast('支付超时，请重新尝试');
+                }
+            } catch (error) {
+                console.error('支付状态检查失败:', error);
+            }
+        }, 3000); // 每3秒检查一次
+    }
+
+    // ✅ 正式环境：真实的支付验证
+    async verifyPayment(testId) {
+        try {
+            const response = await fetch(`${this.apiBase}/verify-payment.php`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    testId: testId,
+                    userId: this.getUserId()
+                })
+            });
+
+            const result = await response.json();
+            
+            if (result.success && result.paid) {
+                // 支付成功，保存记录
+                storageManager.savePaymentRecord(testId);
+                return true;
+            }
+            
+            return false;
+            
+        } catch (error) {
+            console.error('支付验证失败:', error);
+            return false;
+        }
+    }
+
+    // 测试环境模拟支付
+    mockPaymentFlow(testId, tradeNo) {
+        this.showToast('测试环境：模拟支付流程');
+        
+        // 模拟支付成功
+        setTimeout(() => {
+            storageManager.savePaymentRecord(testId);
+            this.showToast('模拟支付成功！');
+            setTimeout(() => {
+                window.location.href = `testing.html?id=${testId}`;
+            }, 1500);
+            this.paymentInProgress = false;
+        }, 2000);
+    }
+
+    // 处理支付成功
+    handlePaymentSuccess(testId) {
+        this.paymentInProgress = false;
+        this.showToast('支付成功！正在跳转...');
+        
+        setTimeout(() => {
+            window.location.href = `testing.html?id=${testId}`;
+        }, 1500);
+    }
+
+    // 创建支付订单（区分环境）
     async createOrder(testId, amount) {
-        const response = await fetch('/api/create-order', {
+        // 测试环境返回模拟数据
+        if (!this.isProd) {
+            return {
+                tradeNo: 'TEST_' + Date.now(),
+                paymentUrl: '#'
+            };
+        }
+
+        // 正式环境调用后端API
+        const response = await fetch(`${this.apiBase}/pay.php`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -36,65 +172,17 @@ class PaymentManager {
             body: JSON.stringify({
                 testId: testId,
                 amount: amount,
-                userId: this.getUserId(),
-                timestamp: Date.now()
+                userId: this.getUserId()
             })
         });
 
-        if (!response.ok) {
-            throw new Error('创建订单失败');
+        const result = await response.json();
+        
+        if (!response.ok || !result.success) {
+            throw new Error(result.error || '创建订单失败');
         }
 
-        return await response.json();
-    }
-
-    // 调用支付宝支付
-    async callAlipay(orderInfo) {
-        return new Promise((resolve, reject) => {
-            // 支付宝H5支付调用
-            if (window.AlipayJSBridge) {
-                window.AlipayJSBridge.call("tradePay", {
-                    tradeNO: orderInfo.tradeNo
-                }, (result) => {
-                    this.handlePaymentResult(result);
-                    resolve(result);
-                });
-            } else {
-                // 备用方案：跳转到支付宝支付页面
-                window.location.href = orderInfo.paymentUrl;
-            }
-        });
-    }
-
-    // 处理支付结果
-    handlePaymentResult(result) {
-        this.paymentInProgress = false;
-        
-        const resultCode = result.resultCode || result.code;
-        
-        switch (resultCode) {
-            case '9000':
-            case 'success':
-                this.showToast('支付成功');
-                // 跳转到答题页面
-                setTimeout(() => {
-                    const testId = new URLSearchParams(window.location.search).get('id');
-                    window.location.href = `testing.html?id=${testId}`;
-                }, 1500);
-                break;
-                
-            case '6001':
-                this.showToast('支付已取消');
-                break;
-                
-            case '4000':
-            case 'fail':
-                this.showToast('支付失败');
-                break;
-                
-            default:
-                this.showToast('支付结果未知');
-        }
+        return result;
     }
 
     // 获取用户ID
@@ -108,10 +196,10 @@ class PaymentManager {
     }
 
     showToast(message) {
+        // ... 保持原有的Toast显示逻辑
         if (window.app && window.app.showToast) {
             window.app.showToast(message);
         } else {
-            // 备用Toast显示
             const toast = document.createElement('div');
             toast.style.cssText = `
                 position: fixed;
