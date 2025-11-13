@@ -255,62 +255,114 @@
                 }).join('');
             }
             /**
-             * 初始化拖拽排序
+             * 初始化拖拽排序 - 修复版本
              */
             initSortable() {
                 const sortableList = document.getElementById('sortableList');
                 if (!sortableList) return;
 
                 let draggedItem = null;
+                let startY = 0;
+                let currentY = 0;
 
-                // 修复：添加触摸事件支持
+                // 统一的拖拽开始处理
                 const handleDragStart = (e) => {
-                    if (e.target.classList.contains('sort-item')) {
-                        draggedItem = e.target;
-                        // 修复：阻止默认行为避免页面滚动
-                        e.preventDefault();
-                        setTimeout(() => {
-                            draggedItem.classList.add('dragging');
-                            // 修复：在拖拽时禁用页面滚动
-                            document.body.style.overflow = 'hidden';
-                        }, 0);
+                    const item = e.target.closest('.sort-item');
+                    if (!item) return;
+                    
+                    draggedItem = item;
+                    
+                    // 记录起始位置
+                    if (e.type === 'touchstart') {
+                        startY = e.touches[0].clientY;
+                    } else {
+                        startY = e.clientY;
+                        e.dataTransfer.setData('text/plain', ''); // 必要的拖拽API
                     }
+                    
+                    // 添加拖拽样式
+                    setTimeout(() => {
+                        draggedItem.classList.add('dragging');
+                        document.body.style.overflow = 'hidden'; // 防止页面滚动
+                    }, 0);
                 };
 
+                // 统一的拖拽结束处理
                 const handleDragEnd = (e) => {
-                    if (draggedItem) {
-                        draggedItem.classList.remove('dragging');
-                        // 修复：恢复页面滚动
-                        document.body.style.overflow = '';
-                        this.saveSortAnswer();
-                        draggedItem = null;
-                    }
-                };
-
-                const handleDragOver = (e) => {
-                    e.preventDefault();
                     if (!draggedItem) return;
                     
-                    const afterElement = this.getDragAfterElement(sortableList, e.clientY || e.touches[0].clientY);
-                    if (afterElement) {
-                        sortableList.insertBefore(draggedItem, afterElement);
+                    draggedItem.classList.remove('dragging');
+                    document.body.style.overflow = ''; // 恢复页面滚动
+                    
+                    // 保存答案
+                    this.saveSortAnswer();
+                    draggedItem = null;
+                    startY = 0;
+                    currentY = 0;
+                };
+
+                // 统一的拖拽移动处理
+                const handleDragMove = (e) => {
+                    if (!draggedItem) return;
+                    
+                    e.preventDefault();
+                    
+                    // 获取当前Y坐标
+                    if (e.type === 'touchmove') {
+                        currentY = e.touches[0].clientY;
+                    } else {
+                        currentY = e.clientY;
+                    }
+                    
+                    // 计算拖拽位置并重新排序
+                    const afterElement = this.getDragAfterElement(sortableList, currentY);
+                    if (afterElement && afterElement !== draggedItem.nextSibling) {
+                        if (afterElement) {
+                            sortableList.insertBefore(draggedItem, afterElement);
+                        } else {
+                            sortableList.appendChild(draggedItem);
+                        }
                     }
                 };
 
-                // 修复：同时绑定鼠标和触摸事件
-                sortableList.addEventListener('dragstart', handleDragStart);
-                sortableList.addEventListener('touchstart', handleDragStart, { passive: false });
+                // 清理现有事件监听器
+                const cloneSortableList = sortableList.cloneNode(true);
+                sortableList.parentNode.replaceChild(cloneSortableList, sortableList);
                 
-                sortableList.addEventListener('dragend', handleDragEnd);
-                sortableList.addEventListener('touchend', handleDragEnd);
+                const newSortableList = document.getElementById('sortableList');
                 
-                sortableList.addEventListener('dragover', handleDragOver);
-                sortableList.addEventListener('touchmove', handleDragOver, { passive: false });
+                // 重新绑定事件 - 使用更清晰的事件委托
+                newSortableList.addEventListener('mousedown', (e) => {
+                    if (e.target.closest('.sort-item')) {
+                        handleDragStart(e);
+                    }
+                });
+                
+                newSortableList.addEventListener('touchstart', (e) => {
+                    if (e.target.closest('.sort-item')) {
+                        handleDragStart(e);
+                    }
+                }, { passive: false });
+                
+                document.addEventListener('mousemove', handleDragMove);
+                document.addEventListener('touchmove', handleDragMove, { passive: false });
+                
+                document.addEventListener('mouseup', handleDragEnd);
+                document.addEventListener('touchend', handleDragEnd);
+                
+                // 防止拖拽过程中的选择文本
+                document.addEventListener('selectstart', (e) => {
+                    if (draggedItem) {
+                        e.preventDefault();
+                    }
+                });
             }
 
-            // 修复：优化获取拖拽位置的方法
+            // 修复：改进获取拖拽位置的方法
             getDragAfterElement(container, y) {
                 const draggableElements = [...container.querySelectorAll('.sort-item:not(.dragging)')];
+                
+                if (draggableElements.length === 0) return null;
                 
                 return draggableElements.reduce((closest, child) => {
                     const box = child.getBoundingClientRect();
@@ -330,6 +382,9 @@
             saveSortAnswer() {
                 const sortItems = document.querySelectorAll('.sort-item');
                 const sortedIds = Array.from(sortItems).map(item => item.dataset.optionId);
+
+                console.log('拖拽排序结果:', sortedIds); // 调试信息
+                
                 this.answers[this.currentQuestionIndex] = sortedIds;
                 this.saveProgress();
                 this.updateNavigationButtons();
@@ -778,8 +833,10 @@
             cursor: move;
             transition: all 0.3s ease;
             gap: 12px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
             touch-action: none; /* 修复：防止触摸默认行为 */
-            user-select: none; /* 修复：防止文本选择 */           
+            user-select: none; /* 修复：防止文本选择 */ 
+            -webkit-user-select: none;          
         }
 
         .sort-item:hover {
@@ -788,17 +845,29 @@
 
         .sort-item.dragging {
             opacity: 0.6;
-            background: #f8f9fa;
-            transform: rotate(2deg);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: rotate(3deg);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            z-index: 1000;
+            background: white;
         }
 
         .sort-handle {
             color: #999;
             font-size: 16px;
             cursor: move;
-            padding: 8px;
+            padding: 8px 12px;
+            margin: -8px 0 -8px -12px;
             touch-action: none;
+        }
+
+        /* 拖拽时的视觉反馈 */
+        .sort-item:active {
+            background: #f8f9fa;
+        }
+
+        /* 确保拖拽时其他项有足够的空间 */
+        .sortable-list {
+            min-height: 60px; /* 确保有足够高度容纳拖拽项 */
         }
 
         /* 多选题样式 */
