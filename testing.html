@@ -460,6 +460,13 @@
 
 
             completeTest() {
+                console.log('🔍 调试信息:', {
+                    testId: this.testId,
+                    answers: this.answers,
+                    testData: this.testData,
+                    hasDimensions: !!this.testData?.dimensions
+                });
+
                 try {
                     // 使用统一的计分管理器计算结果
                     const result = calculationManager.calculateResult(

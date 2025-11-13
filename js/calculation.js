@@ -303,6 +303,11 @@ class CalculationManager {
      * 精神需求测试计分逻辑 - 测试ID: 8
      */
     calculateSpiritualNeeds(answers, testData) {
+        // 添加错误检查
+        if (!testData || !testData.dimensions) {
+            console.error('❌ 测试数据缺失:', testData);
+            throw new Error('测试配置数据不完整，无法计算结果');
+        }
         const dimensions = testData.dimensions;
         const result = {
             score: 0,
