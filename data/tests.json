@@ -1226,451 +1226,601 @@
         {
           "id": 1,
           "text": "我清楚地知道自己生活的目标和追求。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"A": 0}},
-            {"id": "是", "text": "是", "score": {"A": 17}}
+            {"id": "A", "text": "完全不符合", "score": {"A": 0}},
+            {"id": "B", "text": "不太符合", "score": {"A": 4}},
+            {"id": "C", "text": "一般", "score": {"A": 8}},
+            {"id": "D", "text": "比较符合", "score": {"A": 13}},
+            {"id": "E", "text": "完全符合", "score": {"A": 17}}
           ]
         },
         {
           "id": 2,
           "text": "我感到被身边人（如家人、朋友、恋人）深深地爱着。",
-          "type": "binary", 
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"B": 0}},
-            {"id": "是", "text": "是", "score": {"B": 17}}
+            {"id": "A", "text": "完全不符合", "score": {"B": 0}},
+            {"id": "B", "text": "不太符合", "score": {"B": 4}},
+            {"id": "C", "text": "一般", "score": {"B": 8}},
+            {"id": "D", "text": "比较符合", "score": {"B": 13}},
+            {"id": "E", "text": "完全符合", "score": {"B": 17}}
           ]
         },
         {
           "id": 3,
           "text": "当我和一群人为一个共同目标努力时，我感到非常满足。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"C": 0}},
-            {"id": "是", "text": "是", "score": {"C": 13}}
+            {"id": "A", "text": "完全不符合", "score": {"C": 0}},
+            {"id": "B", "text": "不太符合", "score": {"C": 3}},
+            {"id": "C", "text": "一般", "score": {"C": 6}},
+            {"id": "D", "text": "比较符合", "score": {"C": 10}},
+            {"id": "E", "text": "完全符合", "score": {"C": 13}}
           ]
         },
         {
           "id": 4,
           "text": "我觉得自己已经定型，很难再有什么改变。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"D": 16}},
-            {"id": "是", "text": "是", "score": {"D": 0}}
+            {"id": "A", "text": "完全不符合", "score": {"D": 16}},
+            {"id": "B", "text": "不太符合", "score": {"D": 12}},
+            {"id": "C", "text": "一般", "score": {"D": 8}},
+            {"id": "D", "text": "比较符合", "score": {"D": 4}},
+            {"id": "E", "text": "完全符合", "score": {"D": 0}}
           ]
         },
         {
           "id": 5,
           "text": "我经常有想要把想法变成现实作品的冲动。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"E": 0}},
-            {"id": "是", "text": "是", "score": {"E": 22}}
+            {"id": "A", "text": "完全不符合", "score": {"E": 0}},
+            {"id": "B", "text": "不太符合", "score": {"E": 5}},
+            {"id": "C", "text": "一般", "score": {"E": 11}},
+            {"id": "D", "text": "比较符合", "score": {"E": 17}},
+            {"id": "E", "text": "完全符合", "score": {"E": 22}}
           ]
         },
         {
           "id": 6,
           "text": "我在竞争中感到兴奋，并渴望获胜。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"F": 0}},
-            {"id": "是", "text": "是", "score": {"F": 16}}
+            {"id": "A", "text": "完全不符合", "score": {"F": 0}},
+            {"id": "B", "text": "不太符合", "score": {"F": 4}},
+            {"id": "C", "text": "一般", "score": {"F": 8}},
+            {"id": "D", "text": "比较符合", "score": {"F": 12}},
+            {"id": "E", "text": "完全符合", "score": {"F": 16}}
           ]
         },
         {
           "id": 7,
           "text": "和我在一起的人常常感到轻松快乐。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"G": 0}},
-            {"id": "是", "text": "是", "score": {"G": 16}}
+            {"id": "A", "text": "完全不符合", "score": {"G": 0}},
+            {"id": "B", "text": "不太符合", "score": {"G": 4}},
+            {"id": "C", "text": "一般", "score": {"G": 8}},
+            {"id": "D", "text": "比较符合", "score": {"G": 12}},
+            {"id": "E", "text": "完全符合", "score": {"G": 16}}
           ]
         },
         {
           "id": 8,
           "text": "一个让我身心感到安全的家对我极其重要。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"H": 0}},
-            {"id": "是", "text": "是", "score": {"H": 17}}
+            {"id": "A", "text": "完全不符合", "score": {"H": 0}},
+            {"id": "B", "text": "不太符合", "score": {"H": 4}},
+            {"id": "C", "text": "一般", "score": {"H": 8}},
+            {"id": "D", "text": "比较符合", "score": {"H": 13}},
+            {"id": "E", "text": "完全符合", "score": {"H": 17}}
           ]
         },
         {
           "id": 9,
           "text": "如果有人替我做决定，我会感到轻松。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"I": 18}},
-            {"id": "是", "text": "是", "score": {"I": 0}}
+            {"id": "A", "text": "完全不符合", "score": {"I": 18}},
+            {"id": "B", "text": "不太符合", "score": {"I": 14}},
+            {"id": "C", "text": "一般", "score": {"I": 9}},
+            {"id": "D", "text": "比较符合", "score": {"I": 4}},
+            {"id": "E", "text": "完全符合", "score": {"I": 0}}
           ]
         },
         {
           "id": 10,
           "text": "在团队中，我常常自愿帮助和支持他人。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"J": 0}},
-            {"id": "是", "text": "是", "score": {"J": 22}}
+            {"id": "A", "text": "完全不符合", "score": {"J": 0}},
+            {"id": "B", "text": "不太符合", "score": {"J": 5}},
+            {"id": "C", "text": "一般", "score": {"J": 11}},
+            {"id": "D", "text": "比较符合", "score": {"J": 17}},
+            {"id": "E", "text": "完全符合", "score": {"J": 22}}
           ]
         },
         {
           "id": 11,
           "text": "在群体中我常常感到格格不入。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"C": 20}},
-            {"id": "是", "text": "是", "score": {"C": 0}}
+            {"id": "A", "text": "完全不符合", "score": {"C": 20}},
+            {"id": "B", "text": "不太符合", "score": {"C": 15}},
+            {"id": "C", "text": "一般", "score": {"C": 10}},
+            {"id": "D", "text": "比较符合", "score": {"C": 5}},
+            {"id": "E", "text": "完全符合", "score": {"C": 0}}
           ]
         },
         {
           "id": 12,
           "text": "我主动寻求他人的反馈来帮助自己进步。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"D": 0}},
-            {"id": "是", "text": "是", "score": {"D": 15}}
+            {"id": "A", "text": "完全不符合", "score": {"D": 0}},
+            {"id": "B", "text": "不太符合", "score": {"D": 4}},
+            {"id": "C", "text": "一般", "score": {"D": 8}},
+            {"id": "D", "text": "比较符合", "score": {"D": 12}},
+            {"id": "E", "text": "完全符合", "score": {"D": 15}}
           ]
         },
         {
           "id": 13,
           "text": "我很容易从简单的事物（如美食、好天气）中找到乐趣。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"G": 0}},
-            {"id": "是", "text": "是", "score": {"G": 17}}
+            {"id": "A", "text": "完全不符合", "score": {"G": 0}},
+            {"id": "B", "text": "不太符合", "score": {"G": 4}},
+            {"id": "C", "text": "一般", "score": {"G": 8}},
+            {"id": "D", "text": "比较符合", "score": {"G": 13}},
+            {"id": "E", "text": "完全符合", "score": {"G": 17}}
           ]
         },
         {
           "id": 14,
           "text": "保障和稳定往往是我找工作时最先考虑的。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"H": 0}},
-            {"id": "是", "text": "是", "score": {"H": 14}}
+            {"id": "A", "text": "完全不符合", "score": {"H": 0}},
+            {"id": "B", "text": "不太符合", "score": {"H": 3}},
+            {"id": "C", "text": "一般", "score": {"H": 7}},
+            {"id": "D", "text": "比较符合", "score": {"H": 11}},
+            {"id": "E", "text": "完全符合", "score": {"H": 14}}
           ]
         },
         {
           "id": 15,
           "text": "在思想和观点上，我保持独立，不盲从他人。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"I": 0}},
-            {"id": "是", "text": "是", "score": {"I": 17}}
+            {"id": "A", "text": "完全不符合", "score": {"I": 0}},
+            {"id": "B", "text": "不太符合", "score": {"I": 4}},
+            {"id": "C", "text": "一般", "score": {"I": 8}},
+            {"id": "D", "text": "比较符合", "score": {"I": 13}},
+            {"id": "E", "text": "完全符合", "score": {"I": 17}}
           ]
         },
         {
           "id": 16,
           "text": "我关心社会问题，并愿意为之付出行动。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"J": 0}},
-            {"id": "是", "text": "是", "score": {"J": 19}}
+            {"id": "A", "text": "完全不符合", "score": {"J": 0}},
+            {"id": "B", "text": "不太符合", "score": {"J": 5}},
+            {"id": "C", "text": "一般", "score": {"J": 10}},
+            {"id": "D", "text": "比较符合", "score": {"J": 15}},
+            {"id": "E", "text": "完全符合", "score": {"J": 19}}
           ]
         },
         {
           "id": 17,
           "text": "即使是很小的事，我也能从中发现其重要性。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"A": 0}},
-            {"id": "是", "text": "是", "score": {"A": 21}}
+            {"id": "A", "text": "完全不符合", "score": {"A": 0}},
+            {"id": "B", "text": "不太符合", "score": {"A": 5}},
+            {"id": "C", "text": "一般", "score": {"A": 10}},
+            {"id": "D", "text": "比较符合", "score": {"A": 16}},
+            {"id": "E", "text": "完全符合", "score": {"A": 21}}
           ]
         },
         {
           "id": 18,
           "text": "我可以自主地决定如何生活，这对我至关重要。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"I": 0}},
-            {"id": "是", "text": "是", "score": {"I": 17}}
+            {"id": "A", "text": "完全不符合", "score": {"I": 0}},
+            {"id": "B", "text": "不太符合", "score": {"I": 4}},
+            {"id": "C", "text": "一般", "score": {"I": 8}},
+            {"id": "D", "text": "比较符合", "score": {"I": 13}},
+            {"id": "E", "text": "完全符合", "score": {"I": 17}}
           ]
         },
         {
           "id": 19,
           "text": "我是某个社群（如兴趣小组、社区、团队）中活跃的一员。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"C": 0}},
-            {"id": "是", "text": "是", "score": {"C": 25}}
+            {"id": "A", "text": "完全不符合", "score": {"C": 0}},
+            {"id": "B", "text": "不太符合", "score": {"C": 6}},
+            {"id": "C", "text": "一般", "score": {"C": 12}},
+            {"id": "D", "text": "比较符合", "score": {"C": 19}},
+            {"id": "E", "text": "完全符合", "score": {"C": 25}}
           ]
         },
         {
           "id": 20,
           "text": "我每年都会为自己设定学习或提升的目标。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"D": 0}},
-            {"id": "是", "text": "是", "score": {"D": 19}}
+            {"id": "A", "text": "完全不符合", "score": {"D": 0}},
+            {"id": "B", "text": "不太符合", "score": {"D": 5}},
+            {"id": "C", "text": "一般", "score": {"D": 10}},
+            {"id": "D", "text": "比较符合", "score": {"D": 15}},
+            {"id": "E", "text": "完全符合", "score": {"D": 19}}
           ]
         },
         {
           "id": 21,
           "text": "我有通过艺术、写作、音乐等方式表达自己的习惯。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"E": 0}},
-            {"id": "是", "text": "是", "score": {"E": 15}}
+            {"id": "A", "text": "完全不符合", "score": {"E": 0}},
+            {"id": "B", "text": "不太符合", "score": {"E": 4}},
+            {"id": "C", "text": "一般", "score": {"E": 8}},
+            {"id": "D", "text": "比较符合", "score": {"E": 12}},
+            {"id": "E", "text": "完全符合", "score": {"E": 15}}
           ]
         },
         {
           "id": 22,
           "text": "我希望我对事情的发展拥有发言权和决定权。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"F": 0}},
-            {"id": "是", "text": "是", "score": {"F": 17}}
+            {"id": "A", "text": "完全不符合", "score": {"F": 0}},
+            {"id": "B", "text": "不太符合", "score": {"F": 4}},
+            {"id": "C", "text": "一般", "score": {"F": 8}},
+            {"id": "D", "text": "比较符合", "score": {"F": 13}},
+            {"id": "E", "text": "完全符合", "score": {"F": 17}}
           ]
         },
         {
           "id": 23,
           "text": "我愿意花大量时间和精力来维系重要的关系。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"B": 0}},
-            {"id": "是", "text": "是", "score": {"B": 21}}
+            {"id": "A", "text": "完全不符合", "score": {"B": 0}},
+            {"id": "B", "text": "不太符合", "score": {"B": 5}},
+            {"id": "C", "text": "一般", "score": {"B": 10}},
+            {"id": "D", "text": "比较符合", "score": {"B": 16}},
+            {"id": "E", "text": "完全符合", "score": {"B": 21}}
           ]
         },
         {
           "id": 24,
           "text": "「幽默」是我生活中不可或缺的部分。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"G": 15}},
-            {"id": "是", "text": "是", "score": {"G": 0}}
+            {"id": "A", "text": "完全不符合", "score": {"G": 15}},
+            {"id": "B", "text": "不太符合", "score": {"G": 11}},
+            {"id": "C", "text": "一般", "score": {"G": 8}},
+            {"id": "D", "text": "比较符合", "score": {"G": 4}},
+            {"id": "E", "text": "完全符合", "score": {"G": 0}}
           ]
         },
         {
           "id": 25,
           "text": "表达情感会让我感到不自在。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"B": 15}},
-            {"id": "是", "text": "是", "score": {"B": 0}}
+            {"id": "A", "text": "完全不符合", "score": {"B": 15}},
+            {"id": "B", "text": "不太符合", "score": {"B": 11}},
+            {"id": "C", "text": "一般", "score": {"B": 8}},
+            {"id": "D", "text": "比较符合", "score": {"B": 4}},
+            {"id": "E", "text": "完全符合", "score": {"B": 0}}
           ]
         },
         {
           "id": 26,
           "text": "我看到他人因为我的帮助而变得更好时，我会非常高兴。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"J": 0}},
-            {"id": "是", "text": "是", "score": {"J": 17}}
+            {"id": "A", "text": "完全不符合", "score": {"J": 0}},
+            {"id": "B", "text": "不太符合", "score": {"J": 4}},
+            {"id": "C", "text": "一般", "score": {"J": 8}},
+            {"id": "D", "text": "比较符合", "score": {"J": 13}},
+            {"id": "E", "text": "完全符合", "score": {"J": 17}}
           ]
         },
         {
           "id": 27,
           "text": "我对来自他人的控制非常敏感和抵触。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"I": 0}},
-            {"id": "是", "text": "是", "score": {"I": 14}}
+            {"id": "A", "text": "完全不符合", "score": {"I": 0}},
+            {"id": "B", "text": "不太符合", "score": {"I": 3}},
+            {"id": "C", "text": "一般", "score": {"I": 7}},
+            {"id": "D", "text": "比较符合", "score": {"I": 11}},
+            {"id": "E", "text": "完全符合", "score": {"I": 14}}
           ]
         },
         {
           "id": 28,
           "text": "我享受从零开始创造一件事物的过程。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"E": 0}},
-            {"id": "是", "text": "是", "score": {"E": 18}}
+            {"id": "A", "text": "完全不符合", "score": {"E": 0}},
+            {"id": "B", "text": "不太符合", "score": {"E": 4}},
+            {"id": "C", "text": "一般", "score": {"E": 9}},
+            {"id": "D", "text": "比较符合", "score": {"E": 14}},
+            {"id": "E", "text": "完全符合", "score": {"E": 18}}
           ]
         },
         {
           "id": 29,
           "text": "我常常觉得日常生活琐碎且缺乏目的。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"A": 17}},
-            {"id": "是", "text": "是", "score": {"A": 0}}
+            {"id": "A", "text": "完全不符合", "score": {"A": 17}},
+            {"id": "B", "text": "不太符合", "score": {"A": 13}},
+            {"id": "C", "text": "一般", "score": {"A": 8}},
+            {"id": "D", "text": "比较符合", "score": {"A": 4}},
+            {"id": "E", "text": "完全符合", "score": {"A": 0}}
           ]
         },
         {
           "id": 30,
           "text": "我愿意为了一些我认为有意义的事而牺牲短期利益。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"A": 0}},
-            {"id": "是", "text": "是", "score": {"A": 18}}
+            {"id": "A", "text": "完全不符合", "score": {"A": 0}},
+            {"id": "B", "text": "不太符合", "score": {"A": 4}},
+            {"id": "C", "text": "一般", "score": {"A": 9}},
+            {"id": "D", "text": "比较符合", "score": {"A": 14}},
+            {"id": "E", "text": "完全符合", "score": {"A": 18}}
           ]
         },
         {
           "id": 31,
           "text": "我感到自己与自然和万物是相连的。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"C": 0}},
-            {"id": "是", "text": "是", "score": {"C": 15}}
+            {"id": "A", "text": "完全不符合", "score": {"C": 0}},
+            {"id": "B", "text": "不太符合", "score": {"C": 4}},
+            {"id": "C", "text": "一般", "score": {"C": 8}},
+            {"id": "D", "text": "比较符合", "score": {"C": 12}},
+            {"id": "E", "text": "完全符合", "score": {"C": 15}}
           ]
         },
         {
           "id": 32,
           "text": "我所做的工作/所学的专业让我感觉很有价值。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"A": 0}},
-            {"id": "是", "text": "是", "score": {"A": 21}}
+            {"id": "A", "text": "完全不符合", "score": {"A": 0}},
+            {"id": "B", "text": "不太符合", "score": {"A": 5}},
+            {"id": "C", "text": "一般", "score": {"A": 10}},
+            {"id": "D", "text": "比较符合", "score": {"A": 16}},
+            {"id": "E", "text": "完全符合", "score": {"A": 21}}
           ]
         },
         {
           "id": 33,
           "text": "身体的亲密接触（如拥抱、亲吻）让我感到安心、幸福。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"B": 0}},
-            {"id": "是", "text": "是", "score": {"B": 15}}
+            {"id": "A", "text": "完全不符合", "score": {"B": 0}},
+            {"id": "B", "text": "不太符合", "score": {"B": 4}},
+            {"id": "C", "text": "一般", "score": {"B": 8}},
+            {"id": "D", "text": "比较符合", "score": {"B": 12}},
+            {"id": "E", "text": "完全符合", "score": {"B": 15}}
           ]
         },
         {
           "id": 34,
           "text": "学习新东西让我感到疲惫。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"D": 15}},
-            {"id": "是", "text": "是", "score": {"D": 0}}
+            {"id": "A", "text": "完全不符合", "score": {"D": 15}},
+            {"id": "B", "text": "不太符合", "score": {"D": 11}},
+            {"id": "C", "text": "一般", "score": {"D": 8}},
+            {"id": "D", "text": "比较符合", "score": {"D": 4}},
+            {"id": "E", "text": "完全符合", "score": {"D": 0}}
           ]
         },
         {
           "id": 35,
           "text": "被人看重和尊敬对我很重要。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"F": 0}},
-            {"id": "是", "text": "是", "score": {"F": 17}}
+            {"id": "A", "text": "完全不符合", "score": {"F": 0}},
+            {"id": "B", "text": "不太符合", "score": {"F": 4}},
+            {"id": "C", "text": "一般", "score": {"F": 8}},
+            {"id": "D", "text": "比较符合", "score": {"F": 13}},
+            {"id": "E", "text": "完全符合", "score": {"F": 17}}
           ]
         },
         {
           "id": 36,
           "text": "我经常纯粹为了找乐子而做一些事。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"G": 0}},
-            {"id": "是", "text": "是", "score": {"G": 16}}
+            {"id": "A", "text": "完全不符合", "score": {"G": 0}},
+            {"id": "B", "text": "不太符合", "score": {"G": 4}},
+            {"id": "C", "text": "一般", "score": {"G": 8}},
+            {"id": "D", "text": "比较符合", "score": {"G": 12}},
+            {"id": "E", "text": "完全符合", "score": {"G": 16}}
           ]
         },
         {
           "id": 37,
           "text": "我需要一个稳定的、可预测的生活环境。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"H": 0}},
-            {"id": "是", "text": "是", "score": {"H": 14}}
+            {"id": "A", "text": "完全不符合", "score": {"H": 0}},
+            {"id": "B", "text": "不太符合", "score": {"H": 3}},
+            {"id": "C", "text": "一般", "score": {"H": 7}},
+            {"id": "D", "text": "比较符合", "score": {"H": 11}},
+            {"id": "E", "text": "完全符合", "score": {"H": 14}}
           ]
         },
         {
           "id": 38,
           "text": "我优先考虑自己的利益，而非他人的需求。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"J": 13}},
-            {"id": "是", "text": "是", "score": {"J": 0}}
+            {"id": "A", "text": "完全不符合", "score": {"J": 13}},
+            {"id": "B", "text": "不太符合", "score": {"J": 10}},
+            {"id": "C", "text": "一般", "score": {"J": 6}},
+            {"id": "D", "text": "比较符合", "score": {"J": 3}},
+            {"id": "E", "text": "完全符合", "score": {"J": 0}}
           ]
         },
         {
           "id": 39,
           "text": "我对未来不太担心，也觉得没必要提前规划。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"H": 16}},
-            {"id": "是", "text": "是", "score": {"H": 0}}
+            {"id": "A", "text": "完全不符合", "score": {"H": 16}},
+            {"id": "B", "text": "不太符合", "score": {"H": 12}},
+            {"id": "C", "text": "一般", "score": {"H": 8}},
+            {"id": "D", "text": "比较符合", "score": {"H": 4}},
+            {"id": "E", "text": "完全符合", "score": {"H": 0}}
           ]
         },
         {
           "id": 40,
           "text": "我更喜欢遵循指令，而不是自己创造新方案。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"E": 18}},
-            {"id": "是", "text": "是", "score": {"E": 0}}
+            {"id": "A", "text": "完全不符合", "score": {"E": 18}},
+            {"id": "B", "text": "不太符合", "score": {"E": 14}},
+            {"id": "C", "text": "一般", "score": {"E": 9}},
+            {"id": "D", "text": "比较符合", "score": {"E": 4}},
+            {"id": "E", "text": "完全符合", "score": {"E": 0}}
           ]
         },
         {
           "id": 41,
           "text": "在团队中，我倾向于担任主导者的角色。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"F": 0}},
-            {"id": "是", "text": "是", "score": {"F": 18}}
+            {"id": "A", "text": "完全不符合", "score": {"F": 0}},
+            {"id": "B", "text": "不太符合", "score": {"F": 4}},
+            {"id": "C", "text": "一般", "score": {"F": 9}},
+            {"id": "D", "text": "比较符合", "score": {"F": 14}},
+            {"id": "E", "text": "完全符合", "score": {"F": 18}}
           ]
         },
         {
           "id": 42,
           "text": "利他主义是我的价值观的核心组成部分。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"J": 0}},
-            {"id": "是", "text": "是", "score": {"J": 17}}
+            {"id": "A", "text": "完全不符合", "score": {"J": 0}},
+            {"id": "B", "text": "不太符合", "score": {"J": 4}},
+            {"id": "C", "text": "一般", "score": {"J": 8}},
+            {"id": "D", "text": "比较符合", "score": {"J": 13}},
+            {"id": "E", "text": "完全符合", "score": {"J": 17}}
           ]
         },
         {
           "id": 43,
           "text": "关心他人、为他人付出时让我感到快乐。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"B": 0}},
-            {"id": "是", "text": "是", "score": {"B": 15}}
+            {"id": "A", "text": "完全不符合", "score": {"B": 0}},
+            {"id": "B", "text": "不太符合", "score": {"B": 4}},
+            {"id": "C", "text": "一般", "score": {"B": 8}},
+            {"id": "D", "text": "比较符合", "score": {"B": 12}},
+            {"id": "E", "text": "完全符合", "score": {"B": 15}}
           ]
         },
         {
           "id": 44,
           "text": "我宁愿承担自主选择的后果，也不愿被他人安排。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"I": 0}},
-            {"id": "是", "text": "是", "score": {"I": 15}}
+            {"id": "A", "text": "完全不符合", "score": {"I": 0}},
+            {"id": "B", "text": "不太符合", "score": {"I": 4}},
+            {"id": "C", "text": "一般", "score": {"I": 8}},
+            {"id": "D", "text": "比较符合", "score": {"I": 12}},
+            {"id": "E", "text": "完全符合", "score": {"I": 15}}
           ]
         },
         {
           "id": 45,
           "text": "在团队中工作让我感到充满力量。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"C": 0}},
-            {"id": "是", "text": "是", "score": {"C": 17}}
+            {"id": "A", "text": "完全不符合", "score": {"C": 0}},
+            {"id": "B", "text": "不太符合", "score": {"C": 4}},
+            {"id": "C", "text": "一般", "score": {"C": 8}},
+            {"id": "D", "text": "比较符合", "score": {"C": 13}},
+            {"id": "E", "text": "完全符合", "score": {"C": 17}}
           ]
         },
         {
           "id": 46,
           "text": "我经常反思自己的行为，以求改进。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"D": 0}},
-            {"id": "是", "text": "是", "score": {"D": 17}}
+            {"id": "A", "text": "完全不符合", "score": {"D": 0}},
+            {"id": "B", "text": "不太符合", "score": {"D": 4}},
+            {"id": "C", "text": "一般", "score": {"D": 8}},
+            {"id": "D", "text": "比较符合", "score": {"D": 13}},
+            {"id": "E", "text": "完全符合", "score": {"D": 17}}
           ]
         },
         {
           "id": 47,
           "text": "我不喜欢听从别人的指令行事，即便这个人是我的长辈。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"F": 0}},
-            {"id": "是", "text": "是", "score": {"F": 16}}
+            {"id": "A", "text": "完全不符合", "score": {"F": 0}},
+            {"id": "B", "text": "不太符合", "score": {"F": 4}},
+            {"id": "C", "text": "一般", "score": {"F": 8}},
+            {"id": "D", "text": "比较符合", "score": {"F": 12}},
+            {"id": "E", "text": "完全符合", "score": {"F": 16}}
           ]
         },
         {
           "id": 48,
           "text": "我会为未来的风险（如失业、意外）做准备。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"H": 0}},
-            {"id": "是", "text": "是", "score": {"H": 21}}
+            {"id": "A", "text": "完全不符合", "score": {"H": 0}},
+            {"id": "B", "text": "不太符合", "score": {"H": 5}},
+            {"id": "C", "text": "一般", "score": {"H": 10}},
+            {"id": "D", "text": "比较符合", "score": {"H": 16}},
+            {"id": "E", "text": "完全符合", "score": {"H": 21}}
           ]
         },
         {
           "id": 49,
           "text": "解决问题时，我喜欢提出新颖独特的方案。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"E": 0}},
-            {"id": "是", "text": "是", "score": {"E": 16}}
+            {"id": "A", "text": "完全不符合", "score": {"E": 0}},
+            {"id": "B", "text": "不太符合", "score": {"E": 4}},
+            {"id": "C", "text": "一般", "score": {"E": 8}},
+            {"id": "D", "text": "比较符合", "score": {"E": 12}},
+            {"id": "E", "text": "完全符合", "score": {"E": 16}}
           ]
         },
         {
           "id": 50,
           "text": "我常常觉得\"玩\"是在浪费时间。",
-          "type": "binary",
+          "type": "single",
           "options": [
-            {"id": "否", "text": "否", "score": {"G": 21}},
-            {"id": "是", "text": "是", "score": {"G": 0}}
+            {"id": "A", "text": "完全不符合", "score": {"G": 21}},
+            {"id": "B", "text": "不太符合", "score": {"G": 16}},
+            {"id": "C", "text": "一般", "score": {"G": 10}},
+            {"id": "D", "text": "比较符合", "score": {"G": 5}},
+            {"id": "E", "text": "完全符合", "score": {"G": 0}}
           ]
         },
         {

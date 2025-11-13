@@ -263,36 +263,52 @@
 
                 let draggedItem = null;
 
-                // 拖拽开始
-                sortableList.addEventListener('dragstart', (e) => {
+                // 修复：添加触摸事件支持
+                const handleDragStart = (e) => {
                     if (e.target.classList.contains('sort-item')) {
                         draggedItem = e.target;
-                        setTimeout(() => e.target.classList.add('dragging'), 0);
+                        // 修复：阻止默认行为避免页面滚动
+                        e.preventDefault();
+                        setTimeout(() => {
+                            draggedItem.classList.add('dragging');
+                            // 修复：在拖拽时禁用页面滚动
+                            document.body.style.overflow = 'hidden';
+                        }, 0);
                     }
-                });
+                };
 
-                // 拖拽结束
-                sortableList.addEventListener('dragend', (e) => {
-                    if (e.target.classList.contains('sort-item')) {
-                        e.target.classList.remove('dragging');
+                const handleDragEnd = (e) => {
+                    if (draggedItem) {
+                        draggedItem.classList.remove('dragging');
+                        // 修复：恢复页面滚动
+                        document.body.style.overflow = '';
                         this.saveSortAnswer();
+                        draggedItem = null;
                     }
-                });
+                };
 
-                // 拖拽经过
-                sortableList.addEventListener('dragover', (e) => {
+                const handleDragOver = (e) => {
                     e.preventDefault();
-                    const afterElement = this.getDragAfterElement(sortableList, e.clientY);
-                    const draggable = document.querySelector('.dragging');
-                    if (draggable && afterElement) {
-                        sortableList.insertBefore(draggable, afterElement);
+                    if (!draggedItem) return;
+                    
+                    const afterElement = this.getDragAfterElement(sortableList, e.clientY || e.touches[0].clientY);
+                    if (afterElement) {
+                        sortableList.insertBefore(draggedItem, afterElement);
                     }
-                });
+                };
+
+                // 修复：同时绑定鼠标和触摸事件
+                sortableList.addEventListener('dragstart', handleDragStart);
+                sortableList.addEventListener('touchstart', handleDragStart, { passive: false });
+                
+                sortableList.addEventListener('dragend', handleDragEnd);
+                sortableList.addEventListener('touchend', handleDragEnd);
+                
+                sortableList.addEventListener('dragover', handleDragOver);
+                sortableList.addEventListener('touchmove', handleDragOver, { passive: false });
             }
 
-            /**
-             * 获取拖拽后的位置元素
-             */
+            // 修复：优化获取拖拽位置的方法
             getDragAfterElement(container, y) {
                 const draggableElements = [...container.querySelectorAll('.sort-item:not(.dragging)')];
                 
@@ -762,6 +778,8 @@
             cursor: move;
             transition: all 0.3s ease;
             gap: 12px;
+            touch-action: none; /* 修复：防止触摸默认行为 */
+            user-select: none; /* 修复：防止文本选择 */           
         }
 
         .sort-item:hover {
@@ -769,14 +787,18 @@
         }
 
         .sort-item.dragging {
-            opacity: 0.5;
+            opacity: 0.6;
             background: #f8f9fa;
+            transform: rotate(2deg);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
         .sort-handle {
             color: #999;
             font-size: 16px;
             cursor: move;
+            padding: 8px;
+            touch-action: none;
         }
 
         /* 多选题样式 */
@@ -832,6 +854,14 @@
             
             .progress-info {
                 font-size: 13px;
+            }
+            .sort-item {
+                padding: 12px;
+                margin: 4px 0;
+            }
+            
+            .sort-item.dragging {
+                transform: scale(1.02);
             }
         }
 
