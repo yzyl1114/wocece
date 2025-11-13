@@ -763,8 +763,7 @@ const ReportComponents = {
         render: (data, config) => {
             const topDim = data.topDimensions[0];
             return `
-                <section class="result-header" style="background: linear-gradient(135deg, ${topDim.color}, #764ba2);">
-                    <div class="result-title">精神需求测试完成</div>
+                <section class="result-header" style="background: linear-gradient(135deg, ${topDim.color}, #764ba2); padding: 20px 15px;">
                     <div class="result-content">
                         <div class="result-label">你的核心精神需求</div>
                         <div class="result-text">${topDim.name}</div>
@@ -776,41 +775,21 @@ const ReportComponents = {
         }
     },
 
-    'spiritual-dimensions-chart': {
+    'spiritual-horizontal-bars': {
         render: (data, config) => {
+            // 按分数排序
+            const sortedDimensions = [...data.dimensions].sort((a, b) => b.score - a.score);
+            
             return `
                 <section class="analysis-section">
                     <h3>10大精神维度分析</h3>
-                    <div class="radar-chart-container">
-                        <canvas id="spiritualRadarChart" width="300" height="300"></canvas>
-                    </div>
-                    <div class="dimensions-legend">
-                        ${data.dimensions.map(dim => `
-                            <div class="legend-item">
-                                <span class="legend-color" style="background: ${dim.color};"></span>
-                                <span class="legend-name">${dim.name}</span>
-                                <span class="legend-score">${dim.score}%</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                </section>
-            `;
-        }
-    },
-
-    'spiritual-top-dimensions': {
-        render: (data, config) => {
-            return `
-                <section class="analysis-section">
-                    <h3>主导需求分析</h3>
-                    <div class="top-dimensions-grid">
-                        ${data.topDimensions.map((dim, index) => `
-                            <div class="dimension-card" style="border-left: 4px solid ${dim.color};">
-                                <div class="dimension-rank">${index + 1}</div>
-                                <div class="dimension-info">
-                                    <h4>${dim.name}</h4>
-                                    <div class="dimension-score">${dim.score}%</div>
-                                    <p class="dimension-desc">${dim.interpretation}</p>
+                    <div class="horizontal-bars-container">
+                        ${sortedDimensions.map(dim => `
+                            <div class="bar-item">
+                                <div class="bar-label">${dim.name}</div>
+                                <div class="bar-track">
+                                    <div class="bar-fill" style="width: ${dim.score}%; background: ${dim.color};"></div>
+                                    <div class="bar-score">${dim.score}%</div>
                                 </div>
                             </div>
                         `).join('')}
@@ -822,54 +801,65 @@ const ReportComponents = {
 
     'spiritual-detailed-analysis': {
         render: (data, config) => {
+            const sortedDimensions = [...data.dimensions].sort((a, b) => b.score - a.score);
+            
             return `
                 <section class="analysis-section">
                     <h3>深度解读</h3>
-                    <div class="analysis-content">
-                        <p>${data.detailedAnalysis}</p>
-                        <div class="dimension-details">
-                            ${data.topDimensions.map(dim => `
-                                <div class="dimension-detail">
-                                    <h4 style="color: ${dim.color};">${dim.name}需求</h4>
-                                    <p>${dim.description}</p>
-                                    <div class="dimension-strength">
-                                        <span>需求强度: </span>
-                                        <div class="strength-bar">
-                                            <div class="strength-fill" style="width: ${dim.score}%; background: ${dim.color};"></div>
-                                        </div>
-                                        <span>${dim.score}%</span>
+                    <div class="dimensions-analysis">
+                        ${sortedDimensions.map(dim => `
+                            <div class="dimension-analysis-item">
+                                <div class="dimension-header" style="border-left: 4px solid ${dim.color};">
+                                    <h4>${dim.name}需求 (${dim.score}%)</h4>
+                                </div>
+                                <div class="dimension-content">
+                                    <p><strong>含义：</strong>${dim.description}</p>
+                                    <p><strong>你的表现：</strong>${dim.interpretation}</p>
+                                    <div class="suggestions">
+                                        <strong>针对性建议：</strong>
+                                        <ul>
+                                            ${this.getDimensionSuggestions(dim.code, dim.score).map(suggestion => 
+                                                `<li>${suggestion}</li>`
+                                            ).join('')}
+                                        </ul>
                                     </div>
                                 </div>
-                            `).join('')}
-                        </div>
+                            </div>
+                        `).join('')}
                     </div>
                 </section>
             `;
         }
     },
 
-    'spiritual-balance-advice': {
+    'spiritual-summary': {
         render: (data, config) => {
+            const topDimensions = data.topDimensions.slice(0, 3);
             const lowDimensions = data.dimensions.filter(dim => dim.score < 40).slice(0, 2);
-            if (lowDimensions.length === 0) return '';
             
             return `
                 <section class="analysis-section">
-                    <h3>平衡发展建议</h3>
-                    <div class="balance-advice">
-                        <p>你的精神需求相对均衡，但在以下方面可以进一步培养：</p>
-                        <div class="improvement-areas">
-                            ${lowDimensions.map(dim => `
-                                <div class="improvement-item">
-                                    <h4 style="color: ${dim.color};">${dim.name}</h4>
-                                    <p>${dim.interpretation}</p>
-                                    <ul class="suggestions">
-                                        <li>尝试相关的新活动和体验</li>
-                                        <li>设定小目标逐步培养兴趣</li>
-                                        <li>寻找这方面的榜样或导师</li>
-                                    </ul>
-                                </div>
-                            `).join('')}
+                    <h3>总结与建议</h3>
+                    <div class="summary-content">
+                        <div class="summary-point">
+                            <strong>核心优势：</strong>你在${topDimensions.map(dim => dim.name).join('、')}方面表现突出，
+                            这构成了你精神世界的主要驱动力。
+                        </div>
+                        
+                        ${lowDimensions.length > 0 ? `
+                        <div class="summary-point">
+                            <strong>发展建议：</strong>可以关注${lowDimensions.map(dim => dim.name).join('和')}方面的平衡发展，
+                            以获得更全面的精神满足。
+                        </div>
+                        ` : ''}
+                        
+                        <div class="summary-point">
+                            <strong>行动指引：</strong>基于你的精神需求特征，建议在生活中创造更多能够满足
+                            ${topDimensions[0].name}和${topDimensions[1].name}需求的机会。
+                        </div>
+                        
+                        <div class="professional-note">
+                            *本测试结果基于你的答题情况生成，反映了当前阶段的精神需求倾向，会随着个人成长而发生变化。
                         </div>
                     </div>
                 </section>
@@ -1130,6 +1120,119 @@ if (!document.querySelector('#report-components-styles')) {
             margin-top: 2px;
         }
 
+        /* 横向柱状图样式 */
+        .horizontal-bars-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .bar-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .bar-label {
+            width: 80px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .bar-track {
+            flex: 1;
+            height: 24px;
+            background: #f0f0f0;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 12px;
+            transition: width 1s ease;
+            position: relative;
+        }
+
+        .bar-score {
+            width: 50px;
+            text-align: right;
+            font-weight: bold;
+            color: #333;
+            font-size: 14px;
+        }
+
+        /* 深度解读样式 */
+        .dimensions-analysis {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .dimension-analysis-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .dimension-header {
+            padding-left: 15px;
+            margin-bottom: 10px;
+        }
+
+        .dimension-header h4 {
+            margin: 0;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .dimension-content {
+            line-height: 1.6;
+        }
+
+        .dimension-content p {
+            margin: 8px 0;
+        }
+
+        .suggestions {
+            margin-top: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            border-left: 3px solid #667eea;
+        }
+
+        .suggestions ul {
+            margin: 5px 0;
+            padding-left: 20px;
+        }
+
+        .suggestions li {
+            margin: 4px 0;
+        }
+
+        /* 总结区块样式 */
+        .summary-content {
+            line-height: 1.8;
+        }
+
+        .summary-point {
+            margin: 15px 0;
+            padding: 0;
+            background: none;
+        }
+
+        .professional-note {
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+            margin-top: 20px;
+            text-align: center;
+        }
+            
         /* 响应式调整 */
         @media (max-width: 480px) {
             .indicator-grid {

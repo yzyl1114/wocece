@@ -50,10 +50,9 @@ class TemplateEngine {
         'spiritual-needs': {
             components: [
                 'spiritual-header',
-                'spiritual-dimensions-chart',
-                'spiritual-top-dimensions', 
-                'spiritual-detailed-analysis',
-                'spiritual-balance-advice',
+                'spiritual-horizontal-bars', // 新增：横向柱状图
+                'spiritual-detailed-analysis', // 扩展：深度解读
+                'spiritual-summary', // 新增：总结区块
                 'save-actions'
             ],
             styles: 'spiritual-styles'
