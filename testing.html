@@ -158,10 +158,94 @@
                     imageContainer.style.display = 'none';
                 }
 
-                // 更新选项
+                // ============ 替换这部分：根据题型渲染不同界面 ============
+                this.renderOptionsByType(question);
+                
+                // 更新导航按钮状态
+                this.updateNavigationButtons();
+            }
+
+            /**
+             * 根据题型渲染不同选项界面
+             */
+            renderOptionsByType(question) {
                 const optionsContainer = document.getElementById('optionsContainer');
-                optionsContainer.innerHTML = question.options.map(option => {
-                    const isSelected = this.answers[this.currentQuestionIndex] === option.id;
+                
+                switch(question.type) {
+                    case 'sort':
+                        this.renderSortOptions(question, optionsContainer);
+                        break;
+                    case 'multiple':
+                        this.renderMultipleOptions(question, optionsContainer);
+                        break;
+                    default: // binary, single
+                        this.renderDefaultOptions(question, optionsContainer);
+                }
+            }
+
+            /**
+             * 渲染排序题界面
+             */
+            renderSortOptions(question, container) {
+                const currentAnswer = this.answers[this.currentQuestionIndex] || [];
+                
+                let html = `
+                    <div class="sort-instruction">
+                        <p>请按重要性由高到低拖拽排序：</p>
+                    </div>
+                    <div class="sortable-list" id="sortableList">
+                `;
+                
+                // 如果已有答案，按答案顺序渲染；否则按原始顺序
+                const itemsToRender = currentAnswer.length > 0 
+                    ? currentAnswer.map(id => question.options.find(opt => opt.id === id))
+                    : question.options;
+                    
+                itemsToRender.forEach(option => {
+                    if (!option) return;
+                    const isSelected = currentAnswer.includes(option.id);
+                    html += `
+                        <div class="sort-item ${isSelected ? 'selected' : ''}" 
+                            data-option-id="${option.id}" draggable="true">
+                            <span class="sort-handle">☰</span>
+                            <span class="option-text">${option.text}</span>
+                        </div>
+                    `;
+                });
+                
+                html += `</div>`;
+                container.innerHTML = html;
+                
+                // 初始化拖拽排序
+                this.initSortable();
+            }
+
+            /**
+             * 渲染多选题界面
+             */
+            renderMultipleOptions(question, container) {
+                const currentAnswer = this.answers[this.currentQuestionIndex] || [];
+                
+                container.innerHTML = question.options.map(option => {
+                    const isSelected = currentAnswer.includes(option.id);
+                    return `
+                        <div class="option multiple-option ${isSelected ? 'selected' : ''}" 
+                            data-option-id="${option.id}">
+                            <span class="option-checkbox">${isSelected ? '✓' : ''}</span>
+                            <span class="option-text">${option.text}</span>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            /**
+             * 渲染默认单选题界面
+             */
+            renderDefaultOptions(question, container) {
+                const currentAnswer = this.answers[this.currentQuestionIndex];
+                
+                container.innerHTML = question.options.map(option => {
+                    const isSelected = currentAnswer === option.id;
                     return `
                         <div class="option ${isSelected ? 'selected' : ''}" data-option-id="${option.id}">
                             <span class="option-label">${option.id}</span>
@@ -169,6 +253,70 @@
                         </div>
                     `;
                 }).join('');
+            }
+            /**
+             * 初始化拖拽排序
+             */
+            initSortable() {
+                const sortableList = document.getElementById('sortableList');
+                if (!sortableList) return;
+
+                let draggedItem = null;
+
+                // 拖拽开始
+                sortableList.addEventListener('dragstart', (e) => {
+                    if (e.target.classList.contains('sort-item')) {
+                        draggedItem = e.target;
+                        setTimeout(() => e.target.classList.add('dragging'), 0);
+                    }
+                });
+
+                // 拖拽结束
+                sortableList.addEventListener('dragend', (e) => {
+                    if (e.target.classList.contains('sort-item')) {
+                        e.target.classList.remove('dragging');
+                        this.saveSortAnswer();
+                    }
+                });
+
+                // 拖拽经过
+                sortableList.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    const afterElement = this.getDragAfterElement(sortableList, e.clientY);
+                    const draggable = document.querySelector('.dragging');
+                    if (draggable && afterElement) {
+                        sortableList.insertBefore(draggable, afterElement);
+                    }
+                });
+            }
+
+            /**
+             * 获取拖拽后的位置元素
+             */
+            getDragAfterElement(container, y) {
+                const draggableElements = [...container.querySelectorAll('.sort-item:not(.dragging)')];
+                
+                return draggableElements.reduce((closest, child) => {
+                    const box = child.getBoundingClientRect();
+                    const offset = y - box.top - box.height / 2;
+                    
+                    if (offset < 0 && offset > closest.offset) {
+                        return { offset: offset, element: child };
+                    } else {
+                        return closest;
+                    }
+                }, { offset: Number.NEGATIVE_INFINITY }).element;
+            }
+
+            /**
+             * 保存排序题答案
+             */
+            saveSortAnswer() {
+                const sortItems = document.querySelectorAll('.sort-item');
+                const sortedIds = Array.from(sortItems).map(item => item.dataset.optionId);
+                this.answers[this.currentQuestionIndex] = sortedIds;
+                this.saveProgress();
+                this.updateNavigationButtons();
             }
 
             bindEvents() {
@@ -201,16 +349,33 @@
             }
 
             selectOption(optionId) {
-                // 记录答案
-                this.answers[this.currentQuestionIndex] = optionId;
+                const question = this.testData.questions[this.currentQuestionIndex];
+                
+                switch(question.type) {
+                    case 'multiple':
+                        // 多选题：切换选择状态
+                        const currentAnswer = this.answers[this.currentQuestionIndex] || [];
+                        if (currentAnswer.includes(optionId)) {
+                            // 取消选择
+                            this.answers[this.currentQuestionIndex] = currentAnswer.filter(id => id !== optionId);
+                        } else {
+                            // 添加选择
+                            this.answers[this.currentQuestionIndex] = [...currentAnswer, optionId];
+                        }
+                        break;
+                        
+                    case 'sort':
+                        // 排序题在拖拽时自动保存，这里不需要处理
+                        return;
+                        
+                    default:
+                        // 单选题：直接记录答案
+                        this.answers[this.currentQuestionIndex] = optionId;
+                }
                 
                 // 重新渲染选项以显示选中状态
                 this.renderQuestion();
-                
-                // 保存进度
                 this.saveProgress();
-                
-                // 更新导航按钮状态
                 this.updateNavigationButtons();
             }
 
@@ -245,6 +410,7 @@
             updateNavigationButtons() {
                 const prevBtn = document.getElementById('prevBtn');
                 const nextBtn = document.getElementById('nextBtn');
+                const question = this.testData.questions[this.currentQuestionIndex];
                 
                 // 更新上一题按钮状态
                 prevBtn.disabled = this.currentQuestionIndex === 0;
@@ -256,8 +422,21 @@
                     nextBtn.textContent = '下一题';
                 }
                 
-                // 如果有答案，启用下一题按钮
-                const hasAnswer = !!this.answers[this.currentQuestionIndex];
+                // 根据题型检查是否有答案
+                let hasAnswer = false;
+                const currentAnswer = this.answers[this.currentQuestionIndex];
+                
+                switch(question.type) {
+                    case 'sort':
+                        hasAnswer = Array.isArray(currentAnswer) && currentAnswer.length > 0;
+                        break;
+                    case 'multiple':
+                        hasAnswer = Array.isArray(currentAnswer) && currentAnswer.length > 0;
+                        break;
+                    default:
+                        hasAnswer = !!currentAnswer;
+                }
+                
                 nextBtn.disabled = !hasAnswer;
             }
 
@@ -550,6 +729,73 @@
             background: #ccc;
             cursor: not-allowed;
             box-shadow: none;
+        }
+
+        /* 排序题样式 */
+        .sort-instruction {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .sortable-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sort-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px;
+            cursor: move;
+            transition: all 0.3s ease;
+            gap: 12px;
+        }
+
+        .sort-item:hover {
+            border-color: #667eea;
+        }
+
+        .sort-item.dragging {
+            opacity: 0.5;
+            background: #f8f9fa;
+        }
+
+        .sort-handle {
+            color: #999;
+            font-size: 16px;
+            cursor: move;
+        }
+
+        /* 多选题样式 */
+        .multiple-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .option-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: white;
+            background: #f0f0f0;
+            transition: all 0.3s ease;
+        }
+
+        .multiple-option.selected .option-checkbox {
+            background: #667eea;
+            border-color: #667eea;
         }
 
         /* 响应式调整 */
