@@ -768,7 +768,7 @@ const ReportComponents = {
                         <div class="result-label">你的核心精神需求</div>
                         <div class="result-text">${topDim.name}</div>
                         <div class="score-number">${data.score}%</div>
-                        <div class="score-label">综合匹配度</div>
+                        <div class="score-label" style="color: white;>综合匹配度</div>
                     </div>
                 </section>
             `;
@@ -780,6 +780,14 @@ const ReportComponents = {
             // 按分数排序
             const sortedDimensions = [...data.dimensions].sort((a, b) => b.score - a.score);
             
+            // 统一的渐变色方案
+            const getBarColor = (score) => {
+                if (score >= 80) return 'linear-gradient(90deg, #667eea, #764ba2)';
+                if (score >= 60) return 'linear-gradient(90deg, #5a67d8, #667eea)';
+                if (score >= 40) return 'linear-gradient(90deg, #4c51bf, #5a67d8)';
+                return 'linear-gradient(90deg, #718096, #4a5568)';
+            };
+            
             return `
                 <section class="analysis-section">
                     <h3>10大精神维度分析</h3>
@@ -788,9 +796,9 @@ const ReportComponents = {
                             <div class="bar-item">
                                 <div class="bar-label">${dim.name}</div>
                                 <div class="bar-track">
-                                    <div class="bar-fill" style="width: ${dim.score}%; background: ${dim.color};"></div>
-                                    <div class="bar-score">${dim.score}%</div>
+                                    <div class="bar-fill" style="width: ${dim.score}%; background: ${getBarColor(dim.score)};"></div>
                                 </div>
+                                <div class="bar-score">${dim.score}%</div>
                             </div>
                         `).join('')}
                     </div>
@@ -809,19 +817,19 @@ const ReportComponents = {
                     <div class="dimensions-analysis">
                         ${sortedDimensions.map(dim => `
                             <div class="dimension-analysis-item">
-                                <div class="dimension-header" style="border-left: 4px solid ${dim.color};">
-                                    <h4>${dim.name}需求 (${dim.score}%)</h4>
+                                <div class="dimension-header">
+                                    <h4 style="text-align: left; margin: 0; color: #333; font-size: 16px;">${dim.name} (${dim.score}%)</h4>
                                 </div>
                                 <div class="dimension-content">
                                     <p><strong>含义：</strong>${dim.description}</p>
                                     <p><strong>你的表现：</strong>${dim.interpretation}</p>
                                     <div class="suggestions">
                                         <strong>针对性建议：</strong>
-                                        <ul>
+                                        <div class="suggestion-list">
                                             ${ReportComponents.getDimensionSuggestions(dim.code, dim.score).map(suggestion => 
-                                                `<li>${suggestion}</li>`
+                                                `<div class="suggestion-item">${suggestion}</div>`
                                             ).join('')}
-                                        </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1291,30 +1299,33 @@ if (!document.querySelector('#report-components-styles')) {
             font-size: 14px;
             font-weight: 500;
             color: #333;
+            flex-shrink: 0;
         }
 
         .bar-track {
             flex: 1;
             height: 24px;
             background: #f0f0f0;
-            border-radius: 12px;
+            border-radius: 10px;
             position: relative;
             overflow: hidden;
         }
 
         .bar-fill {
             height: 100%;
-            border-radius: 12px;
+            border-radius: 10px;
             transition: width 1s ease;
             position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .bar-score {
-            width: 50px;
+            width: 40px;
             text-align: right;
             font-weight: bold;
             color: #333;
             font-size: 14px;
+            flex-shrink: 0;
         }
 
         /* 深度解读样式 */
@@ -1331,8 +1342,7 @@ if (!document.querySelector('#report-components-styles')) {
         }
 
         .dimension-header {
-            padding-left: 15px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .dimension-header h4 {
@@ -1347,14 +1357,37 @@ if (!document.querySelector('#report-components-styles')) {
 
         .dimension-content p {
             margin: 8px 0;
+            color: #555;
         }
 
         .suggestions {
-            margin-top: 10px;
-            padding: 10px;
+            margin-top: 12px;
+            padding: 12px;
             background: white;
             border-radius: 6px;
             border-left: 3px solid #667eea;
+        }
+        .suggestions strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .suggestion-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .suggestion-item {
+            padding: 6px 0;
+            color: #555;
+            line-height: 1.5;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
         }
 
         .suggestions ul {
@@ -1406,6 +1439,28 @@ if (!document.querySelector('#report-components-styles')) {
                 font-size: 10px;
                 padding: 4px 8px;
             }
+
+            .bar-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            
+            .bar-label {
+                width: 100%;
+            }
+            
+            .bar-track {
+                width: 100%;
+            }
+            
+            .bar-score {
+                align-self: flex-end;
+            }
+            
+            .dimension-header h4 {
+                font-size: 15px;
+            }            
         }
     `;
     document.head.appendChild(style);
