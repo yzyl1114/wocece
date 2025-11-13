@@ -173,7 +173,11 @@ class ResultManager {
         document.getElementById('funAnalysis').style.display = 'none';
         document.getElementById('standardAnalysis').style.display = 'block';
 
-        if (this.testId === '6') {
+        if (this.testId === '8') {
+            console.log('强制使用精神需求测试模板');
+            const template = this.templateEngine.getTemplate(this.testConfig);
+            this.renderByTemplate(template, 'standard');
+        } else if (this.testId === '6') {
             this.renderSCL90Report();
         } else {
             this.renderBasicStandardReport();

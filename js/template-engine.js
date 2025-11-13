@@ -75,10 +75,10 @@ class TemplateEngine {
             return this.constructor.TEMPLATES['animal-personality'];
         }
 
-        if (testConfig && testConfig.id === '8') {
-            console.log('🎯 使用精神需求测试模板');
+        if (testConfig && (testConfig.id === '8' || testConfig.calculationType === 'spiritual_needs')) {
+            console.log('🎯 强制使用精神需求测试模板');
             return this.constructor.TEMPLATES['spiritual-needs'];
-        }    
+        }
 
         // 原有逻辑作为备用
         if (testConfig?.resultTemplate) {
