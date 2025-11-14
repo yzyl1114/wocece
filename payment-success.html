@@ -101,19 +101,12 @@
             const urlParams = new URLSearchParams(window.location.search);
             const testId = urlParams.get('testId');
             const success = urlParams.get('success');
-            const tradeStatus = urlParams.get('trade_status'); // 支付宝返回的状态
-            const tradeNo = urlParams.get('out_trade_no');
+            const tradeStatus = urlParams.get('trade_status');
+            const outTradeNo = urlParams.get('out_trade_no');
             
-            // 添加调试信息 - 临时显示所有URL参数
-            console.log('URL参数:', {
-                testId,
-                success, 
-                tradeStatus,
-                outTradeNo,
-                allParams: Object.fromEntries(urlParams)
-            });
+            console.log('支付成功页面加载，参数:', { testId, success, tradeStatus, outTradeNo });
             
-            // 临时显示调试信息到页面
+            // 添加调试信息到页面
             const debugInfo = document.createElement('div');
             debugInfo.style.cssText = 'background: #f5f5f5; padding: 10px; margin: 10px; border-radius: 5px; font-size: 12px;';
             debugInfo.innerHTML = `
@@ -126,17 +119,93 @@
             `;
             document.querySelector('.success-container').prepend(debugInfo);
 
-            // 支付成功处理
-            if (testId && (success === 'true' || tradeStatus === 'TRADE_SUCCESS')) {
+            // 扩展支付成功状态检测
+            const isPaymentSuccess = 
+                success === 'true' || 
+                tradeStatus === 'TRADE_SUCCESS' ||
+                tradeStatus === 'TRADE_FINISHED' ||
+                (outTradeNo && outTradeNo.startsWith('TEST_'));
+
+            if (testId && isPaymentSuccess) {
+                // 支付成功 - 确保保存支付记录
+                console.log('检测到支付成功，测试ID:', testId);
+                
                 // 显示成功界面
                 document.querySelector('.success-title').textContent = '支付成功！';
                 document.querySelector('.success-message').innerHTML = '您已成功解锁测试内容<br>现在可以开始测试了';
-                storageManager.savePaymentRecord(testId);
                 
-                // 设置开始测试按钮
-                document.getElementById('startTestBtn').onclick = function() {
+                // 保存支付记录 - 添加详细日志和错误处理
+                try {
+                    if (window.storageManager) {
+                        console.log('找到storageManager，开始保存支付记录...');
+                        storageManager.savePaymentRecord(testId);
+                        console.log('支付记录保存完成');
+                        
+                        // 验证是否保存成功
+                        const isPaid = storageManager.hasPaidForTest(testId);
+                        console.log('支付状态验证:', isPaid ? '已支付' : '未支付');
+                        
+                        if (!isPaid) {
+                            console.error('支付记录保存失败！');
+                            // 备用方案：直接操作localStorage
+                            const paidTests = JSON.parse(localStorage.getItem('paid_tests') || '[]');
+                            if (!paidTests.includes(testId)) {
+                                paidTests.push(testId);
+                                localStorage.setItem('paid_tests', JSON.stringify(paidTests));
+                                console.log('使用备用方案保存支付记录');
+                            }
+                        }
+                    } else {
+                        console.error('storageManager未找到！');
+                        // 直接操作localStorage
+                        const paidTests = JSON.parse(localStorage.getItem('paid_tests') || '[]');
+                        if (!paidTests.includes(testId)) {
+                            paidTests.push(testId);
+                            localStorage.setItem('paid_tests', JSON.stringify(paidTests));
+                            console.log('直接使用localStorage保存支付记录');
+                        }
+                    }
+                } catch (error) {
+                    console.error('保存支付记录时出错:', error);
+                }
+                
+                // 添加存储状态显示到页面
+                const statusDisplay = document.createElement('div');
+                statusDisplay.style.cssText = 'background: #e6f7ff; padding: 10px; margin: 10px; border-radius: 5px; font-size: 12px; border: 1px solid #91d5ff;';
+                
+                // 检查最终的支付状态
+                let finalPaidStatus = false;
+                if (window.storageManager) {
+                    finalPaidStatus = storageManager.hasPaidForTest(testId);
+                } else {
+                    const paidTests = JSON.parse(localStorage.getItem('paid_tests') || '[]');
+                    finalPaidStatus = paidTests.includes(testId);
+                }
+                
+                statusDisplay.innerHTML = `
+                    <strong>支付状态:</strong><br>
+                    测试ID: ${testId}<br>
+                    本地支付状态: ${finalPaidStatus ? '✅ 已支付' : '❌ 未支付'}<br>
+                    存储验证: ${typeof storageManager !== 'undefined' ? '✅ storageManager可用' : '❌ storageManager不可用'}
+                `;
+                document.querySelector('.success-container').prepend(statusDisplay);
+                
+                // 设置开始测试按钮 - 双重保险
+                const startTestBtn = document.getElementById('startTestBtn');
+                
+                // 方法1: onclick
+                startTestBtn.onclick = function() {
+                    console.log('onclick点击开始测试，跳转到:', `testing.html?id=${testId}`);
                     window.location.href = `testing.html?id=${testId}`;
                 };
+                
+                // 方法2: addEventListener (备用)
+                startTestBtn.addEventListener('click', function(e) {
+                    console.log('addEventListener点击开始测试');
+                    e.preventDefault();
+                    window.location.href = `testing.html?id=${testId}`;
+                });
+                
             } 
             // 支付失败处理
             else if (tradeStatus === 'TRADE_CLOSED' || tradeStatus === 'TRADE_FAILED') {

@@ -18,7 +18,9 @@ class StorageManager {
         
         // 正式模式检查真实的支付记录
         const paidTests = this.getPaidTests();
-        return paidTests.includes(testId);
+        const isPaid = paidTests.includes(testId);
+        console.log('检查支付状态:', testId, isPaid ? '已支付' : '未支付');
+        return isPaid;
     }
 
     // 获取已支付的测试列表
@@ -29,10 +31,17 @@ class StorageManager {
 
     // 保存支付记录
     savePaymentRecord(testId) {
+        console.log('savePaymentRecord被调用，testId:', testId);
+        
         const paidTests = this.getPaidTests();
+        console.log('当前已支付列表:', paidTests);
+        
         if (!paidTests.includes(testId)) {
             paidTests.push(testId);
             this.storage.setItem('paid_tests', JSON.stringify(paidTests));
+            console.log('支付记录已保存，新列表:', paidTests);
+        } else {
+            console.log('测试已支付，无需重复保存');
         }
     }
 

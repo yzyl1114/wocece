@@ -126,7 +126,7 @@ class PsychTestApp {
                 description: '专业心理健康筛查，评估9大心理症状维度',
                 category: 'standard',
                 templateType: 'standard', // 新增字段
-                price: 0,
+                price: 0.01,
                 questions: 90,
                 image: 'images/scl90.jpg'
             },
@@ -136,7 +136,7 @@ class PsychTestApp {
                 description: '揭秘你的灵魂动物原型，发现隐藏人格特质',
                 category: 'fun',
                 templateType: 'fun', // 新增字段
-                price: 1,
+                price: 0.01,
                 questions: 60,
                 image: 'images/test7.jpg'
             },
@@ -146,7 +146,7 @@ class PsychTestApp {
             description: '探索10大精神维度，发现内心最深处的驱动力',
             category: 'standard',
             templateType: 'standard',
-            price: 1,
+            price: 0.01,
             questions: 60,
             image: 'images/spiritual-needs.jpg'
             }            
