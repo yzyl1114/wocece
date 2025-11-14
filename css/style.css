@@ -272,6 +272,35 @@ body {
     line-height: 1.4;
 }
 
+/* 测试进度样式 */
+.test-progress {
+    font-size: 12px;
+    color: #667eea;
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+.test-completed {
+    font-size: 12px;
+    color: #52c41a;
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+/* 已完成测试的按钮样式 */
+.completed-btn {
+    background: linear-gradient(135deg, #52c41a, #389e0d) !important;
+}
+
+/* 测试列表项悬停效果 */
+.test-list-item:hover .test-progress {
+    color: #fff;
+}
+
+.test-list-item:hover .test-completed {
+    color: #fff;
+}
+
 .small-btn {
     background: var(--primary-color);
     color: white;

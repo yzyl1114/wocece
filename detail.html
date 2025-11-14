@@ -145,6 +145,9 @@
                 // 更新页面标题
                 document.title = `${this.testData.title} - 我测测`;
 
+                // 更新按钮状态
+                this.updateButtonState();
+
                 setTimeout(() => {
                     document.body.classList.add('content-loaded');
                 }, 100);
@@ -321,14 +324,81 @@
                 }
             }
 
+            // 新增方法：更新按钮状态
+            updateButtonState() {
+                const startBtn = document.getElementById('startTestBtn');
+                const priceSpan = document.getElementById('testPrice');
+                
+                // 检查是否已支付
+                const hasPaid = storageManager.hasPaidForTest(this.testId);
+                
+                // 检查是否有未完成的测试进度
+                const hasProgress = storageManager.getTestProgress(this.testId);
+                
+                // 检查是否已有测试结果（已完成测试）
+                const hasCompleted = this.hasCompletedTest(this.testId);
+                
+                if (hasCompleted) {
+                    // 已完成测试，显示解锁测试（需要重新支付）
+                    startBtn.innerHTML = `¥<span id="testPrice">${this.testData.price}</span> 解锁测试`;
+                } else if (hasPaid || hasProgress) {
+                    // 已支付或有进度，显示立即测试
+                    startBtn.innerHTML = `立即测试`;
+                    if (priceSpan) priceSpan.style.display = 'none';
+                } else {
+                    // 未支付，显示解锁测试
+                    startBtn.innerHTML = `¥<span id="testPrice">${this.testData.price}</span> 解锁测试`;
+                    if (priceSpan) priceSpan.style.display = 'inline';
+                }
+            }
+
+            // 新增方法：检查是否已完成测试
+            hasCompletedTest(testId) {
+                // 检查是否有测试结果
+                const results = this.getAllTestResults();
+                return results.some(result => result.testId === testId);
+            }
+
+            // 新增方法：获取所有测试结果
+            getAllTestResults() {
+                const results = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key && key.startsWith('test_result_')) {
+                        try {
+                            const result = JSON.parse(localStorage.getItem(key));
+                            if (result && result.data) {
+                                results.push({
+                                    testId: result.data.testId || 'unknown',
+                                    timestamp: result.timestamp,
+                                    resultId: key.replace('test_result_', '')
+                                });
+                            }
+                        } catch (e) {
+                            console.error('解析测试结果失败:', e);
+                        }
+                    }
+                }
+                return results;
+            }            
+
             handleStartTest() {
+                // 检查是否已完成测试
+                if (this.hasCompletedTest(this.testId)) {
+                    // 已完成测试，需要重新支付
+                    if (window.paymentManager) {
+                        window.paymentManager.initializePayment(this.testId, this.testData.price);
+                    }
+                    return;
+                }
+                
+                // 原有逻辑
                 if (this.testData.price === 0 || 
                         storageManager.hasPaidForTest(this.testId) || 
                         this.hasRedeemedForTest(this.testId)) {
                     window.location.href = `testing.html?id=${this.testId}`;
                 } else {
                     if (window.paymentManager) {
-                        // 直接调用支付管理器，不再检查支付状态
                         window.paymentManager.initializePayment(this.testId, this.testData.price);
                     } else {
                         this.showToast('正在准备支付...');

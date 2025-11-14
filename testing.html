@@ -65,6 +65,7 @@
                 this.renderQuestion();
                 this.bindEvents();
                 this.updateNavigationButtons();
+                this.updateProgress(); // 新增：更新进度显示
             }
 
             async loadTestData() {
@@ -135,16 +136,14 @@
 
             renderQuestion() {
                 if (!this.testData || !this.testData.questions[this.currentQuestionIndex]) {
+                    console.error('题目数据不存在:', this.currentQuestionIndex);
                     return;
                 }
 
                 const question = this.testData.questions[this.currentQuestionIndex];
-                const progress = ((this.currentQuestionIndex + 1) / this.testData.questions.length) * 100;
-
-                // 更新进度
-                document.getElementById('progressText').textContent = 
-                    `第${this.currentQuestionIndex + 1}题/共${this.testData.questions.length}题`;
-                document.getElementById('progressBar').style.width = `${progress}%`;
+                
+                // 更新进度显示
+                this.updateProgress();
 
                 // 更新题目
                 document.getElementById('questionText').textContent = question.text;
@@ -391,6 +390,11 @@
             }
 
             bindEvents() {
+                // 新增：返回按钮事件处理
+                document.querySelector('.logo').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.handleBackButton();
+                });                
                 // 选项点击事件
                 document.getElementById('optionsContainer').addEventListener('click', (e) => {
                     const option = e.target.closest('.option');
@@ -478,6 +482,22 @@
                 }
             }
 
+            /**
+             * 处理返回按钮点击
+             */
+            handleBackButton() {
+                if (this.answers.length > 0 || this.currentQuestionIndex > 0) {
+                    // 有进度，显示确认提示
+                    if (confirm('测试进度将自动保存，稍后可以继续测试。确定要返回吗？')) {
+                        this.saveProgress();
+                        window.location.href = 'index.html';
+                    }
+                } else {
+                    // 无进度，直接返回
+                    window.location.href = 'index.html';
+                }
+            }
+
             updateNavigationButtons() {
                 const prevBtn = document.getElementById('prevBtn');
                 const nextBtn = document.getElementById('nextBtn');
@@ -511,6 +531,20 @@
                 nextBtn.disabled = !hasAnswer;
             }
 
+            /**
+             * 更新进度显示
+             */
+            updateProgress() {
+                if (!this.testData || !this.testData.questions) return;
+                
+                const progress = ((this.currentQuestionIndex + 1) / this.testData.questions.length) * 100;
+                
+                // 更新进度文本和进度条
+                document.getElementById('progressText').textContent = 
+                    `第${this.currentQuestionIndex + 1}题/共${this.testData.questions.length}题`;
+                document.getElementById('progressBar').style.width = `${progress}%`;
+            }
+
             saveProgress() {
                 const progress = {
                     testId: this.testId,
@@ -524,8 +558,24 @@
             loadProgress() {
                 const progress = storageManager.getTestProgress(this.testId);
                 if (progress) {
-                    this.currentQuestionIndex = progress.questionIndex;
+                    this.currentQuestionIndex = progress.questionIndex || 0;
                     this.answers = progress.answers || [];
+                    
+                    console.log('加载进度:', {
+                        questionIndex: this.currentQuestionIndex,
+                        answersCount: this.answers.length,
+                        answers: this.answers
+                    });
+                    
+                    // 如果所有问题都已回答，跳转到结果页
+                    if (this.currentQuestionIndex >= this.testData.questions.length) {
+                        this.completeTest();
+                        return;
+                    }
+                } else {
+                    this.currentQuestionIndex = 0;
+                    this.answers = [];
+                    console.log('无进度，从头开始');
                 }
             }
 

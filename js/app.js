@@ -190,16 +190,35 @@ class PsychTestApp {
     renderTestList() {
         const testListContainer = document.getElementById('testList');
         if (testListContainer) {
-            testListContainer.innerHTML = this.tests.map(test => `
-                <div class="test-list-item" data-test-id="${test.id}" data-category="${test.category}">
-                    <div class="test-thumb" style="background: linear-gradient(135deg, #667eea, #764ba2);"></div>
-                    <div class="test-info">
-                        <div class="test-title">${test.title}</div>
-                        <div class="test-desc">${test.description}</div>
+            testListContainer.innerHTML = this.tests.map(test => {
+                // 检查测试进度
+                const progress = storageManager.getTestProgress(test.id);
+                const hasProgress = progress && progress.answers && progress.answers.length > 0;
+                
+                // 检查是否已完成测试
+                const hasCompleted = this.hasCompletedTest(test.id);
+                
+                // 根据状态决定按钮文本
+                let buttonText = '前往';
+                if (hasCompleted) {
+                    buttonText = '查看报告';
+                } else if (hasProgress) {
+                    buttonText = `继续 (${progress.answers.length}/${test.questions})`;
+                }
+                
+                return `
+                    <div class="test-list-item" data-test-id="${test.id}" data-category="${test.category}">
+                        <div class="test-thumb" style="background: linear-gradient(135deg, #667eea, #764ba2);"></div>
+                        <div class="test-info">
+                            <div class="test-title">${test.title}</div>
+                            <div class="test-desc">${test.description}</div>
+                            ${hasProgress ? `<div class="test-progress">已完成 ${progress.answers.length}/${test.questions} 题</div>` : ''}
+                            ${hasCompleted ? `<div class="test-completed">✅ 已完成测试</div>` : ''}
+                        </div>
+                        <button class="small-btn ${hasCompleted ? 'completed-btn' : ''}" onclick="app.navigateToTest('${test.id}')">${buttonText}</button>
                     </div>
-                    <button class="small-btn" onclick="app.navigateToTest('${test.id}')">前往</button>
-                </div>
-            `).join('');
+                `;
+            }).join('');
 
             // 绑定列表项点击事件
             testListContainer.querySelectorAll('.test-list-item').forEach(item => {
@@ -213,9 +232,56 @@ class PsychTestApp {
         }
     }
 
+    /**
+     * 检查是否已完成测试
+     */
+    hasCompletedTest(testId) {
+        // 检查是否有测试结果
+        const results = this.getAllTestResults();
+        return results.some(result => result.testId === testId);
+    }
+
+    /**
+     * 获取所有测试结果
+     */
+    getAllTestResults() {
+        const results = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.startsWith('test_result_')) {
+                try {
+                    const result = JSON.parse(localStorage.getItem(key));
+                    if (result && result.data) {
+                        results.push({
+                            testId: result.data.testId || 'unknown',
+                            timestamp: result.timestamp,
+                            resultId: key.replace('test_result_', '')
+                        });
+                    }
+                } catch (e) {
+                    console.error('解析测试结果失败:', e);
+                }
+            }
+        }
+        return results;
+    }
+
     // 跳转到测试详情
     navigateToTest(testId) {
-        this.navigateTo(`detail.html?id=${testId}`);
+        // 检查是否已完成测试
+        if (this.hasCompletedTest(testId)) {
+            // 已完成测试，跳转到报告页面
+            const results = this.getAllTestResults();
+            const testResult = results.find(result => result.testId === testId);
+            if (testResult) {
+                window.location.href = `result.html?id=${testId}&resultId=${testResult.resultId}`;
+            } else {
+                window.location.href = `detail.html?id=${testId}`;
+            }
+        } else {
+            // 未完成测试，跳转到测试页面
+            window.location.href = `testing.html?id=${testId}`;
+        }
     }
 
     handleSearch() {
