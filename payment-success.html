@@ -104,6 +104,28 @@
             const tradeStatus = urlParams.get('trade_status'); // 支付宝返回的状态
             const tradeNo = urlParams.get('out_trade_no');
             
+            // 添加调试信息 - 临时显示所有URL参数
+            console.log('URL参数:', {
+                testId,
+                success, 
+                tradeStatus,
+                outTradeNo,
+                allParams: Object.fromEntries(urlParams)
+            });
+            
+            // 临时显示调试信息到页面
+            const debugInfo = document.createElement('div');
+            debugInfo.style.cssText = 'background: #f5f5f5; padding: 10px; margin: 10px; border-radius: 5px; font-size: 12px;';
+            debugInfo.innerHTML = `
+                <strong>调试信息:</strong><br>
+                testId: ${testId}<br>
+                success: ${success}<br>
+                trade_status: ${tradeStatus}<br>
+                out_trade_no: ${outTradeNo}<br>
+                完整URL: ${window.location.href}
+            `;
+            document.querySelector('.success-container').prepend(debugInfo);
+
             // 支付成功处理
             if (testId && (success === 'true' || tradeStatus === 'TRADE_SUCCESS')) {
                 // 显示成功界面
