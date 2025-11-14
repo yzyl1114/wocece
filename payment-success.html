@@ -99,12 +99,22 @@
         // 页面加载时处理
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
-            const testId = urlParams.get('testId');
+            let testId = urlParams.get('testId');
             const success = urlParams.get('success');
             const tradeStatus = urlParams.get('trade_status');
             const outTradeNo = urlParams.get('out_trade_no');
             
             console.log('支付成功页面加载，参数:', { testId, success, tradeStatus, outTradeNo });
+            
+            // 如果testId为null，尝试从out_trade_no中提取
+            if (!testId && outTradeNo) {
+                // 从 TEST_6_user_... 中提取数字6
+                const match = outTradeNo.match(/TEST_(\d+)_/);
+                if (match && match[1]) {
+                    testId = match[1];
+                    console.log('从out_trade_no中提取到testId:', testId);
+                }
+            }
             
             // 添加调试信息到页面
             const debugInfo = document.createElement('div');
@@ -115,6 +125,7 @@
                 success: ${success}<br>
                 trade_status: ${tradeStatus}<br>
                 out_trade_no: ${outTradeNo}<br>
+                提取的testId: ${testId}<br>
                 完整URL: ${window.location.href}
             `;
             document.querySelector('.success-container').prepend(debugInfo);
@@ -190,7 +201,7 @@
                 `;
                 document.querySelector('.success-container').prepend(statusDisplay);
                 
-                // 设置开始测试按钮 - 双重保险
+                // 设置开始测试按钮
                 const startTestBtn = document.getElementById('startTestBtn');
                 
                 // 方法1: onclick
@@ -202,7 +213,6 @@
                 // 方法2: addEventListener (备用)
                 startTestBtn.addEventListener('click', function(e) {
                     console.log('addEventListener点击开始测试');
-                    e.preventDefault();
                     window.location.href = `testing.html?id=${testId}`;
                 });
                 
