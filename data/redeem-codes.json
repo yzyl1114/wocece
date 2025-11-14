@@ -1,9 +1,23 @@
 {
   "redeemCodes": {
-    "SCL9012345678": {"testId": "6", "status": "active", "createdAt": "2025-01-01"},
-    "SCL9023456789": {"testId": "6", "status": "active", "createdAt": "2025-01-01"},
-    "CHAR12345678": {"testId": "1", "status": "active", "createdAt": "2025-01-01"},
-    "CHAR23456789": {"testId": "1", "status": "active", "createdAt": "2025-01-01"},
-    "ANXI12345678": {"testId": "3", "status": "active", "createdAt": "2025-01-01"}
+    "ABC123DEF456": {
+      "testId": "6",
+      "status": "active",
+      "createdAt": "2024-01-01T00:00:00Z",
+      "expiresAt": "2025-01-01T00:00:00Z"
+    },
+    "DEF789GHI012": {
+      "testId": "8", 
+      "status": "active",
+      "createdAt": "2024-01-01T00:00:00Z",
+      "expiresAt": "2025-01-01T00:00:00Z"
+    },
+    "GHI345JKL678": {
+      "testId": "6",
+      "status": "used",
+      "createdAt": "2024-01-01T00:00:00Z",
+      "usedAt": "2024-01-15T10:30:00Z",
+      "usedBy": "user_123"
+    }
   }
 }

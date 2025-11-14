@@ -151,7 +151,37 @@
 
             async verifyRedeemCode(code) {
                 try {
-                    // 加载兑换码数据
+                    const response = await fetch('/api/verify-redeem.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            code: code,
+                            testId: this.testId,
+                            userId: storageManager.getUserInfo().userId
+                        })
+                    });
+
+                    const result = await response.json();
+                    
+                    if (!response.ok) {
+                        throw new Error(result.error || '网络请求失败');
+                    }
+                    
+                    return result.success;
+                    
+                } catch (error) {
+                    console.error('验证失败:', error);
+                    
+                    // 备用方案：如果API失败，使用本地JSON验证
+                    return await this.fallbackVerify(code);
+                }
+            }
+
+            // 备用验证方案
+            async fallbackVerify(code) {
+                try {
                     const response = await fetch('data/redeem-codes.json');
                     const data = await response.json();
                     const redeemInfo = data.redeemCodes[code];
@@ -165,30 +195,36 @@
                     }
                     
                     if (redeemInfo.testId !== this.testId) {
-                        throw new Error('该兑换码不适用于此测试，请检查测试项目');
+                        throw new Error('兑换码不适用于此测试');
                     }
                     
-                    // 保存兑换记录到本地存储（模拟标记为已使用）
-                    this.saveRedeemRecord(code, redeemInfo.testId);
+                    // 检查有效期
+                    if (redeemInfo.expiresAt && new Date(redeemInfo.expiresAt) < new Date()) {
+                        throw new Error('兑换码已过期');
+                    }
                     
                     return true;
                     
                 } catch (error) {
-                    console.error('验证失败:', error);
+                    console.error('备用验证失败:', error);
                     throw error;
                 }
             }
 
+            // 更新保存兑换记录的方法
             saveRedeemRecord(code, testId) {
+                const userInfo = storageManager.getUserInfo();
                 const records = JSON.parse(localStorage.getItem('redeem_records') || '{}');
+                
                 records[code] = {
                     testId: testId,
                     usedAt: new Date().toISOString(),
-                    userId: storageManager.getUserInfo().userId
+                    userId: userInfo.userId
                 };
+                
                 localStorage.setItem('redeem_records', JSON.stringify(records));
                 
-                // 同时标记为已支付
+                // 同时标记为已支付，解锁测试
                 storageManager.savePaymentRecord(testId);
             }
 
