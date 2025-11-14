@@ -95,6 +95,7 @@
                 this.determineTemplateType();
                 this.renderTestDetail();
                 this.bindEvents();
+                this.checkPaymentReturn(); // 新增：检查是否从支付返回
             }
 
             async loadTestData() {
@@ -301,13 +302,33 @@
                 });
             }
 
+            // 新增方法：检查支付返回状态
+            checkPaymentReturn() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const paymentSuccess = urlParams.get('payment_success');
+                const paymentTestId = urlParams.get('testId');
+                
+                // 如果是从支付成功页面返回，并且测试ID匹配
+                if (paymentSuccess === 'true' && paymentTestId === this.testId) {
+                    this.showToast('支付成功！已解锁测试');
+                    
+                    // 标记为已支付
+                    storageManager.savePaymentRecord(this.testId);
+                    
+                    // 清除URL参数，避免重复提示
+                    const newUrl = window.location.pathname + '?id=' + this.testId;
+                    window.history.replaceState({}, '', newUrl);
+                }
+            }
+
             handleStartTest() {
                 if (this.testData.price === 0 || 
                         storageManager.hasPaidForTest(this.testId) || 
                         this.hasRedeemedForTest(this.testId)) {
-                        window.location.href = `testing.html?id=${this.testId}`;
-                    } else {
+                    window.location.href = `testing.html?id=${this.testId}`;
+                } else {
                     if (window.paymentManager) {
+                        // 直接调用支付管理器，不再检查支付状态
                         window.paymentManager.initializePayment(this.testId, this.testData.price);
                     } else {
                         this.showToast('正在准备支付...');
@@ -319,8 +340,15 @@
             }
 
             hasRedeemedForTest(testId) {
-                const records = JSON.parse(localStorage.getItem('redeem_records') || '{}');
-                return Object.values(records).some(record => record.testId === testId);
+                if (window.storageManager && storageManager.isRedeemed) {
+                    // 使用storageManager的方法
+                    const records = storageManager.getRedeemRecords();
+                    return records.some(record => record.testId === testId);
+                } else {
+                    // 备用方案
+                    const records = JSON.parse(localStorage.getItem('redeem_records') || '{}');
+                    return Object.values(records).some(record => record.testId === testId);
+                }
             }
 
             goToRedeem() {
