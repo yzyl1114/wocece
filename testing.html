@@ -486,15 +486,52 @@
              * 处理返回按钮点击
              */
             handleBackButton() {
-                if (this.answers.length > 0 || this.currentQuestionIndex > 0) {
-                    // 有进度，显示确认提示
-                    if (confirm('测试进度将自动保存，稍后可以继续测试。确定要返回吗？')) {
-                        this.saveProgress();
-                        window.location.href = 'index.html';
-                    }
-                } else {
-                    // 无进度，直接返回
+                // 直接弹出提示，不保存进度
+                if (confirm('退出后将不会保存测试进度，确定要退出吗？')) {
+                    // 清除当前测试的进度
+                    storageManager.clearTestProgress(this.testId);
                     window.location.href = 'index.html';
+                }
+            }
+
+            completeTest() {
+                console.log('🔍 调试信息:', {
+                    testId: this.testId,
+                    answers: this.answers,
+                    testData: this.testData,
+                    hasDimensions: !!this.testData?.dimensions
+                });
+
+                try {
+                    // 使用统一的计分管理器计算结果
+                    const result = calculationManager.calculateResult(
+                        this.testId, 
+                        this.answers, 
+                        this.testData
+                    );
+                    
+                    // 添加测试ID到结果中，便于追踪
+                    result.testId = this.testId;
+                    
+                    // 清除进度，但保留支付记录
+                    storageManager.clearTestProgress(this.testId);
+                    // 标记测试已完成（看到报告）
+                    storageManager.saveTestCompletion(this.testId);
+                    
+                    // ✅ 使用localStorage存储结果
+                    const resultId = 'result_' + this.testId + '_' + Date.now();
+                    storageManager.saveTestResult(resultId, result);
+                    
+                    console.log('结果保存成功，准备跳转:', resultId);
+                    
+                    // 短暂延迟确保数据保存完成
+                    setTimeout(() => {
+                        window.location.href = `result.html?id=${this.testId}&resultId=${resultId}`;
+                    }, 100);
+                    
+                } catch (error) {
+                    console.error('❌ 完成测试时出错:', error);
+                    this.showToast('测试结果生成失败，请重试');
                 }
             }
 

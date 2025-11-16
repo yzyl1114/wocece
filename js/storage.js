@@ -45,6 +45,40 @@ class StorageManager {
         }
     }
 
+    // ========== 新增：测试完成状态管理 ==========
+    
+    // 保存测试完成状态（用户看到报告后调用）
+    saveTestCompletion(testId) {
+        const completedTests = this.getCompletedTests();
+        if (!completedTests.includes(testId)) {
+            completedTests.push(testId);
+            this.storage.setItem('completed_tests', JSON.stringify(completedTests));
+            console.log('测试完成状态已保存:', testId);
+        }
+    }
+
+    // 获取已完成的测试列表
+    getCompletedTests() {
+        const data = this.storage.getItem('completed_tests');
+        return data ? JSON.parse(data) : [];
+    }
+
+    // 检查测试是否已完成（看到报告）
+    hasCompletedTest(testId) {
+        const completedTests = this.getCompletedTests();
+        const isCompleted = completedTests.includes(testId);
+        console.log('检查完成状态:', testId, isCompleted ? '已完成' : '未完成');
+        return isCompleted;
+    }
+
+    // 清除完成状态（如果需要重新测试）
+    clearCompletionStatus(testId) {
+        const completedTests = this.getCompletedTests();
+        const updatedTests = completedTests.filter(id => id !== testId);
+        this.storage.setItem('completed_tests', JSON.stringify(updatedTests));
+        console.log('完成状态已清除:', testId);
+    }
+
     // ========== 测试进度管理 ==========
     
     // 保存测试进度

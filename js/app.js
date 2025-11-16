@@ -190,34 +190,16 @@ class PsychTestApp {
     renderTestList() {
         const testListContainer = document.getElementById('testList');
         if (testListContainer) {
-            testListContainer.innerHTML = this.tests.map(test => {
-                // 检查测试进度
-                const progress = storageManager.getTestProgress(test.id);
-                const hasProgress = progress && progress.answers && progress.answers.length > 0;
-                
-                // 检查是否已支付
-                const hasPaid = storageManager.hasPaidForTest(test.id);
-                
-                // 根据状态决定按钮文本
-                let buttonText = '前往';
-                if (hasProgress) {
-                    buttonText = `继续测`;
-                } else if (hasPaid) {
-                    buttonText = '开始测';
-                }
-                
-                return `
-                    <div class="test-list-item" data-test-id="${test.id}" data-category="${test.category}">
-                        <div class="test-thumb" style="background: linear-gradient(135deg, #667eea, #764ba2);"></div>
-                        <div class="test-info">
-                            <div class="test-title">${test.title}</div>
-                            <div class="test-desc">${test.description}</div>
-                            ${hasProgress ? `<div class="test-progress">已完成 ${progress.answers.length}/${test.questions} 题</div>` : ''}
-                        </div>
-                        <button class="small-btn" onclick="app.navigateToTest('${test.id}')">${buttonText}</button>
+            testListContainer.innerHTML = this.tests.map(test => `
+                <div class="test-list-item" data-test-id="${test.id}" data-category="${test.category}">
+                    <div class="test-thumb" style="background: linear-gradient(135deg, #667eea, #764ba2);"></div>
+                    <div class="test-info">
+                        <div class="test-title">${test.title}</div>
+                        <div class="test-desc">${test.description}</div>
                     </div>
-                `;
-            }).join('');
+                    <button class="small-btn" onclick="app.navigateToTest('${test.id}')">前往</button>
+                </div>
+            `).join('');
 
             // 绑定列表项点击事件
             testListContainer.querySelectorAll('.test-list-item').forEach(item => {

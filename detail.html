@@ -288,7 +288,7 @@
             }
 
             bindEvents() {
-                // 返回按钮
+                // 返回按钮 - 始终返回首页
                 document.querySelector('.logo').addEventListener('click', () => {
                     window.location.href = 'index.html';
                 });
@@ -324,36 +324,48 @@
                 }
             }
 
-            // 新增方法：更新按钮状态
+            // 更新按钮状态
             updateButtonState() {
                 const startBtn = document.getElementById('startTestBtn');
                 const priceSpan = document.getElementById('testPrice');
                 
                 // 检查是否已支付
                 const hasPaid = storageManager.hasPaidForTest(this.testId);
+                // 检查是否已完成测试（看到报告）
+                const hasCompleted = storageManager.hasCompletedTest(this.testId);
                 
-                // 检查是否有未完成的测试进度
-                const hasProgress = storageManager.getTestProgress(this.testId);
-                
-                // 检查是否已有测试结果（已完成测试）- 如果有结果，清除支付状态和进度
-                const hasCompleted = this.hasCompletedTest(this.testId);
-                if (hasCompleted) {
-                    // 用户已完成测试看到报告，清除支付状态和进度，恢复到未支付状态
-                    storageManager.clearTestProgress(this.testId);
-                    // 注意：这里不清除支付记录，因为用户支付一次可以测试一次
-                    // 如果用户想再次测试需要重新支付
-                }
-                
-                if (hasPaid || hasProgress) {
-                    // 已支付或有进度，显示立即测试
+                if (hasPaid && !hasCompleted) {
+                    // 已支付但未完成测试，显示立即测试
                     startBtn.innerHTML = `立即测试`;
                     if (priceSpan) priceSpan.style.display = 'none';
                 } else {
-                    // 未支付，显示解锁测试
+                    // 未支付 或 已完成测试，显示解锁测试
                     startBtn.innerHTML = `¥<span id="testPrice">${this.testData.price}</span> 解锁测试`;
                     if (priceSpan) priceSpan.style.display = 'inline';
                 }
-            } 
+            }
+
+            handleStartTest() {
+                // 检查是否已支付
+                const hasPaid = storageManager.hasPaidForTest(this.testId);
+                // 检查是否已完成测试（看到报告）
+                const hasCompleted = storageManager.hasCompletedTest(this.testId);
+                
+                if (this.testData.price === 0 || (hasPaid && !hasCompleted) || this.hasRedeemedForTest(this.testId)) {
+                    // 免费测试、已支付但未完成、已兑换，直接进入测试
+                    window.location.href = `testing.html?id=${this.testId}`;
+                } else {
+                    // 需要支付（包括已完成测试需要重新支付的）
+                    if (window.paymentManager) {
+                        window.paymentManager.initializePayment(this.testId, this.testData.price);
+                    } else {
+                        this.showToast('正在准备支付...');
+                        setTimeout(() => {
+                            window.location.href = `testing.html?id=${this.testId}`;
+                        }, 1000);
+                    }
+                }
+            }
 
             // 新增方法：检查是否已完成测试
             hasCompletedTest(testId) {
