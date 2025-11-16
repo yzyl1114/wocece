@@ -1,5 +1,5 @@
 <?php
-// verify-redeem.php - 兑换码验证API (调试版本)
+// verify-redeem.php - 兑换码验证API (修复版本)
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
@@ -59,15 +59,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         log_message("文件存在性检查通过");
         
-        // 检查文件权限
+        // 检查文件权限（简化版本，移除有问题的posix函数）
         $filePerms = substr(sprintf('%o', fileperms($dataFile)), -4);
         $isReadable = is_readable($dataFile);
         $isWritable = is_writable($dataFile);
-        $fileOwner = posix_getpwuid(fileowner($dataFile))['name'];
-        $fileGroup = posix_getgrgid(filegroup($dataFile))['name'];
         
         log_message("文件权限信息 - 权限: $filePerms, 可读: " . ($isReadable ? '是' : '否') . ", 可写: " . ($isWritable ? '是' : '否'));
-        log_message("文件所有者 - 用户: $fileOwner, 组: $fileGroup");
         
         if (!$isReadable) {
             $error_msg = '兑换码数据文件不可读，权限: ' . $filePerms;
@@ -100,8 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             log_message("现有兑换码: " . implode(', ', array_keys($redeemCodes)));
             echo json_encode([
                 'success' => false,
-                'error' => '兑换码不存在',
-                'debug' => '现有兑换码: ' . implode(', ', array_keys($redeemCodes))
+                'error' => '兑换码不存在'
             ]);
             exit;
         }
@@ -114,8 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             log_message("兑换码状态无效: " . $redeemInfo['status']);
             echo json_encode([
                 'success' => false,
-                'error' => '兑换码已被使用',
-                'debug' => '当前状态: ' . $redeemInfo['status']
+                'error' => '兑换码已被使用'
             ]);
             exit;
         }
@@ -130,8 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 log_message("兑换码已过期");
                 echo json_encode([
                     'success' => false,
-                    'error' => '兑换码已过期',
-                    'debug' => '过期时间: ' . $redeemInfo['expiresAt']
+                    'error' => '兑换码已过期'
                 ]);
                 exit;
             }
@@ -145,8 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             log_message("测试ID不匹配");
             echo json_encode([
                 'success' => false,
-                'error' => '该兑换码不适用于此测试',
-                'debug' => '兑换码适用于测试: ' . $redeemInfo['testId']
+                'error' => '该兑换码不适用于此测试'
             ]);
             exit;
         }
@@ -185,8 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode([
                 'success' => true,
                 'message' => '兑换成功',
-                'testId' => $testId,
-                'debug' => '文件保存成功'
+                'testId' => $testId
             ]);
         } else {
             $error = error_get_last();
@@ -200,8 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         http_response_code(500);
         echo json_encode([
             'success' => false,
-            'error' => $e->getMessage(),
-            'debug' => '请查看服务器日志获取详细信息'
+            'error' => $e->getMessage()
         ]);
     }
     log_message("=== 兑换码验证请求结束 ===");
@@ -212,7 +203,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 log_message("GET请求，返回API信息");
 echo json_encode([
     'status' => 'redeem_verify_api',
-    'timestamp' => date('Y-m-d H:i:s'),
-    'debug' => '调试模式已启用'
+    'timestamp' => date('Y-m-d H:i:s')
 ]);
 ?>
