@@ -289,9 +289,6 @@
 
             bindEvents() {
                 document.querySelector('.logo').addEventListener('click', () => {
-                    // 使用 replaceState 清除当前页面的历史记录
-                    window.history.replaceState(null, '', 'index.html');
-                    // 然后跳转到首页
                     window.location.href = 'index.html';
                 });
                 
@@ -344,28 +341,6 @@
                     // 未支付 或 已完成测试，显示解锁测试
                     startBtn.innerHTML = `¥<span id="testPrice">${this.testData.price}</span> 解锁测试`;
                     if (priceSpan) priceSpan.style.display = 'inline';
-                }
-            }
-
-            handleStartTest() {
-                // 检查是否已支付
-                const hasPaid = storageManager.hasPaidForTest(this.testId);
-                // 检查是否已完成测试（看到报告）
-                const hasCompleted = storageManager.hasCompletedTest(this.testId);
-                
-                if (this.testData.price === 0 || (hasPaid && !hasCompleted) || this.hasRedeemedForTest(this.testId)) {
-                    // 免费测试、已支付但未完成、已兑换，直接进入测试
-                    window.location.href = `testing.html?id=${this.testId}`;
-                } else {
-                    // 需要支付（包括已完成测试需要重新支付的）
-                    if (window.paymentManager) {
-                        window.paymentManager.initializePayment(this.testId, this.testData.price);
-                    } else {
-                        this.showToast('正在准备支付...');
-                        setTimeout(() => {
-                            window.location.href = `testing.html?id=${this.testId}`;
-                        }, 1000);
-                    }
                 }
             }
 

@@ -486,11 +486,12 @@
              * 处理返回按钮点击
              */
             handleBackButton() {
-                // 直接弹出提示，不保存进度
+                // 直接返回详情页，不保存进度
                 if (confirm('退出后将不会保存测试进度，确定要退出吗？')) {
                     // 清除当前测试的进度
                     storageManager.clearTestProgress(this.testId);
-                    window.location.href = 'index.html';
+                    // 直接跳转到详情页
+                    window.location.href = `detail.html?id=${this.testId}`;
                 }
             }
 
@@ -583,6 +584,11 @@
             }
 
             saveProgress() {
+                // 禁用进度保存
+                console.log('进度保存已禁用');
+                return;
+                
+                /* 原来的代码注释掉
                 const progress = {
                     testId: this.testId,
                     questionIndex: this.currentQuestionIndex,
@@ -590,70 +596,17 @@
                     timestamp: Date.now()
                 };
                 storageManager.saveTestProgress(this.testId, progress);
+                */
             }
 
             loadProgress() {
-                const progress = storageManager.getTestProgress(this.testId);
-                if (progress) {
-                    this.currentQuestionIndex = progress.questionIndex || 0;
-                    this.answers = progress.answers || [];
-                    
-                    console.log('加载进度:', {
-                        questionIndex: this.currentQuestionIndex,
-                        answersCount: this.answers.length,
-                        answers: this.answers
-                    });
-                    
-                    // 如果所有问题都已回答，跳转到结果页
-                    if (this.currentQuestionIndex >= this.testData.questions.length) {
-                        this.completeTest();
-                        return;
-                    }
-                } else {
-                    this.currentQuestionIndex = 0;
-                    this.answers = [];
-                    console.log('无进度，从头开始');
-                }
-            }
-
-
-            completeTest() {
-                console.log('🔍 调试信息:', {
-                    testId: this.testId,
-                    answers: this.answers,
-                    testData: this.testData,
-                    hasDimensions: !!this.testData?.dimensions
-                });
-
-                try {
-                    // 使用统一的计分管理器计算结果
-                    const result = calculationManager.calculateResult(
-                        this.testId, 
-                        this.answers, 
-                        this.testData
-                    );
-                    
-                    // 添加测试ID到结果中，便于追踪
-                    result.testId = this.testId;
-                    
-                    // 清除进度
-                    storageManager.clearTestProgress(this.testId);
-                    
-                    // ✅ 使用localStorage存储结果
-                    const resultId = 'result_' + this.testId + '_' + Date.now();
-                    storageManager.saveTestResult(resultId, result);
-                    
-                    console.log('结果保存成功，准备跳转:', resultId);
-                    
-                    // 短暂延迟确保数据保存完成
-                    setTimeout(() => {
-                        window.location.href = `result.html?id=${this.testId}&resultId=${resultId}`;
-                    }, 100);
-                    
-                } catch (error) {
-                    console.error('❌ 完成测试时出错:', error);
-                    this.showToast('测试结果生成失败，请重试');
-                }
+                // 每次进入测试页都清除进度，确保从第一题开始
+                storageManager.clearTestProgress(this.testId);
+                
+                this.currentQuestionIndex = 0;
+                this.answers = [];
+                
+                console.log('测试进度已重置，从第一题开始');
             }
 
             showToast(message) {

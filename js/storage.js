@@ -103,6 +103,19 @@ class StorageManager {
         this.storage.removeItem(`test_progress_${testId}`);
     }
 
+    // 清理所有测试进度
+    clearAllTestProgress() {
+        const keysToRemove = [];
+        for (let i = 0; i < this.storage.length; i++) {
+            const key = this.storage.key(i);
+            if (key && key.startsWith('test_progress_')) {
+                keysToRemove.push(key);
+            }
+        }
+        keysToRemove.forEach(key => this.storage.removeItem(key));
+        console.log('已清除所有测试进度');
+    }    
+
     // ========== 测试结果管理 ==========
     
     // 保存测试结果
