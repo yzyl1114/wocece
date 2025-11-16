@@ -11,7 +11,7 @@
     <div class="container">
         <!-- 导航栏 -->
         <nav class="navbar">
-            <div class="logo" onclick="window.history.back()">← 返回</div>
+            <div class="logo" id="backButton">← 返回</div>
             <div class="progress-info">
                 <span id="progressText">第1题/共10题</span>
             </div>
@@ -390,11 +390,15 @@
             }
 
             bindEvents() {
-                // 新增：返回按钮事件处理
-                document.querySelector('.logo').addEventListener('click', (e) => {
-                    e.preventDefault();
-                    this.handleBackButton();
-                });                
+                // 修复：明确的返回按钮事件绑定
+                const backButton = document.getElementById('backButton');
+                if (backButton) {
+                    backButton.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        console.log('返回按钮点击事件触发');
+                        this.handleBackButton();
+                    });
+                }               
                 // 选项点击事件
                 document.getElementById('optionsContainer').addEventListener('click', (e) => {
                     const option = e.target.closest('.option');
@@ -486,11 +490,11 @@
              * 处理返回按钮点击
              */
             handleBackButton() {
-                // 直接返回详情页，不保存进度
+                console.log('🔍 返回按钮处理开始');
+                
                 if (confirm('退出后将不会保存测试进度，确定要退出吗？')) {
-                    // 清除当前测试的进度
+                    console.log('✅ 跳转到详情页:', `detail.html?id=${this.testId}`);
                     storageManager.clearTestProgress(this.testId);
-                    // 直接跳转到详情页
                     window.location.href = `detail.html?id=${this.testId}`;
                 }
             }
