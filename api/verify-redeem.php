@@ -1,4 +1,7 @@
 <?php
+error_log("兑换码验证开始: " . date('Y-m-d H:i:s'));
+error_log("请求数据: " . json_encode($input));
+
 // verify-redeem.php - 兑换码验证API
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
@@ -80,6 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // 保存更新
         $data['redeemCodes'] = $redeemCodes;
         if (file_put_contents($dataFile, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE))) {
+            error_log("文件保存成功: " . $code);
             // 记录使用日志
             file_put_contents('/data/wwwroot/wocece/data/redeem-logs.log', 
                 date('Y-m-d H:i:s') . " - 兑换成功: {$code} - 测试: {$testId} - 用户: {$userId}\n", 
@@ -92,6 +96,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'testId' => $testId
             ]);
         } else {
+            error_log("文件保存失败: " . $dataFile);
+            $error = error_get_last();
+            error_log("错误信息: " . $error['message']);            
             throw new Exception('系统错误，请重试');
         }
 
