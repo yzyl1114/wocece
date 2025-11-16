@@ -195,15 +195,15 @@ class PsychTestApp {
                 const progress = storageManager.getTestProgress(test.id);
                 const hasProgress = progress && progress.answers && progress.answers.length > 0;
                 
-                // 检查是否已完成测试
-                const hasCompleted = this.hasCompletedTest(test.id);
+                // 检查是否已支付
+                const hasPaid = storageManager.hasPaidForTest(test.id);
                 
                 // 根据状态决定按钮文本
                 let buttonText = '前往';
-                if (hasCompleted) {
-                    buttonText = '查看报告';
-                } else if (hasProgress) {
-                    buttonText = `继续 (${progress.answers.length}/${test.questions})`;
+                if (hasProgress) {
+                    buttonText = `继续测`;
+                } else if (hasPaid) {
+                    buttonText = '开始测';
                 }
                 
                 return `
@@ -213,9 +213,8 @@ class PsychTestApp {
                             <div class="test-title">${test.title}</div>
                             <div class="test-desc">${test.description}</div>
                             ${hasProgress ? `<div class="test-progress">已完成 ${progress.answers.length}/${test.questions} 题</div>` : ''}
-                            ${hasCompleted ? `<div class="test-completed">✅ 已完成测试</div>` : ''}
                         </div>
-                        <button class="small-btn ${hasCompleted ? 'completed-btn' : ''}" onclick="app.navigateToTest('${test.id}')">${buttonText}</button>
+                        <button class="small-btn" onclick="app.navigateToTest('${test.id}')">${buttonText}</button>
                     </div>
                 `;
             }).join('');
@@ -268,20 +267,7 @@ class PsychTestApp {
 
     // 跳转到测试详情
     navigateToTest(testId) {
-        // 检查是否已完成测试
-        if (this.hasCompletedTest(testId)) {
-            // 已完成测试，跳转到报告页面
-            const results = this.getAllTestResults();
-            const testResult = results.find(result => result.testId === testId);
-            if (testResult) {
-                window.location.href = `result.html?id=${testId}&resultId=${testResult.resultId}`;
-            } else {
-                window.location.href = `detail.html?id=${testId}`;
-            }
-        } else {
-            // 未完成测试，跳转到测试页面
-            window.location.href = `testing.html?id=${testId}`;
-        }
+        window.location.href = `detail.html?id=${testId}`;
     }
 
     handleSearch() {
