@@ -288,8 +288,10 @@
             }
 
             bindEvents() {
-                // 返回按钮 - 始终返回首页
                 document.querySelector('.logo').addEventListener('click', () => {
+                    // 使用 replaceState 清除当前页面的历史记录
+                    window.history.replaceState(null, '', 'index.html');
+                    // 然后跳转到首页
                     window.location.href = 'index.html';
                 });
                 
@@ -305,7 +307,7 @@
                 });
             }
 
-            // 新增方法：检查支付返回状态
+            // 检查支付返回状态
             checkPaymentReturn() {
                 const urlParams = new URLSearchParams(window.location.search);
                 const paymentSuccess = urlParams.get('payment_success');
