@@ -2,13 +2,19 @@
 // generate_codes.php - 批量生成兑换码
 header('Content-Type: application/json; charset=utf-8');
 
-// 配置
+// 接收前端参数
+$input = json_decode(file_get_contents('php://input'), true);
+$requestTestId = $input['testId'] ?? '6';
+$requestCount = $input['count'] ?? 10;
+$requestMonths = $input['expires_months'] ?? 12;
+
+// 配置 - 使用前端传过来的参数
 $config = [
-    'count' => 100, // 生成数量
-    'testId' => '6', // 绑定的测试ID
+    'count' => intval($requestCount), // 使用前端传的数量
+    'testId' => $requestTestId, // ⭐ 使用前端传的测试ID
     'length' => 12, // 兑换码长度
     'prefix' => '', // 前缀
-    'expires_months' => 12 // 有效期月数
+    'expires_months' => intval($requestMonths) // 使用前端传的有效期
 ];
 
 function generateCode($length = 12) {
@@ -43,7 +49,7 @@ while ($generatedCount < $config['count']) {
         $newCodes[] = $code;
         
         $existingData['redeemCodes'][$code] = [
-            'testId' => $config['testId'],
+            'testId' => $config['testId'], // ⭐ 这里现在会使用正确的测试ID
             'status' => 'active',
             'createdAt' => date('c'),
             'expiresAt' => date('c', strtotime("+{$config['expires_months']} months"))
@@ -59,7 +65,7 @@ if (file_put_contents($dataFile, json_encode($existingData, JSON_PRETTY_PRINT | 
         'success' => true,
         'generated' => $generatedCount,
         'codes' => $newCodes,
-        'testId' => $config['testId']
+        'testId' => $config['testId'] // ⭐ 返回实际使用的测试ID
     ], JSON_UNESCAPED_UNICODE);
 } else {
     echo json_encode([

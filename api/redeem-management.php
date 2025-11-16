@@ -149,6 +149,7 @@ if (!$isLoggedIn) {
             <label>测试项目</label>
             <select id="testSelect">
                 <option value="6">SCL-90心理健康测试</option>
+                <option value="7">动物原型测试</option>
                 <option value="8">精神需求测试</option>
             </select>
         </div>
