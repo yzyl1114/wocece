@@ -95,7 +95,34 @@
                 this.determineTemplateType();
                 this.renderTestDetail();
                 this.bindEvents();
-                this.checkPaymentReturn(); // 新增：检查是否从支付返回
+                this.checkPaymentReturn(); // 检查是否从支付返回
+                this.checkRedeemSuccess(); // 新增：检查兑换成功状态
+            }
+
+            // 新增：检查兑换成功状态
+            checkRedeemSuccess() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const redeemSuccess = urlParams.get('redeem_success');
+                
+                if (redeemSuccess === 'true') {
+                    this.showToast('兑换成功！已解锁测试');
+                    
+                    // 标记为已兑换（但不标记为已完成）
+                    // 注意：这里只保存兑换记录，不保存支付记录
+                    const redeemRecords = JSON.parse(localStorage.getItem('redeem_records') || '{}');
+                    redeemRecords[this.testId] = {
+                        redeemed: true,
+                        timestamp: Date.now()
+                    };
+                    localStorage.setItem('redeem_records', JSON.stringify(redeemRecords));
+                    
+                    // 清除URL参数，避免重复提示
+                    const newUrl = window.location.pathname + '?id=' + this.testId;
+                    window.history.replaceState({}, '', newUrl);
+                    
+                    // 更新按钮状态
+                    this.updateButtonState();
+                }
             }
 
             async loadTestData() {
@@ -334,17 +361,23 @@
                 const startBtn = document.getElementById('startTestBtn');
                 const priceSpan = document.getElementById('testPrice');
                 
-                // 检查是否已支付
+                // 检查是否已支付/已兑换且未完成
                 const hasPaid = storageManager.hasPaidForTest(this.testId);
-                // 检查是否已完成测试（看到报告）
-                const hasCompleted = storageManager.hasCompletedTest(this.testId);
+                const hasRedeemed = this.hasRedeemedForTest(this.testId);
+                const hasCompleted = this.hasCompletedTest(this.testId);
                 
-                if (hasPaid && !hasCompleted) {
-                    // 已支付但未完成测试，显示立即测试
+                console.log('按钮状态检查:', {
+                    hasPaid, 
+                    hasRedeemed, 
+                    hasCompleted
+                });
+                
+                if ((hasPaid || hasRedeemed) && !hasCompleted) {
+                    // 已支付/兑换但未完成，显示立即测试
                     startBtn.innerHTML = `立即测试`;
                     if (priceSpan) priceSpan.style.display = 'none';
                 } else {
-                    // 未支付 或 已完成测试，显示解锁测试
+                    // 未支付/兑换 或 已完成，显示解锁测试
                     startBtn.innerHTML = `¥<span id="testPrice">${this.testData.price}</span> 解锁测试`;
                     if (priceSpan) priceSpan.style.display = 'inline';
                 }
@@ -384,34 +417,32 @@
                 // 检查是否已完成测试
                 const hasCompleted = this.hasCompletedTest(this.testId);
                 
-                // ⭐ 重要修改：如果已完成测试，需要重新支付
                 if (hasCompleted) {
-                    console.log('测试已完成，需要重新支付:', this.testId);
+                    console.log('测试已完成，需要重新解锁:', this.testId);
+                    this.showToast('已完成测试，需要重新解锁');
                     
-                    // 检查是否已支付（新的支付检查逻辑）
-                    const hasPaid = storageManager.hasPaidForTest(this.testId);
-                    const hasRedeemed = this.hasRedeemedForTest(this.testId);
+                    // 同时清除支付记录和兑换记录
+                    storageManager.clearCompletionStatus(this.testId);
+                    storageManager.clearPaymentRecord(this.testId);
+                    this.clearRedeemRecord(this.testId); // 新增：清除兑换记录
                     
-                    if (hasPaid || hasRedeemed) {
-                        // 如果已支付或已兑换，清除进度并重新开始
-                        storageManager.clearTestProgress(this.testId);
-                        storageManager.clearCompletionStatus(this.testId); // ⭐ 新增：清除完成状态
-                        window.location.href = `testing.html?id=${this.testId}`;
-                    } else {
-                        // 需要重新支付
-                        if (window.paymentManager) {
-                            window.paymentManager.initializePayment(this.testId, this.testData.price);
-                        } else {
-                            this.showToast('已完成测试，需要重新解锁');
-                        }
-                    }
+                    // 重新检查状态
+                    this.updateButtonState();
                     return;
                 }
                 
-                // 正常流程：检查是否已支付或有进度
+                // 正常流程：检查是否已支付、已兑换或有进度
                 const hasPaid = storageManager.hasPaidForTest(this.testId);
                 const hasRedeemed = this.hasRedeemedForTest(this.testId);
                 const hasProgress = storageManager.getTestProgress(this.testId);
+                
+                console.log('开始测试检查:', {
+                    testId: this.testId,
+                    hasPaid,
+                    hasRedeemed, 
+                    hasProgress,
+                    hasCompleted
+                });
                 
                 if (this.testData.price === 0 || hasPaid || hasRedeemed || hasProgress) {
                     window.location.href = `testing.html?id=${this.testId}`;
@@ -429,16 +460,42 @@
             }
 
             hasRedeemedForTest(testId) {
-                if (window.storageManager && storageManager.isRedeemed) {
-                    // 使用storageManager的方法
-                    const records = storageManager.getRedeemRecords();
-                    return records.some(record => record.testId === testId);
-                } else {
-                    // 备用方案
-                    const records = JSON.parse(localStorage.getItem('redeem_records') || '{}');
-                    return Object.values(records).some(record => record.testId === testId);
+                const redeemRecords = JSON.parse(localStorage.getItem('redeem_records') || '{}');
+                const record = redeemRecords[testId];
+                
+                if (record && record.redeemed) {
+                    // 检查兑换码是否在有效期内（可选）
+                    const usedAt = new Date(record.usedAt);
+                    const now = new Date();
+                    const hoursDiff = (now - usedAt) / (1000 * 60 * 60);
+                    
+                    // 如果兑换超过7天视为过期
+                    if (hoursDiff > 168) {
+                        console.log('兑换记录已过期，需要重新兑换:', testId);
+                        delete redeemRecords[testId]; // 清除过期记录
+                        localStorage.setItem('redeem_records', JSON.stringify(redeemRecords));
+                        return false;
+                    }
+                    
+                    // 如果已兑换但已完成测试，则视为未兑换
+                    if (this.hasCompletedTest(testId)) {
+                        console.log('已兑换但已完成测试，需要重新兑换:', testId);
+                        return false;
+                    }
+                    return true;
                 }
+                return false;
             }
+
+            // 新增：清除兑换记录的方法
+            clearRedeemRecord(testId) {
+                const redeemRecords = JSON.parse(localStorage.getItem('redeem_records') || '{}');
+                if (redeemRecords[testId]) {
+                    delete redeemRecords[testId];
+                    localStorage.setItem('redeem_records', JSON.stringify(redeemRecords));
+                    console.log('兑换记录已清除:', testId);
+                }
+            }            
 
             goToRedeem() {
                 window.location.href = `redeem.html?testId=${this.testId}`;

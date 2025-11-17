@@ -518,7 +518,18 @@
                     // 添加测试ID到结果中，便于追踪
                     result.testId = this.testId;
                     
-                    // 清除进度，但保留支付记录
+                    // ⭐ 关键修复：测试完成后清除所有解锁状态
+                    storageManager.clearPaymentRecord(this.testId); // 清除支付记录
+                    
+                    // 清除兑换记录
+                    const redeemRecords = JSON.parse(localStorage.getItem('redeem_records') || '{}');
+                    if (redeemRecords[this.testId]) {
+                        delete redeemRecords[this.testId];
+                        localStorage.setItem('redeem_records', JSON.stringify(redeemRecords));
+                        console.log('兑换记录已清除:', this.testId);
+                    }
+                    
+                    // 清除进度
                     storageManager.clearTestProgress(this.testId);
                     // 标记测试已完成（看到报告）
                     storageManager.saveTestCompletion(this.testId);
@@ -528,6 +539,7 @@
                     storageManager.saveTestResult(resultId, result);
                     
                     console.log('结果保存成功，准备跳转:', resultId);
+                    console.log('测试完成，所有解锁状态已清除，需要重新支付/兑换才能再次测试');
                     
                     // 短暂延迟确保数据保存完成
                     setTimeout(() => {

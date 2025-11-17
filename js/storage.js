@@ -16,18 +16,20 @@ class StorageManager {
             return true;
         }
         
-        // 正式模式：检查是否有未完成的支付记录
+        // 正式模式：检查支付记录
         const paidTests = this.getPaidTests();
         const isPaid = paidTests.includes(testId);
         
-        // ⭐ 新增：如果已支付但已完成测试，则视为未支付
-        if (isPaid && this.hasCompletedTest(testId)) {
-            console.log('测试已完成，需要重新支付:', testId);
-            return false;
-        }
-        
         console.log('检查支付状态:', testId, isPaid ? '已支付' : '未支付');
         return isPaid;
+    }
+
+    // 清除支付记录
+    clearPaymentRecord(testId) {
+        const paidTests = this.getPaidTests();
+        const updatedTests = paidTests.filter(id => id !== testId);
+        this.storage.setItem('paid_tests', JSON.stringify(updatedTests));
+        console.log('支付记录已清除:', testId);
     }
 
     // 获取已支付的测试列表

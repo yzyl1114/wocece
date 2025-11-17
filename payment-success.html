@@ -203,19 +203,10 @@
                 
                 // 设置开始测试按钮
                 const startTestBtn = document.getElementById('startTestBtn');
-                
-                // 方法1: onclick
                 startTestBtn.onclick = function() {
-                    console.log('onclick点击开始测试，跳转到:', `testing.html?id=${testId}`);
-                    window.location.href = `testing.html?id=${testId}`;
-                };
-                
-                // 方法2: addEventListener (备用)
-                startTestBtn.addEventListener('click', function(e) {
-                    console.log('addEventListener点击开始测试');
-                    window.location.href = `testing.html?id=${testId}`;
-                });
-                
+                        console.log('支付成功，跳转回详情页:', `detail.html?id=${testId}&payment_success=true`);
+                        window.location.href = `detail.html?id=${testId}&payment_success=true`;
+                    }; 
             } 
             // 支付失败处理
             else if (tradeStatus === 'TRADE_CLOSED' || tradeStatus === 'TRADE_FAILED') {

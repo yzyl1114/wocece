@@ -107,9 +107,11 @@
                         this.showToast('兑换成功！');
                         // 保存兑换记录
                         storageManager.saveRedeemRecord(code, this.testId);
-                        // 跳转到测试页面
+                        
+                        // 关键修改：跳转回详情页而不是直接进入测试页
                         setTimeout(() => {
-                            window.location.href = `testing.html?id=${this.testId}`;
+                            // 通过URL参数传递兑换成功状态
+                            window.location.href = `detail.html?id=${this.testId}&redeem_success=true`;
                         }, 1500);
                     } else {
                         this.showToast('兑换码无效或已被使用');
@@ -214,18 +216,18 @@
             // 更新保存兑换记录的方法
             saveRedeemRecord(code, testId) {
                 const userInfo = storageManager.getUserInfo();
-                const records = JSON.parse(localStorage.getItem('redeem_records') || '{}');
                 
-                records[code] = {
-                    testId: testId,
+                // 修复：统一使用 testId 作为键的存储结构
+                const redeemRecords = JSON.parse(localStorage.getItem('redeem_records') || '{}');
+                
+                redeemRecords[testId] = {
+                    redeemed: true,
+                    code: code, // 保存使用的兑换码
                     usedAt: new Date().toISOString(),
                     userId: userInfo.userId
                 };
                 
-                localStorage.setItem('redeem_records', JSON.stringify(records));
-                
-                // 同时标记为已支付，解锁测试
-                storageManager.savePaymentRecord(testId);
+                localStorage.setItem('redeem_records', JSON.stringify(redeemRecords));
             }
 
             showToast(message) {
