@@ -50,7 +50,7 @@ class PaymentManager {
             
             // 直接在当前页面跳转，而不是新窗口
             setTimeout(() => {
-                window.location.href = orderInfo.paymentUrl;
+                this.submitToAlipay(orderInfo.paymentUrl);
             }, 1500); // 给用户1.5秒看到提示
             
         } catch (error) {
@@ -58,6 +58,16 @@ class PaymentManager {
             this.showToast('支付失败: ' + (error.message || '请重试'));
             this.paymentInProgress = false;
         }
+    }
+
+    // 新增方法：使用表单提交避免Safari弹窗
+    submitToAlipay(paymentUrl) {
+        const form = document.createElement('form');
+        form.method = 'GET';
+        form.action = paymentUrl;
+        form.style.display = 'none';
+        document.body.appendChild(form);
+        form.submit();
     }
 
     // ✅ 正式环境：真实的支付验证
