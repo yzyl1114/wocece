@@ -105,86 +105,110 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $redeemInfo = $redeemCodes[$code];
         log_message("找到兑换码信息: " . json_encode($redeemInfo));
 
-        // 检查状态
-        if ($redeemInfo['status'] !== 'active') {
-            log_message("兑换码状态无效: " . $redeemInfo['status']);
-            echo json_encode([
-                'success' => false,
-                'error' => '兑换码已被使用'
-            ]);
-            exit;
-        }
+        // ⭐ 新增：使用文件锁和原子操作确保写入可靠性
+        $lockFile = $dataFile . '.lock';
+        $lockHandle = fopen($lockFile, 'w+');
 
-        // 检查有效期
-        if (isset($redeemInfo['expiresAt'])) {
-            $expiresTime = strtotime($redeemInfo['expiresAt']);
-            $currentTime = time();
-            log_message("有效期检查 - 过期时间: " . $redeemInfo['expiresAt'] . " (" . $expiresTime . "), 当前时间: " . $currentTime);
-            
-            if ($expiresTime < $currentTime) {
-                log_message("兑换码已过期");
-                echo json_encode([
-                    'success' => false,
-                    'error' => '兑换码已过期'
-                ]);
-                exit;
+        if ($lockHandle && flock($lockHandle, LOCK_EX)) { // 获取独占锁
+            try {
+                log_message("成功获取文件锁，开始原子操作");
+                
+                // 重新读取文件，确保获取最新数据（避免竞争条件）
+                $fileContent = file_get_contents($dataFile);
+                $data = json_decode($fileContent, true);
+                $redeemCodes = $data['redeemCodes'] ?? [];
+                
+                // 再次验证兑换码状态（避免重复使用）
+                if (!isset($redeemCodes[$code]) || $redeemCodes[$code]['status'] !== 'active') {
+                    log_message("警告：兑换码状态在锁期间已变更，状态: " . ($redeemCodes[$code]['status'] ?? '不存在'));
+                    echo json_encode([
+                        'success' => false,
+                        'error' => '兑换码状态已变更，请重试'
+                    ]);
+                    exit;
+                }
+
+                // ⭐ 新增：在锁内部进行有效期检查
+                $redeemInfo = $redeemCodes[$code];
+                if (isset($redeemInfo['expiresAt'])) {
+                    $expiresTime = strtotime($redeemInfo['expiresAt']);
+                    $currentTime = time();
+                    log_message("原子操作有效期检查 - 过期时间: " . $redeemInfo['expiresAt'] . " (" . $expiresTime . "), 当前时间: " . $currentTime);
+                    
+                    if ($expiresTime < $currentTime) {
+                        log_message("兑换码在锁期间已过期");
+                        echo json_encode([
+                            'success' => false,
+                            'error' => '兑换码已过期'
+                        ]);
+                        exit;
+                    }
+                }
+
+                // ⭐ 新增：在锁内部进行测试ID匹配检查
+                log_message("原子操作测试ID检查 - 期望: {$redeemInfo['testId']}, 实际: $testId");
+                if ($redeemInfo['testId'] !== $testId) {
+                    log_message("测试ID在锁期间不匹配");
+                    echo json_encode([
+                        'success' => false,
+                        'error' => '该兑换码不适用于此测试'
+                    ]);
+                    exit;
+                }
+
+                log_message("所有原子验证通过，开始标记为已使用");
+
+                // 更新兑换码状态
+                $redeemCodes[$code]['status'] = 'used';
+                $redeemCodes[$code]['usedAt'] = date('c');
+                $redeemCodes[$code]['usedBy'] = $userId;
+                
+                $data['redeemCodes'] = $redeemCodes;
+                $jsonData = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+                
+                log_message("准备保存数据，JSON长度: " . strlen($jsonData) . " 字节");
+                
+                // 使用临时文件避免写入中断
+                $tempFile = $dataFile . '.tmp';
+                $writeResult = file_put_contents($tempFile, $jsonData);
+                
+                if ($writeResult !== false) {
+                    // 原子性重命名操作
+                    if (rename($tempFile, $dataFile)) {
+                        log_message("文件保存成功（原子操作），写入字节数: $writeResult");
+                        
+                        // 记录使用日志
+                        $logMessage = date('Y-m-d H:i:s') . " - 兑换成功: {$code} - 测试: {$testId} - 用户: {$userId}\n";
+                        file_put_contents('/data/wwwroot/wocece/data/redeem-logs.log', $logMessage, FILE_APPEND);
+                        log_message("使用日志记录成功");
+
+                        echo json_encode([
+                            'success' => true,
+                            'message' => '兑换成功',
+                            'testId' => $testId
+                        ]);
+                    } else {
+                        throw new Exception('文件重命名失败，原子操作未完成');
+                    }
+                } else {
+                    throw new Exception('临时文件写入失败');
+                }
+                
+            } finally {
+                // 释放锁
+                flock($lockHandle, LOCK_UN);
+                fclose($lockHandle);
+                // 清理临时文件
+                if (file_exists($tempFile)) {
+                    unlink($tempFile);
+                }
+                if (file_exists($lockFile)) {
+                    unlink($lockFile);
+                }
+                log_message("文件锁和临时文件已清理");
             }
         } else {
-            log_message("无有效期限制");
-        }
-
-        // 检查测试ID匹配
-        log_message("测试ID检查 - 期望: {$redeemInfo['testId']}, 实际: $testId");
-        if ($redeemInfo['testId'] !== $testId) {
-            log_message("测试ID不匹配");
-            echo json_encode([
-                'success' => false,
-                'error' => '该兑换码不适用于此测试'
-            ]);
-            exit;
-        }
-
-        log_message("所有验证通过，开始标记为已使用");
-
-        // 标记为已使用
-        $redeemCodes[$code]['status'] = 'used';
-        $redeemCodes[$code]['usedAt'] = date('c');
-        $redeemCodes[$code]['usedBy'] = $userId;
-
-        // 保存更新
-        $data['redeemCodes'] = $redeemCodes;
-        $jsonData = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        
-        log_message("准备保存数据，JSON长度: " . strlen($jsonData) . " 字节");
-        
-        // 再次检查文件可写性
-        if (!$isWritable) {
-            $error_msg = "文件不可写，当前权限: $filePerms";
-            log_message("错误: $error_msg");
-            throw new Exception($error_msg);
-        }
-        
-        log_message("开始写入文件...");
-        $writeResult = file_put_contents($dataFile, $jsonData);
-        
-        if ($writeResult !== false) {
-            log_message("文件保存成功，写入字节数: $writeResult");
-            
-            // 记录使用日志
-            $logMessage = date('Y-m-d H:i:s') . " - 兑换成功: {$code} - 测试: {$testId} - 用户: {$userId}\n";
-            file_put_contents('/data/wwwroot/wocece/data/redeem-logs.log', $logMessage, FILE_APPEND);
-            log_message("使用日志记录成功");
-
-            echo json_encode([
-                'success' => true,
-                'message' => '兑换成功',
-                'testId' => $testId
-            ]);
-        } else {
-            $error = error_get_last();
-            $error_msg = '文件保存失败: ' . ($error['message'] ?? '未知错误');
-            log_message("错误: $error_msg");
-            throw new Exception($error_msg);
+            throw new Exception('无法获取文件锁，可能系统繁忙');
         }
 
     } catch (Exception $e) {

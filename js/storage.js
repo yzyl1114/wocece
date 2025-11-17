@@ -217,7 +217,14 @@ class StorageManager {
     // 检查是否已兑换
     isRedeemed(code, testId) {
         const records = this.getRedeemRecords();
-        return records.some(record => record.code === code && record.testId === testId);
+        // ⭐ 修复：添加 null 检查
+        if (!records || !Array.isArray(records)) {
+            return false;
+        }
+        return records.some(record => {
+            if (!record) return false;
+            return record.code === code && record.testId === testId;
+        });
     }
 }
 
