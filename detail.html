@@ -421,13 +421,24 @@
                     console.log('测试已完成，需要重新解锁:', this.testId);
                     this.showToast('已完成测试，需要重新解锁');
                     
-                    // 同时清除支付记录和兑换记录
+                    // 关键修复：清除状态后立即触发支付流程
                     storageManager.clearCompletionStatus(this.testId);
                     storageManager.clearPaymentRecord(this.testId);
-                    this.clearRedeemRecord(this.testId); // 新增：清除兑换记录
+                    this.clearRedeemRecord(this.testId);
                     
                     // 重新检查状态
                     this.updateButtonState();
+                    
+                    // 新增：直接启动支付流程
+                    setTimeout(() => {
+                        if (window.paymentManager) {
+                            window.paymentManager.initializePayment(this.testId, this.testData.price);
+                        } else {
+                            // 备用方案：跳转到测试页面
+                            window.location.href = `testing.html?id=${this.testId}`;
+                        }
+                    }, 1500); // 给用户1.5秒看到提示
+                    
                     return;
                 }
                 
