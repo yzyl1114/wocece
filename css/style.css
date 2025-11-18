@@ -63,38 +63,43 @@ body {
     line-height: 1.4;
 }
 
-.feedback-icon,
-.share-icon {
+.header-icon {
     position: absolute;
     top: 20px;
-    width: 24px;
-    height: 24px;
+    width: 32px;  /* 固定宽度 */
+    height: 32px; /* 固定高度 */
     cursor: pointer;
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
     z-index: 100;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: rgba(255, 255, 255, 0.2); /* 半透明白色背景 */
+    border-radius: 8px; /* 圆角 */
+    padding: 6px; /* 内边距 */
+    backdrop-filter: blur(10px); /* 毛玻璃效果 */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* 边框 */
 }
 
-.feedback-icon:hover,
-.share-icon:hover {
+.header-icon:hover {
     transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.3); /* 悬停时背景加深 */
 }
 
-.feedback-icon img,
-.share-icon img {
-    width: 100%;
-    height: 100%;
+.header-icon img {
+    width: 20px;  /* 图标实际显示尺寸 */
+    height: 20px; /* 图标实际显示尺寸 */
     object-fit: contain;
+    filter: brightness(0) invert(1); /* 使图标变为白色 */
 }
 
+/* 图标位置 */
 .share-icon {
-    right: 60px;
+    right: 60px; /* 距离右侧60px */
 }
 
 .feedback-icon {
-    right: 20px;
+    right: 20px; /* 距离右侧20px */
 }
 
 /* 搜索区域 */
@@ -693,19 +698,45 @@ body {
         font-size: 14px; 
     }
 
-    .feedback-icon,
-    .share-icon {  
-        width: 22px; /* 这3个属性会同时应用到2个类 */
-        height: 22px; 
-        top: 15px; 
+    .header-icon {
+        top: 15px;
+        width: 28px;  /* 移动端稍小 */
+        height: 28px;
+        padding: 5px;
+    }
+    
+    .header-icon img {
+        width: 18px;
+        height: 18px;
     }
     
     .share-icon {
-        right: 50px; 
+        right: 50px; /* 移动端间距调整 */
     }
     
     .feedback-icon {
-        right: 15px; 
+        right: 15px;
+    }    
+}
+
+@media (max-width: 375px) {
+    .header-icon {
+        width: 26px;
+        height: 26px;
+        padding: 4px;
+    }
+    
+    .header-icon img {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .share-icon {
+        right: 48px;
+    }
+    
+    .feedback-icon {
+        right: 12px;
     }
 }
 
