@@ -67,9 +67,16 @@ body {
     position: absolute;
     top: 20px;
     right: 20px;
-    font-size: 22px;
+    width: 24px;
+    height: 24px;
     cursor: pointer;
     transition: transform 0.3s ease;
+    background-image: url('images/feedback-icon.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    font-size: 0; /* 隐藏原有的emoji */
+    color: transparent; /* 隐藏文字颜色 */
 }
 
 .feedback-icon:hover {
@@ -80,16 +87,15 @@ body {
 .share-icon {
     position: absolute;
     top: 20px;
-    right: 60px; /* 确保与右侧的反馈图标有间隔 */
-    font-size: 22px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    color: white;
+    right: 60px;
     width: 24px;
     height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    background-image: url('images/share-icon.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .share-icon:hover {
@@ -97,8 +103,7 @@ body {
 }
 
 .share-icon svg {
-    width: 100%;
-    height: 100%;
+    display: none;
 }
 
 /* 搜索区域 */
@@ -695,6 +700,21 @@ body {
 
     .header-subtitle {
         font-size: 14px; 
+    }
+
+    .feedback-icon,
+    .share-icon {  
+        width: 22px; /* 这3个属性会同时应用到2个类 */
+        height: 22px; 
+        top: 15px; 
+    }
+    
+    .share-icon {
+        right: 50px; 
+    }
+    
+    .feedback-icon {
+        right: 15px; 
     }
 }
 
