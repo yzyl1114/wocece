@@ -474,18 +474,6 @@ const ReportComponents = {
                             </div>
                         </div>
                         
-                        <div class="dimension-progress-container">
-                            <div class="progress-labels">
-                                <span>低</span>
-                                <span>中</span>
-                                <span>高</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill ${level}" style="width: ${percentage}%"></div>
-                                <div class="progress-marker" style="left: ${percentage}%"></div>
-                            </div>
-                        </div>
-                        
                         <div class="dimension-analysis">
                             ${getDetailedDimensionAnalysis(key, value, percentage)}
                         </div>
