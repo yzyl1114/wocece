@@ -35,24 +35,27 @@ body {
 .header-banner {
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     color: white;
-    padding: 30px 20px 25px;
+    padding: 40px 20px 30px;
     text-align: center;
     position: relative;
-    margin: -15px -15px 20px -15px;
+    margin: -15px -15px 25px -15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .header-content {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .header-title {
-    font-size: 28px;
+    font-size: 32px;
     font-weight: bold;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
 }
 
 .header-subtitle {
-    font-size: 16px;
+    font-size: 18px;
     opacity: 0.9;
 }
 
@@ -676,11 +679,15 @@ body {
     }
     
     .header-banner {
-        padding: 25px 15px 20px;
+        padding: 35px 15px 25px;
     }
     
     .header-title {
-        font-size: 24px;
+        font-size: 28px;
+    }
+
+    .header-subtitle {
+        font-size: 16px; /* 🔧 修改：移动端字体 */
     }
 }
 

@@ -138,7 +138,7 @@ class PsychTestApp {
                 templateType: 'fun', // 新增字段
                 price: 0.01,
                 questions: 60,
-                image: 'images/test7.jpg'
+                image: 'images/animal-personality.jpg'
             },
             {
             id: '8',
@@ -161,13 +161,13 @@ class PsychTestApp {
     renderFeaturedTests() {
         const featuredContainer = document.getElementById('featuredTests');
         if (featuredContainer) {
-            // 指定4个测试作为特色测试：1,2,3,4
-            const featuredIds = ['1', '2', '3', '4'];
+            // 指定4个测试作为特色测试：1,2
+            const featuredIds = ['1', '2'];
             const featuredTests = this.tests.filter(test => featuredIds.includes(test.id));
             
             featuredContainer.innerHTML = featuredTests.map(test => `
                 <div class="test-card" data-test-id="${test.id}">
-                    <div class="test-image" style="background: linear-gradient(135deg, #667eea, #764ba2);"></div>
+                    <div class="test-image" style="background-image: url('${test.image}'); background-size: cover; background-position: center;"></div>
                     <div class="test-content">
                         <div class="test-title">${test.title}</div>
                         <button class="test-btn" onclick="app.navigateToTest('${test.id}')">前往 →</button>
@@ -192,7 +192,7 @@ class PsychTestApp {
         if (testListContainer) {
             testListContainer.innerHTML = this.tests.map(test => `
                 <div class="test-list-item" data-test-id="${test.id}" data-category="${test.category}">
-                    <div class="test-thumb" style="background: linear-gradient(135deg, #667eea, #764ba2);"></div>
+                    <div class="test-thumb" style="background-image: url('${test.image}'); background-size: cover; background-position: center;"></div>
                     <div class="test-info">
                         <div class="test-title">${test.title}</div>
                         <div class="test-desc">${test.description}</div>
