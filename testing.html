@@ -171,13 +171,7 @@
 
             renderSortOptions(question, container) {
                 const currentAnswer = this.answers[this.currentQuestionIndex] || [];
-                
-                let html = `
-                    <div class="sort-instruction">
-                        <p>📝 请按重要性由高到低拖拽排序（拖动左侧 ☰ 图标）</p>
-                    </div>
-                    <div class="sortable-list" id="sortableList">
-                `;
+                let html = `<div class="sortable-list" id="sortableList">`;
                 
                 const itemsToRender = currentAnswer.length > 0 
                     ? currentAnswer.map(id => question.options.find(opt => opt.id === id)).filter(Boolean)
@@ -815,17 +809,6 @@
         }
 
         /* 排序题样式 - 完全重写 */
-        .sort-instruction {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #666;
-            font-size: 14px;
-            padding: 12px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
-        }
-
         .sortable-list {
             display: flex;
             flex-direction: column;
