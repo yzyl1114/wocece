@@ -41,7 +41,7 @@ class ChartRenderer {
         ctx.lineWidth = 1;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.font = '10px Arial';
+        ctx.font = '9px Arial';
         
         // 绘制同心圆网格 - 改为5个等级，对应1-5分
         for (let i = 1; i <= 5; i++) {
@@ -134,9 +134,8 @@ class ChartRenderer {
             // 绘制多行文本
             const lines = labelText.split('\n');
             lines.forEach((line, index) => {
-                // 设置文字阴影提高可读性
                 ctx.fillStyle = 'white';
-                ctx.fillText(line, x + 1, y + (index * 14) + 1);
+                ctx.fillText(line, x, y + (index * 14));
                 ctx.fillStyle = '#333';
                 ctx.fillText(line, x, y + (index * 14));
             });
