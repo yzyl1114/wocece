@@ -77,6 +77,7 @@ body {
     background-position: center;
     font-size: 0; /* 隐藏原有的emoji */
     color: transparent; /* 隐藏文字颜色 */
+    z-index: 100; /* 🔧 确保在最上层 */
 }
 
 .feedback-icon:hover {
@@ -96,6 +97,7 @@ body {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    z-index: 100;
 }
 
 .share-icon:hover {
@@ -707,6 +709,7 @@ body {
         width: 22px; /* 这3个属性会同时应用到2个类 */
         height: 22px; 
         top: 15px; 
+        background-size: 22px 22px;
     }
     
     .share-icon {
