@@ -373,7 +373,7 @@ class CalculationManager {
         Object.keys(dimensions).forEach(dimKey => {
             const dim = dimensions[dimKey];
             const score = result.dimensionScores[dimKey];
-            const percentage = Math.min(100, (score / 100) * 100);
+            const percentage = Math.min(100, Math.round((score / 100) * 100));
             
             result.dimensions.push({
                 code: dimKey,
@@ -407,6 +407,7 @@ class CalculationManager {
      */
     addScores(dimensionScores, scoresToAdd) {
         Object.entries(scoresToAdd).forEach(([dim, score]) => {
+            const roundedScore = Math.round(score);
             dimensionScores[dim] = (dimensionScores[dim] || 0) + score;
             // 上限100分
             dimensionScores[dim] = Math.min(100, dimensionScores[dim]);

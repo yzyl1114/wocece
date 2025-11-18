@@ -795,10 +795,10 @@ const ReportComponents = {
                             <div class="bar-item">
                                 <div class="bar-info">
                                     <span class="bar-label">${dim.name}</span>
-                                    <span class="bar-score">${dim.score}%</span>
+                                    <span class="bar-score">${Math.round(dim.score)}%</span> <!-- 确保整数 -->
                                 </div>
                                 <div class="bar-track">
-                                    <div class="bar-fill" style="width: ${dim.score}%; background: ${getBarColor(dim.score)};"></div>
+                                    <div class="bar-fill" style="width: ${Math.round(dim.score)}%; background: ${getBarColor(dim.score)};"></div> <!-- 确保整数 -->
                                 </div>
                             </div>
                         `).join('')}
@@ -819,7 +819,7 @@ const ReportComponents = {
                         ${sortedDimensions.map(dim => `
                             <div class="dimension-analysis-item">
                                 <div class="dimension-header">
-                                    <h4 class="dimension-title">${dim.name} (${dim.score}%)</h4>
+                                    <h4 class="dimension-title">${dim.name} (${Math.round(dim.score)}%)</h4> <!-- 确保整数 -->
                                 </div>
                                 <div class="dimension-content">
                                     <p><strong>含义：</strong>${dim.description}</p>
