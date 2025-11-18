@@ -35,28 +35,32 @@ body {
 .header-banner {
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     color: white;
-    padding: 40px 20px 30px;
+    padding: 30px 20px;
     text-align: center;
     position: relative;
     margin: -15px -15px 25px -15px;
+    height: 200px; /* 固定高度 */
+    min-height: 200px; /* 最小高度 */
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
 }
 
 .header-content {
-    margin-bottom: 15px;
+    margin-bottom: 0;
 }
 
 .header-title {
     font-size: 32px;
     font-weight: bold;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
 }
 
 .header-subtitle {
-    font-size: 18px;
+    font-size: 16px;
     opacity: 0.9;
+    line-height: 1.4;
 }
 
 .feedback-icon {
@@ -197,6 +201,25 @@ body {
     height: 100px;
     object-fit: cover;
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+/* 趣味精选封面图精细控制 */
+.featured-tests .test-image {
+    width: 100%;
+    height: 200px; /* 固定高度 */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* 更多好玩缩略图精细控制 */
+.test-list .test-thumb {
+    width: 120px;
+    height: 120px; /* 固定正方形 */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    flex-shrink: 0; /* 防止变形 */
 }
 
 .test-content {
@@ -679,15 +702,18 @@ body {
     }
     
     .header-banner {
-        padding: 35px 15px 25px;
+        height: 180px; /* 🔧 移动端稍矮 */
+        min-height: 180px;
+        padding: 25px 15px;
     }
     
     .header-title {
         font-size: 28px;
+        margin-bottom: 6px;
     }
 
     .header-subtitle {
-        font-size: 16px; /* 🔧 修改：移动端字体 */
+        font-size: 14px; 
     }
 }
 
