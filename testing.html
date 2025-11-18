@@ -65,12 +65,11 @@
                 this.renderQuestion();
                 this.bindEvents();
                 this.updateNavigationButtons();
-                this.updateProgress(); // 新增：更新进度显示
+                this.updateProgress();
             }
 
             async loadTestData() {
                 try {
-                    // 从JSON文件加载测试数据
                     const response = await fetch('data/tests.json');
                     const data = await response.json();
                     this.testData = data.tests[this.testId];
@@ -79,14 +78,12 @@
                         throw new Error('测试数据不存在');
                     }
                     
-                    // 确保questions字段存在
                     if (!this.testData.questions || this.testData.questions.length === 0) {
                         throw new Error('测试题目数据为空');
                     }
                     
                 } catch (error) {
                     console.error('加载测试数据失败:', error);
-                    // 使用默认数据
                     this.testData = {
                         id: this.testId,
                         title: '心理测试',
@@ -95,7 +92,6 @@
                 }
             }
 
-            // 添加缺失的默认题目方法
             getDefaultQuestions() {
                 return [
                     {
@@ -142,13 +138,10 @@
 
                 const question = this.testData.questions[this.currentQuestionIndex];
                 
-                // 更新进度显示
                 this.updateProgress();
 
-                // 更新题目
                 document.getElementById('questionText').textContent = question.text;
 
-                // 更新图片
                 const imageContainer = document.getElementById('questionImage');
                 if (question.image) {
                     imageContainer.innerHTML = `<img src="${question.image}" alt="题目图片" style="max-width: 100%; border-radius: 8px;">`;
@@ -157,16 +150,10 @@
                     imageContainer.style.display = 'none';
                 }
 
-                // ============ 替换这部分：根据题型渲染不同界面 ============
                 this.renderOptionsByType(question);
-                
-                // 更新导航按钮状态
                 this.updateNavigationButtons();
             }
 
-            /**
-             * 根据题型渲染不同选项界面
-             */
             renderOptionsByType(question) {
                 const optionsContainer = document.getElementById('optionsContainer');
                 
@@ -177,37 +164,32 @@
                     case 'multiple':
                         this.renderMultipleOptions(question, optionsContainer);
                         break;
-                    default: // binary, single
+                    default:
                         this.renderDefaultOptions(question, optionsContainer);
                 }
             }
 
-            /**
-             * 渲染排序题界面
-             */
             renderSortOptions(question, container) {
                 const currentAnswer = this.answers[this.currentQuestionIndex] || [];
                 
                 let html = `
                     <div class="sort-instruction">
-                        <p>请按重要性由高到低拖拽排序：</p>
+                        <p>📝 请按重要性由高到低拖拽排序（拖动左侧 ☰ 图标）</p>
                     </div>
                     <div class="sortable-list" id="sortableList">
                 `;
                 
-                // 如果已有答案，按答案顺序渲染；否则按原始顺序
                 const itemsToRender = currentAnswer.length > 0 
-                    ? currentAnswer.map(id => question.options.find(opt => opt.id === id))
-                    : question.options;
+                    ? currentAnswer.map(id => question.options.find(opt => opt.id === id)).filter(Boolean)
+                    : [...question.options];
                     
-                itemsToRender.forEach(option => {
+                itemsToRender.forEach((option, index) => {
                     if (!option) return;
-                    const isSelected = currentAnswer.includes(option.id);
                     html += `
-                        <div class="sort-item ${isSelected ? 'selected' : ''}" 
-                            data-option-id="${option.id}" draggable="true">
+                        <div class="sort-item" data-option-id="${option.id}">
                             <span class="sort-handle">☰</span>
                             <span class="option-text">${option.text}</span>
+                            <span class="sort-position">${index + 1}</span>
                         </div>
                     `;
                 });
@@ -215,13 +197,9 @@
                 html += `</div>`;
                 container.innerHTML = html;
                 
-                // 初始化拖拽排序
                 this.initSortable();
             }
 
-            /**
-             * 渲染多选题界面
-             */
             renderMultipleOptions(question, container) {
                 const currentAnswer = this.answers[this.currentQuestionIndex] || [];
                 
@@ -237,9 +215,6 @@
                 }).join('');
             }
 
-            /**
-             * 渲染默认单选题界面
-             */
             renderDefaultOptions(question, container) {
                 const currentAnswer = this.answers[this.currentQuestionIndex];
                 
@@ -253,115 +228,146 @@
                     `;
                 }).join('');
             }
+
             /**
-             * 初始化拖拽排序 - 修复版本
+             * 初始化拖拽排序 - 完全重写的版本
              */
             initSortable() {
                 const sortableList = document.getElementById('sortableList');
                 if (!sortableList) return;
 
                 let draggedItem = null;
-                let startY = 0;
-                let currentY = 0;
+                let dragStartIndex = 0;
 
-                // 统一的拖拽开始处理
-                const handleDragStart = (e) => {
-                    const item = e.target.closest('.sort-item');
-                    if (!item) return;
-                    
-                    draggedItem = item;
-                    
-                    // 记录起始位置
-                    if (e.type === 'touchstart') {
-                        startY = e.touches[0].clientY;
-                    } else {
-                        startY = e.clientY;
-                        e.dataTransfer.setData('text/plain', ''); // 必要的拖拽API
-                    }
-                    
-                    // 添加拖拽样式
-                    setTimeout(() => {
-                        draggedItem.classList.add('dragging');
-                        document.body.style.overflow = 'hidden'; // 防止页面滚动
-                    }, 0);
+                // 创建拖拽项克隆
+                const createDragImage = (item) => {
+                    const dragImage = item.cloneNode(true);
+                    dragImage.style.width = item.offsetWidth + 'px';
+                    dragImage.style.opacity = '0.8';
+                    dragImage.style.transform = 'rotate(5deg)';
+                    dragImage.style.zIndex = '10000';
+                    dragImage.style.position = 'fixed';
+                    dragImage.style.pointerEvents = 'none';
+                    return dragImage;
                 };
 
-                // 统一的拖拽结束处理
+                // 拖拽开始
+                const handleDragStart = (e) => {
+                    draggedItem = e.target.closest('.sort-item');
+                    if (!draggedItem) return;
+
+                    dragStartIndex = Array.from(sortableList.children).indexOf(draggedItem);
+                    
+                    // 设置拖拽效果
+                    if (e.dataTransfer) {
+                        e.dataTransfer.effectAllowed = 'move';
+                    }
+                    
+                    draggedItem.classList.add('dragging');
+                    
+                    // 添加半透明效果给其他项
+                    Array.from(sortableList.children).forEach(item => {
+                        if (item !== draggedItem) {
+                            item.style.opacity = '0.6';
+                        }
+                    });
+                };
+
+                // 拖拽结束
                 const handleDragEnd = (e) => {
                     if (!draggedItem) return;
                     
                     draggedItem.classList.remove('dragging');
-                    document.body.style.overflow = ''; // 恢复页面滚动
                     
-                    // 保存答案
+                    // 恢复其他项的透明度
+                    Array.from(sortableList.children).forEach(item => {
+                        item.style.opacity = '1';
+                    });
+                    
+                    // 保存排序结果
                     this.saveSortAnswer();
                     draggedItem = null;
-                    startY = 0;
-                    currentY = 0;
                 };
 
-                // 统一的拖拽移动处理
-                const handleDragMove = (e) => {
+                // 拖拽经过
+                const handleDragOver = (e) => {
+                    e.preventDefault();
+                    if (!draggedItem) return;
+
+                    const afterElement = this.getDragAfterElement(sortableList, e.clientY);
+                    if (afterElement) {
+                        sortableList.insertBefore(draggedItem, afterElement);
+                    } else {
+                        sortableList.appendChild(draggedItem);
+                    }
+                };
+
+                // 触摸设备支持
+                let touchStartY = 0;
+                let touchCurrentY = 0;
+
+                const handleTouchStart = (e) => {
+                    const item = e.target.closest('.sort-item');
+                    if (!item) return;
+
+                    draggedItem = item;
+                    touchStartY = e.touches[0].clientY;
+                    dragStartIndex = Array.from(sortableList.children).indexOf(draggedItem);
+                    
+                    draggedItem.classList.add('dragging');
+                    
+                    Array.from(sortableList.children).forEach(item => {
+                        if (item !== draggedItem) {
+                            item.style.opacity = '0.6';
+                        }
+                    });
+                };
+
+                const handleTouchMove = (e) => {
                     if (!draggedItem) return;
                     
                     e.preventDefault();
+                    touchCurrentY = e.touches[0].clientY;
                     
-                    // 获取当前Y坐标
-                    if (e.type === 'touchmove') {
-                        currentY = e.touches[0].clientY;
-                    } else {
-                        currentY = e.clientY;
-                    }
-                    
-                    // 计算拖拽位置并重新排序
-                    const afterElement = this.getDragAfterElement(sortableList, currentY);
+                    const afterElement = this.getDragAfterElement(sortableList, touchCurrentY);
                     if (afterElement && afterElement !== draggedItem.nextSibling) {
-                        if (afterElement) {
-                            sortableList.insertBefore(draggedItem, afterElement);
-                        } else {
-                            sortableList.appendChild(draggedItem);
-                        }
+                        sortableList.insertBefore(draggedItem, afterElement);
                     }
                 };
 
-                // 清理现有事件监听器
-                const cloneSortableList = sortableList.cloneNode(true);
-                sortableList.parentNode.replaceChild(cloneSortableList, sortableList);
+                const handleTouchEnd = (e) => {
+                    if (!draggedItem) return;
+                    
+                    draggedItem.classList.remove('dragging');
+                    
+                    Array.from(sortableList.children).forEach(item => {
+                        item.style.opacity = '1';
+                    });
+                    
+                    this.saveSortAnswer();
+                    draggedItem = null;
+                };
+
+                // 绑定事件
+                sortableList.addEventListener('dragstart', handleDragStart);
+                sortableList.addEventListener('dragend', handleDragEnd);
+                sortableList.addEventListener('dragover', handleDragOver);
                 
-                const newSortableList = document.getElementById('sortableList');
+                // 触摸事件
+                sortableList.addEventListener('touchstart', handleTouchStart, { passive: false });
+                sortableList.addEventListener('touchmove', handleTouchMove, { passive: false });
+                sortableList.addEventListener('touchend', handleTouchEnd);
                 
-                // 重新绑定事件 - 使用更清晰的事件委托
-                newSortableList.addEventListener('mousedown', (e) => {
-                    if (e.target.closest('.sort-item')) {
-                        handleDragStart(e);
-                    }
-                });
-                
-                newSortableList.addEventListener('touchstart', (e) => {
-                    if (e.target.closest('.sort-item')) {
-                        handleDragStart(e);
-                    }
-                }, { passive: false });
-                
-                document.addEventListener('mousemove', handleDragMove);
-                document.addEventListener('touchmove', handleDragMove, { passive: false });
-                
-                document.addEventListener('mouseup', handleDragEnd);
-                document.addEventListener('touchend', handleDragEnd);
-                
-                // 防止拖拽过程中的选择文本
-                document.addEventListener('selectstart', (e) => {
+                // 防止文本选择
+                sortableList.addEventListener('selectstart', (e) => {
                     if (draggedItem) {
                         e.preventDefault();
                     }
                 });
             }
 
-            // 修复：改进获取拖拽位置的方法
             getDragAfterElement(container, y) {
                 const draggableElements = [...container.querySelectorAll('.sort-item:not(.dragging)')];
-                
-                if (draggableElements.length === 0) return null;
                 
                 return draggableElements.reduce((closest, child) => {
                     const box = child.getBoundingClientRect();
@@ -375,31 +381,33 @@
                 }, { offset: Number.NEGATIVE_INFINITY }).element;
             }
 
-            /**
-             * 保存排序题答案
-             */
             saveSortAnswer() {
                 const sortItems = document.querySelectorAll('.sort-item');
                 const sortedIds = Array.from(sortItems).map(item => item.dataset.optionId);
 
-                console.log('拖拽排序结果:', sortedIds); // 调试信息
+                console.log('拖拽排序结果:', sortedIds);
                 
                 this.answers[this.currentQuestionIndex] = sortedIds;
-                this.saveProgress();
                 this.updateNavigationButtons();
+                
+                // 更新位置数字
+                sortItems.forEach((item, index) => {
+                    const positionSpan = item.querySelector('.sort-position');
+                    if (positionSpan) {
+                        positionSpan.textContent = index + 1;
+                    }
+                });
             }
 
             bindEvents() {
-                // 修复：明确的返回按钮事件绑定
                 const backButton = document.getElementById('backButton');
                 if (backButton) {
                     backButton.addEventListener('click', (e) => {
                         e.preventDefault();
-                        console.log('返回按钮点击事件触发');
                         this.handleBackButton();
                     });
                 }               
-                // 选项点击事件
+                
                 document.getElementById('optionsContainer').addEventListener('click', (e) => {
                     const option = e.target.closest('.option');
                     if (option) {
@@ -407,17 +415,14 @@
                     }
                 });
 
-                // 上一题按钮
                 document.getElementById('prevBtn').addEventListener('click', () => {
                     this.previousQuestion();
                 });
 
-                // 下一题按钮
                 document.getElementById('nextBtn').addEventListener('click', () => {
                     this.nextQuestion();
                 });
 
-                // 防止页面刷新
                 window.addEventListener('beforeunload', (e) => {
                     if (this.currentQuestionIndex > 0 && 
                         this.currentQuestionIndex < this.testData.questions.length - 1) {
@@ -432,29 +437,20 @@
                 
                 switch(question.type) {
                     case 'multiple':
-                        // 多选题：切换选择状态
                         const currentAnswer = this.answers[this.currentQuestionIndex] || [];
                         if (currentAnswer.includes(optionId)) {
-                            // 取消选择
                             this.answers[this.currentQuestionIndex] = currentAnswer.filter(id => id !== optionId);
                         } else {
-                            // 添加选择
                             this.answers[this.currentQuestionIndex] = [...currentAnswer, optionId];
                         }
                         break;
-                        
                     case 'sort':
-                        // 排序题在拖拽时自动保存，这里不需要处理
                         return;
-                        
                     default:
-                        // 单选题：直接记录答案
                         this.answers[this.currentQuestionIndex] = optionId;
                 }
                 
-                // 重新渲染选项以显示选中状态
                 this.renderQuestion();
-                this.saveProgress();
                 this.updateNavigationButtons();
             }
 
@@ -468,7 +464,6 @@
 
             nextQuestion() {
                 if (this.currentQuestionIndex < this.testData.questions.length - 1) {
-                    // 如果有答案才允许进入下一题
                     if (this.answers[this.currentQuestionIndex]) {
                         this.currentQuestionIndex++;
                         this.renderQuestion();
@@ -477,7 +472,6 @@
                         this.showToast('请先选择答案');
                     }
                 } else {
-                    // 最后一题，完成测试
                     if (this.answers[this.currentQuestionIndex]) {
                         this.completeTest();
                     } else {
@@ -486,14 +480,8 @@
                 }
             }
 
-            /**
-             * 处理返回按钮点击
-             */
             handleBackButton() {
-                console.log('🔍 返回按钮处理开始');
-                
                 if (confirm('退出后将不会保存测试进度，确定要退出吗？')) {
-                    console.log('✅ 跳转到详情页:', `detail.html?id=${this.testId}`);
                     storageManager.clearTestProgress(this.testId);
                     window.location.href = `detail.html?id=${this.testId}`;
                 }
@@ -508,40 +496,28 @@
                 });
 
                 try {
-                    // 使用统一的计分管理器计算结果
                     const result = calculationManager.calculateResult(
                         this.testId, 
                         this.answers, 
                         this.testData
                     );
                     
-                    // 添加测试ID到结果中，便于追踪
                     result.testId = this.testId;
                     
-                    // ⭐ 关键修复：测试完成后清除所有解锁状态
-                    storageManager.clearPaymentRecord(this.testId); // 清除支付记录
+                    storageManager.clearPaymentRecord(this.testId);
                     
-                    // 清除兑换记录
                     const redeemRecords = JSON.parse(localStorage.getItem('redeem_records') || '{}');
                     if (redeemRecords[this.testId]) {
                         delete redeemRecords[this.testId];
                         localStorage.setItem('redeem_records', JSON.stringify(redeemRecords));
-                        console.log('兑换记录已清除:', this.testId);
                     }
                     
-                    // 清除进度
                     storageManager.clearTestProgress(this.testId);
-                    // 标记测试已完成（看到报告）
                     storageManager.saveTestCompletion(this.testId);
                     
-                    // ✅ 使用localStorage存储结果
                     const resultId = 'result_' + this.testId + '_' + Date.now();
                     storageManager.saveTestResult(resultId, result);
                     
-                    console.log('结果保存成功，准备跳转:', resultId);
-                    console.log('测试完成，所有解锁状态已清除，需要重新支付/兑换才能再次测试');
-                    
-                    // 短暂延迟确保数据保存完成
                     setTimeout(() => {
                         window.location.href = `result.html?id=${this.testId}&resultId=${resultId}`;
                     }, 100);
@@ -557,17 +533,14 @@
                 const nextBtn = document.getElementById('nextBtn');
                 const question = this.testData.questions[this.currentQuestionIndex];
                 
-                // 更新上一题按钮状态
                 prevBtn.disabled = this.currentQuestionIndex === 0;
                 
-                // 更新下一题按钮文本和状态
                 if (this.currentQuestionIndex === this.testData.questions.length - 1) {
                     nextBtn.textContent = '完成测试';
                 } else {
                     nextBtn.textContent = '下一题';
                 }
                 
-                // 根据题型检查是否有答案
                 let hasAnswer = false;
                 const currentAnswer = this.answers[this.currentQuestionIndex];
                 
@@ -585,43 +558,25 @@
                 nextBtn.disabled = !hasAnswer;
             }
 
-            /**
-             * 更新进度显示
-             */
             updateProgress() {
                 if (!this.testData || !this.testData.questions) return;
                 
                 const progress = ((this.currentQuestionIndex + 1) / this.testData.questions.length) * 100;
                 
-                // 更新进度文本和进度条
                 document.getElementById('progressText').textContent = 
                     `第${this.currentQuestionIndex + 1}题/共${this.testData.questions.length}题`;
                 document.getElementById('progressBar').style.width = `${progress}%`;
             }
 
             saveProgress() {
-                // 禁用进度保存
                 console.log('进度保存已禁用');
                 return;
-                
-                /* 原来的代码注释掉
-                const progress = {
-                    testId: this.testId,
-                    questionIndex: this.currentQuestionIndex,
-                    answers: this.answers,
-                    timestamp: Date.now()
-                };
-                storageManager.saveTestProgress(this.testId, progress);
-                */
             }
 
             loadProgress() {
-                // 每次进入测试页都清除进度，确保从第一题开始
                 storageManager.clearTestProgress(this.testId);
-                
                 this.currentQuestionIndex = 0;
                 this.answers = [];
-                
                 console.log('测试进度已重置，从第一题开始');
             }
 
@@ -647,14 +602,12 @@
             }
         }
 
-        // 初始化答题页面
         document.addEventListener('DOMContentLoaded', () => {
             window.testingManager = new TestingManager();
         });
     </script>
 
     <style>
-        /* 修复返回按钮样式 */
         .navbar {
             display: flex;
             align-items: center;
@@ -685,7 +638,6 @@
             font-weight: 500;
         }
 
-        /* 进度条样式优化 */
         .testing-progress {
             background: white;
             padding: 0 15px 15px;
@@ -708,7 +660,6 @@
             transition: width 0.3s ease;
         }
 
-        /* 题目区域优化 */
         .question-section {
             margin: 10px 0;
         }
@@ -741,7 +692,6 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
-        /* 选项区域优化 */
         .options-section {
             margin-bottom: 20px;
         }
@@ -804,7 +754,6 @@
             font-weight: 500;
         }
 
-        /* 导航按钮优化 */
         .navigation-buttons {
             display: flex;
             gap: 12px;
@@ -865,68 +814,99 @@
             box-shadow: none;
         }
 
-        /* 排序题样式 */
+        /* 排序题样式 - 完全重写 */
         .sort-instruction {
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             color: #666;
             font-size: 14px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
         }
 
         .sortable-list {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
+            min-height: 300px;
         }
 
         .sort-item {
             display: flex;
             align-items: center;
-            padding: 15px;
+            padding: 16px;
             background: white;
-            border: 2px solid #f0f0f0;
-            border-radius: 8px;
-            cursor: move;
+            border: 2px solid #e8f4fd;
+            border-radius: 12px;
+            cursor: grab;
             transition: all 0.3s ease;
             gap: 12px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            touch-action: none; /* 修复：防止触摸默认行为 */
-            user-select: none; /* 修复：防止文本选择 */ 
-            -webkit-user-select: none;          
+            user-select: none;
+            -webkit-user-select: none;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .sort-item:active {
+            cursor: grabbing;
         }
 
         .sort-item:hover {
             border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.15);
         }
 
         .sort-item.dragging {
-            opacity: 0.6;
-            transform: rotate(3deg);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            opacity: 0.9;
+            transform: rotate(3deg) scale(1.02);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
             z-index: 1000;
             background: white;
+            border-color: #667eea;
         }
 
         .sort-handle {
-            color: #999;
-            font-size: 16px;
-            cursor: move;
+            color: #667eea;
+            font-size: 18px;
+            cursor: grab;
             padding: 8px 12px;
-            margin: -8px 0 -8px -12px;
-            touch-action: none;
+            margin: -8px 12px -8px -8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 24px;
+            background: #f0f4ff;
+            border-radius: 6px;
+            transition: all 0.3s ease;
         }
 
-        /* 拖拽时的视觉反馈 */
-        .sort-item:active {
-            background: #f8f9fa;
+        .sort-item:active .sort-handle {
+            cursor: grabbing;
+            background: #667eea;
+            color: white;
         }
 
-        /* 确保拖拽时其他项有足够的空间 */
-        .sortable-list {
-            min-height: 60px; /* 确保有足够高度容纳拖拽项 */
+        .sort-item .option-text {
+            flex: 1;
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
         }
 
-        /* 多选题样式 */
+        .sort-position {
+            color: #667eea;
+            font-size: 14px;
+            font-weight: bold;
+            background: #f0f4ff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            min-width: 24px;
+            text-align: center;
+        }
+
         .multiple-option {
             display: flex;
             align-items: center;
@@ -952,7 +932,6 @@
             border-color: #667eea;
         }
 
-        /* 响应式调整 */
         @media (max-width: 480px) {
             .question-text {
                 font-size: 16px;
@@ -980,17 +959,22 @@
             .progress-info {
                 font-size: 13px;
             }
+            
             .sort-item {
-                padding: 12px;
-                margin: 4px 0;
+                padding: 14px;
             }
             
-            .sort-item.dragging {
-                transform: scale(1.02);
+            .sort-handle {
+                font-size: 16px;
+                padding: 6px 10px;
+                margin: -6px 10px -6px -6px;
+            }
+            
+            .sort-item .option-text {
+                font-size: 15px;
             }
         }
 
-        /* 动画效果 */
         @keyframes fadeIn {
             from {
                 opacity: 0;
