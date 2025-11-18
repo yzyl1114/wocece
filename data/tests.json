@@ -225,7 +225,7 @@
           "interpretation": "30分以上强迫症状较明显，20分以下强迫症状不明显"
         },
         "interpersonal": {
-          "name": "人际关系敏感",
+          "name": "人际敏感",
           "items": [6, 21, 34, 36, 37, 41, 61, 69, 73],
           "description": "指某些个人不自在感和自卑感",
           "lowDescription": "人际关系较为和谐，社交自信",
