@@ -101,16 +101,7 @@
             renderTestHeader() {
                 if (!this.testData) return;
                 
-                const coverImg = document.getElementById('testCover');
                 const testTitle = document.getElementById('testTitle');
-                
-                if (this.testData.image) {
-                    coverImg.src = this.testData.image;
-                    coverImg.style.display = 'block';
-                } else {
-                    coverImg.style.display = 'none';
-                }
-                
                 testTitle.textContent = this.testData.title;
             }
 
@@ -629,7 +620,7 @@
         body {
             margin: 0;
             padding: 0;
-            background: #f5f6fa;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4efe9 100%);
             min-height: 100vh;
             max-height: 100vh;
             overflow: hidden;
@@ -640,6 +631,11 @@
             display: flex;
             flex-direction: column;
             padding: 0;
+            margin: 0 auto;
+            max-width: 750px; /* 最大宽度限制 */
+            width: 100%;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1); /* 添加阴影增强立体感 */
+            background: white;
         }
 
         /* 导航栏 */
@@ -675,20 +671,16 @@
             display: flex;
             align-items: center;
             padding: 12px 15px;
-            background: white;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             border-bottom: 1px solid #f0f0f0;
             height: 80px;
             min-height: 80px;
             flex-shrink: 0;
+            color: white;
         }
 
         .header-image {
-            width: 50px;
-            height: 50px;
-            border-radius: 8px;
-            overflow: hidden;
-            margin-right: 12px;
-            flex-shrink: 0;
+            display: none; /* 隐藏图片容器 */
         }
 
         .header-image img {
@@ -699,13 +691,14 @@
 
         .header-content {
             flex: 1;
+            text-align: center;
         }
 
         .header-content h2 {
             margin: 0;
             font-size: 18px;
             font-weight: 600;
-            color: #333;
+            color: white;
             line-height: 1.3;
         }
 
@@ -1030,6 +1023,14 @@
             .option.compact {
                 min-height: 40px;
                 padding: 8px 12px;
+            }
+        }
+
+        /* 移动端保持全宽 */
+        @media (max-width: 768px) {
+            .container {
+                max-width: 100%;
+                box-shadow: none;
             }
         }
 
