@@ -17,13 +17,6 @@
             </div>
         </nav>
 
-        <!-- 进度条 -->
-        <div class="testing-progress">
-            <div class="progress-bar">
-                <div class="progress" id="progressBar" style="width: 10%"></div>
-            </div>
-        </div>
-
         <!-- 题目区域 -->
         <section class="question-section">
             <div class="question-card">
@@ -555,11 +548,8 @@
             updateProgress() {
                 if (!this.testData || !this.testData.questions) return;
                 
-                const progress = ((this.currentQuestionIndex + 1) / this.testData.questions.length) * 100;
-                
                 document.getElementById('progressText').textContent = 
                     `第${this.currentQuestionIndex + 1}题/共${this.testData.questions.length}题`;
-                document.getElementById('progressBar').style.width = `${progress}%`;
             }
 
             saveProgress() {
@@ -632,28 +622,6 @@
             font-weight: 500;
         }
 
-        .testing-progress {
-            background: white;
-            padding: 0 15px 15px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .progress-bar {
-            height: 6px;
-            background: #f0f0f0;
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .progress {
-            height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            border-radius: 3px;
-            transition: width 0.3s ease;
-        }
-
         .question-section {
             margin: 10px 0;
         }
@@ -704,20 +672,13 @@
             border: 2px solid #f0f0f0;
             border-radius: 12px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-        }
-
-        .option:hover {
-            border-color: #667eea;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+            transition: border-color 0.2s ease; /* 简化过渡效果 */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04); /* 简化阴影 */
         }
 
         .option.selected {
             border-color: #667eea;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+            background: white;
         }
 
         .option-label {
@@ -733,12 +694,10 @@
             font-weight: bold;
             font-size: 16px;
             flex-shrink: 0;
-            transition: all 0.3s ease;
         }
 
         .option.selected .option-label {
             background: #764ba2;
-            transform: scale(1.1);
         }
 
         .option-text {
@@ -774,13 +733,11 @@
             background: white;
             color: #667eea;
             border: 2px solid #667eea;
-            box-shadow: 0 2px 6px rgba(102, 126, 234, 0.1);
         }
 
         .prev-btn:hover:not(:disabled) {
             background: #667eea;
             color: white;
-            transform: translateY(-2px);
         }
 
         .prev-btn:disabled {
@@ -788,24 +745,20 @@
             color: #ccc;
             border-color: #e0e0e0;
             cursor: not-allowed;
-            box-shadow: none;
         }
 
         .next-btn {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
 
         .next-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+            opacity: 0.9;
         }
 
         .next-btn:disabled {
             background: #ccc;
             cursor: not-allowed;
-            box-shadow: none;
         }
 
         /* 排序题样式 - 完全重写 */
@@ -829,23 +782,17 @@
             user-select: none;
             -webkit-user-select: none;
             position: relative;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
         }
 
         .sort-item:active {
             cursor: grabbing;
         }
 
-        .sort-item:hover {
-            border-color: #667eea;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.15);
-        }
-
         .sort-item.dragging {
             opacity: 0.9;
             transform: rotate(3deg) scale(1.02);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
             z-index: 1000;
             background: white;
             border-color: #667eea;
@@ -863,7 +810,6 @@
             min-width: 24px;
             background: #f0f4ff;
             border-radius: 6px;
-            transition: all 0.3s ease;
         }
 
         .sort-item:active .sort-handle {
@@ -907,7 +853,7 @@
             font-size: 12px;
             color: white;
             background: #f0f0f0;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
         .multiple-option.selected .option-checkbox {
