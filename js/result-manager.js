@@ -697,8 +697,14 @@ class ResultManager {
             // 过滤掉当前测试
             const availableTests = allTests.filter(test => test.id !== this.testId);
             
+            // 确保每个测试都有图片路径
+            const testsWithImages = availableTests.map(test => ({
+                ...test,
+                image: test.image || `images/test-${test.id}.jpg` // 默认图片路径
+            }));
+            
             // 随机选择
-            const shuffled = availableTests.sort(() => 0.5 - Math.random());
+            const shuffled = testsWithImages.sort(() => 0.5 - Math.random());
             return shuffled.slice(0, count);
         } catch (error) {
             console.error('获取推荐测试失败:', error);
@@ -715,7 +721,9 @@ class ResultManager {
 
         container.innerHTML = recommendations.map(test => `
             <div class="test-list-item" data-test-id="${test.id}">
-                <div class="test-thumb" style="background: linear-gradient(135deg, #667eea, #764ba2);"></div>
+                <div class="test-thumb">
+                    <img src="${test.image || 'images/default-test.jpg'}" alt="${test.title}" onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, var(--primary-color), var(--secondary-color))'">
+                </div>
                 <div class="test-info">
                     <div class="test-title">${test.title}</div>
                     <div class="test-desc">${test.description}</div>
