@@ -156,7 +156,7 @@
     "6": {
       "id": "6",
       "title": "SCL-90心理健康测试",
-      "description": "专业心理健康筛查，评估9大心理症状维度",
+      "description": "专业心理健康状态评估",
       "templateType": "standard",
       "category": "standard",
       "resultDisplayType": "score",
@@ -171,7 +171,7 @@
       },
       
       "theory": {
-        "content": "SCL-90症状自评量表是世界上最著名的心理健康测试量表之一，由L.R.Derogatis编制。\n\nSCL-90从感觉、思维、情感、意识、行为等方面全面评估心理健康程度，是当前使用最广泛的精神和心理门诊检查量表。",
+        "content": "SCL-90症状自评量表是世界上最著名的心理健康测试量表之一，由L.R.Derogatis编制。\n\n量表从感觉、思维、情感、意识、行为等9个方面全面评估心理健康程度，是当前使用最广泛的精神和心理门诊检查量表。",
         "image": null
       },
       
@@ -402,7 +402,7 @@
     "7": {
       "id": "7",
       "title": "动物人格测试",
-      "description": "动物人格测试基于荣格心理学和原型理论，通过60道精心设计的题目，揭示你内心深处的动物原型。\n\n每种动物原型代表不同的性格特质和行为模式，帮助你更好地理解自己的天赋、挑战和成长方向。\n\n请根据你的第一感觉选择答案，不要过多思考。测试结果将显示你的主导动物原型及其特质。",
+      "description": "你内心深处住着什么动物？是威猛的狮子、睿智的猫头鹰，还是自由的狼？\n\n通过60道神奇的心理选择题，我们将解锁你的专属动物人格。这不仅是一个测试，更是一次与内心对话的旅程，发现你隐藏的天赋特质和独特魅力。\n\n准备好遇见那个真实的你了吗？",
       "templateType": "fun",
       "category": "fun",
       "resultDisplayType": "animal",
@@ -1077,7 +1077,7 @@
     "8": {
       "id": "8",
       "title": "精神需求测试",
-      "description": "探索10大精神维度，发现你内心最深处的驱动力",
+      "description": "发现你内心的精神驱动力",
       "templateType": "standard",
       "category": "standard", 
       "resultDisplayType": "dimension",
@@ -1089,7 +1089,7 @@
       "basicInfo": {
         "questions": 60,
         "duration": 15,
-        "reportType": "维度分析报告"
+        "reportType": "专业报告"
       },
       
       "theory": {
@@ -1098,12 +1098,10 @@
       },
       
       "requirements": {
-        "content": "测试分为两部分：50题自我鉴定 + 10题情景测试。请根据你的真实感受和倾向进行选择。",
+        "content": "测试分为两部分：50题自我鉴定 + 10题情景测试。请根据真实感受和倾向选择。",
         "items": [
-          "第一部分：选择'是'或'否'，反映你的日常倾向",
-          "第二部分：根据情景选择最符合你内心的选项",
-          "所有题目没有对错之分，请诚实作答",
-          "测试时间约15分钟，建议在安静环境下完成"
+          "所有题目没有对错之分，请诚实作答。",
+          "测试时间约15分钟，建议在安静环境下完成。"
         ],
         "image": null
       },
@@ -1134,91 +1132,91 @@
           "name": "意义",
           "color": "#228B22",
           "icon": "images/icon_1.png",
-          "description": "有方向感和价值感，相信自己的存在和行动有其内在的重要性",
-          "lowDescription": "对生活目标和价值感的追求相对较低",
-          "highDescription": "强烈追求生命的意义和目标感",
-          "interpretation": "这个维度反映了你对生活目的和存在价值的重视程度"
+          "description": "有方向感和价值感，相信自己的存在和行动有其内在的重要性。",
+          "lowDescription": "对生活目标和价值感的追求相对较低。",
+          "highDescription": "强烈追求生命的意义和目标感。",
+          "interpretation": "这个维度反映了你对生活目的和存在价值的重视程度。"
         },
         "B": {
           "name": "爱",
           "color": "#FF4791", 
           "icon": "images/icon_2.png",
-          "description": "建立并维系深刻的、双向的情感纽带，体验接纳、关怀和亲密",
-          "lowDescription": "对情感连接和亲密关系的需求相对较低",
-          "highDescription": "高度重视爱与被爱的情感体验",
-          "interpretation": "反映了你对情感连接和亲密关系的渴望程度"
+          "description": "建立并维系深刻的、双向的情感纽带，体验接纳、关怀和亲密。",
+          "lowDescription": "对情感连接和亲密关系的需求相对较低。",
+          "highDescription": "高度重视爱与被爱的情感体验。",
+          "interpretation": "反映了你对情感连接和亲密关系的渴望程度。"
         },
         "C": {
           "name": "连接",
           "color": "#8080B7",
           "icon": "images/icon_3.png", 
-          "description": "与社区、自然或全人类产生归属感和共鸣",
-          "lowDescription": "对群体归属和广泛连接的需求较低",
-          "highDescription": "渴望与更广阔的世界建立联系",
-          "interpretation": "显示了你对群体归属和社会连接的重视程度"
+          "description": "与社区、自然或全人类产生归属感和共鸣。",
+          "lowDescription": "对群体归属和广泛连接的需求较低。",
+          "highDescription": "渴望与更广阔的世界建立联系。",
+          "interpretation": "显示了你对群体归属和社会连接的重视程度。"
         },
         "D": {
           "name": "成长",
           "color": "#9ACD32",
           "icon": "images/icon_4.png",
-          "description": "追求不断扩展自己的能力、智慧和人格，实现自我潜能", 
-          "lowDescription": "对个人成长和发展的动力相对较弱",
-          "highDescription": "持续追求自我提升和能力拓展",
-          "interpretation": "反映了你对个人成长和自我实现的驱动力"
+          "description": "追求不断扩展自己的能力、智慧和人格，实现自我潜能。", 
+          "lowDescription": "对个人成长和发展的动力相对较弱。",
+          "highDescription": "持续追求自我提升和能力拓展。",
+          "interpretation": "反映了你对个人成长和自我实现的驱动力。"
         },
         "E": {
           "name": "创造",
           "color": "#D07225",
           "icon": "images/icon_5.png",
-          "description": "将内心的想法和情感转化为新颖、独特的现实产物",
-          "lowDescription": "创造性表达的需求相对较低", 
-          "highDescription": "强烈的创造欲和表达冲动",
-          "interpretation": "显示了你通过创造性工作表达自我的需求强度"
+          "description": "将内心的想法和情感转化为新颖、独特的现实产物。",
+          "lowDescription": "创造性表达的需求相对较低。", 
+          "highDescription": "强烈的创造欲和表达冲动。",
+          "interpretation": "显示了你通过创造性工作表达自我的需求强度。"
         },
         "F": {
           "name": "权力",
           "color": "#8A4242",
           "icon": "images/icon_6.png",
-          "description": "影响并掌控自身环境与他人，以感受自身的能力与重要性",
-          "lowDescription": "对影响力和控制权的需求较低",
-          "highDescription": "渴望拥有影响力和决策权", 
-          "interpretation": "反映了你对掌控环境和影响他人的需求"
+          "description": "影响并掌控自身环境与他人，以感受自身的能力与重要性。",
+          "lowDescription": "对影响力和控制权的需求较低。",
+          "highDescription": "渴望拥有影响力和决策权。", 
+          "interpretation": "反映了你对掌控环境和影响他人的需求。"
         },
         "G": {
           "name": "乐趣",
           "color": "#90DB33",
           "icon": "images/icon_7.png",
-          "description": "追求因活动本身而产生的纯粹快乐和愉悦",
-          "lowDescription": "对娱乐和享乐的需求相对较低",
-          "highDescription": "高度重视生活中的乐趣和愉悦体验",
-          "interpretation": "显示了你对快乐和愉悦体验的追求程度"
+          "description": "追求因活动本身而产生的纯粹快乐和愉悦。",
+          "lowDescription": "对娱乐和享乐的需求相对较低。",
+          "highDescription": "高度重视生活中的乐趣和愉悦体验。",
+          "interpretation": "显示了你对快乐和愉悦体验的追求程度。"
         },
         "H": {
           "name": "安全感", 
           "color": "#A136B0",
           "icon": "images/icon_8.png",
-          "description": "拥有稳定、安全和可预测的生活感受，从而免于恐惧和焦虑",
-          "lowDescription": "对稳定性和安全性的需求较低",
-          "highDescription": "强烈需要稳定和安全的环境",
-          "interpretation": "反映了你对生活稳定性和心理安全的需求强度"
+          "description": "拥有稳定、安全和可预测的生活感受，从而免于恐惧和焦虑。",
+          "lowDescription": "对稳定性和安全性的需求较低。",
+          "highDescription": "强烈需要稳定和安全的环境。",
+          "interpretation": "反映了你对生活稳定性和心理安全的需求强度。"
         },
         "I": {
           "name": "自由",
           "color": "#4AC4A6", 
           "icon": "images/icon_9.png",
-          "description": "渴望根据自身价值观和意愿，主导自己的生活",
-          "lowDescription": "对自主权和自由度的需求相对较低",
-          "highDescription": "极度重视个人自由和独立性",
-          "interpretation": "显示了你对自主决策和个人自由的重视程度"
+          "description": "渴望根据自身价值观和意愿，主导自己的生活。",
+          "lowDescription": "对自主权和自由度的需求相对较低。",
+          "highDescription": "极度重视个人自由和独立性。",
+          "interpretation": "显示了你对自主决策和个人自由的重视程度。"
         },
         "J": {
           "name": "贡献",
           "color": "#B99C31",
           "icon": "images/icon_10.png", 
-          "description": "通过行动、时间和资源，对他人或世界产生积极影响",
-          "lowDescription": "利他主义和贡献社会的动力较弱",
-          "highDescription": "强烈的利他主义和服务他人意愿",
-          "interpretation": "反映了你通过帮助他人实现自我价值的需求"
+          "description": "通过行动、时间和资源，对他人或世界产生积极影响。",
+          "lowDescription": "利他主义和贡献社会的动力较弱。",
+          "highDescription": "强烈的利他主义和服务他人意愿。",
+          "interpretation": "反映了你通过帮助他人实现自我价值的需求。"
         }
       },
       

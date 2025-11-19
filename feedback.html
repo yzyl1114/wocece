@@ -18,7 +18,7 @@
         <section class="feedback-section">
             <div class="feedback-header">
                 <h1>我要吐槽</h1>
-                <p>填写你的意见或建议，以便我们提供更好的帮助</p>
+                <p>填写意见或建议，以便我们提供帮助</p>
             </div>
 
             <form id="feedbackForm" class="feedback-form">
@@ -30,7 +30,7 @@
                     <textarea 
                         id="problemDescription" 
                         class="form-textarea" 
-                        placeholder="请详细描述你遇到的问题..."
+                        placeholder="描述您遇到的问题..."
                         maxlength="200"
                         required
                     ></textarea>
@@ -55,7 +55,7 @@
                 <!-- 提交按钮 -->
                 <div class="form-actions">
                     <button type="submit" class="submit-btn" id="submitBtn">
-                        确定提交
+                        提交
                     </button>
                 </div>
             </form>
@@ -195,7 +195,7 @@
 
                     if (response.ok) {
                         console.log('Formspree提交成功');
-                        this.showToast('提交成功！我们会尽快处理您的反馈');
+                        this.showToast('提交成功！我们会尽快处理');
                         return { success: true };
                     } else {
                         throw new Error('提交失败，请检查网络后重试');

@@ -78,7 +78,7 @@ class PsychTestApp {
             {
                 id: '1',
                 title: '性格色彩测试',
-                description: '了解你的性格色彩，发现真实的自己',
+                description: '了解最真实的你自己',
                 category: 'fun',
                 price: 1,
                 questions: 10,
@@ -123,7 +123,7 @@ class PsychTestApp {
             {
                 id: '6',  // SCL-90测试
                 title: 'SCL-90心理健康测试',
-                description: '专业心理健康筛查，评估9大心理症状维度',
+                description: '专业心理健康状态评估',
                 category: 'standard',
                 templateType: 'standard', // 新增字段
                 price: 0.01,
@@ -133,7 +133,7 @@ class PsychTestApp {
             {
                 id: '7',  // 动物塑测试
                 title: '动物人格测试',
-                description: '揭秘你的灵魂动物原型，发现隐藏人格特质',
+                description: '揭秘你的灵魂动物原型',
                 category: 'fun',
                 templateType: 'fun', // 新增字段
                 price: 0.01,
@@ -143,7 +143,7 @@ class PsychTestApp {
             {
             id: '8',
             title: '精神需求测试',
-            description: '探索10大精神维度，发现内心最深处的驱动力',
+            description: '发现你内心的精神驱动力',
             category: 'standard',
             templateType: 'standard',
             price: 0.01,
@@ -161,7 +161,7 @@ class PsychTestApp {
     renderFeaturedTests() {
         const featuredContainer = document.getElementById('featuredTests');
         if (featuredContainer) {
-            // 指定4个测试作为特色测试：1,2
+            // 指定2个测试作为特色测试：1,2
             const featuredIds = ['1', '2'];
             const featuredTests = this.tests.filter(test => featuredIds.includes(test.id));
             
