@@ -6,18 +6,18 @@
 }
 
 :root {
-    --primary-color: #667eea;
-    --secondary-color: #764ba2;
+    --primary-color: #00B894;      /* 修改：蓝紫色 → 清新绿 */
+    --secondary-color: #00CEC9;    /* 修改：深紫色 → 青蓝色 */
     --text-color: #333;
-    --bg-color: #f5f6fa;
-    --border-color: #e1e1e1;
+    --bg-color: #F8FDFB;           /* 修改：灰色 → 浅青绿 */
+    --border-color: #E8F4F1;       /* 修改：灰色 → 浅青绿 */
 }
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     line-height: 1.6;
     color: var(--text-color);
-    background: linear-gradient(135deg, #f5f7fa 0%, #e4efe9 100%);
+    background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%); /* 修改：背景渐变 */
     max-width: 750px;
     margin: 0 auto;
     position: relative;
@@ -129,7 +129,7 @@ body {
 
 .search-btn {
     padding: 12px 20px;
-    background: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); /* 修改：添加渐变 */
     color: white;
     border: none;
     border-radius: 25px;
@@ -140,7 +140,8 @@ body {
 }
 
 .search-btn:hover {
-    background: var(--secondary-color);
+    transform: translateY(-1px); /* 修改：优化悬停效果 */
+    box-shadow: 0 4px 12px rgba(0, 184, 148, 0.3);
 }
 
 
@@ -217,7 +218,7 @@ body {
 .test-btn {
     width: 100%;
     padding: 6px;
-    background: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); /* 修改：添加渐变 */
     color: white;
     border: none;
     border-radius: 4px;
@@ -227,7 +228,8 @@ body {
 }
 
 .test-btn:hover {
-    background: var(--secondary-color);
+    transform: translateY(-1px); /* 修改：优化悬停效果 */
+    box-shadow: 0 2px 8px rgba(0, 184, 148, 0.3);
 }
 
 /* 测试列表项新样式 */
@@ -283,14 +285,14 @@ body {
 /* 测试进度样式 */
 .test-progress {
     font-size: 12px;
-    color: #667eea;
+    color: var(--primary-color); /* 修改：蓝色 → 清新绿 */
     margin-top: 5px;
     font-weight: bold;
 }
 
 .test-completed {
     font-size: 12px;
-    color: #52c41a;
+    color: var(--primary-color); /* 修改：绿色 → 清新绿 */
     margin-top: 5px;
     font-weight: bold;
 }
@@ -310,7 +312,7 @@ body {
 }
 
 .small-btn {
-    background: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); /* 修改：添加渐变 */
     color: white;
     border: none;
     padding: 6px 12px;
@@ -322,8 +324,8 @@ body {
 }
 
 .small-btn:hover {
-    background: var(--secondary-color);
-    transform: translateY(-1px);
+    transform: translateY(-1px); /* 修改：优化悬停效果 */
+    box-shadow: 0 2px 8px rgba(0, 184, 148, 0.3);
 }
 
 /* 底部导航 */
@@ -354,8 +356,8 @@ body {
 }
 
 .nav-item.active {
-    color: var(--primary-color);
-    background: rgba(102, 126, 234, 0.1);
+    color: var(--primary-color); /* 修改：蓝色 → 清新绿 */
+    background: rgba(0, 184, 148, 0.1); /* 修改：更新透明度颜色 */
 }
 
 .nav-icon {
@@ -482,7 +484,7 @@ body {
 .download-btn {
     position: fixed;
     bottom: 30px;
-    background: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); /* 修改：更新渐变 */
     color: white;
     padding: 12px 30px;
     border: none;
@@ -537,7 +539,7 @@ body {
 }
 
 .feedback-header {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); /* 修改：更新渐变 */
     color: white;
     padding: 25px 20px;
     text-align: center;
@@ -619,7 +621,7 @@ body {
 .submit-btn {
     width: 100%;
     padding: 15px;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); /* 修改：更新渐变 */
     color: white;
     border: none;
     border-radius: 8px;
@@ -956,7 +958,7 @@ body {
 
 /* 专业建议卡片 */
 .professional-advice {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); /* 修改：更新渐变 */
     color: white;
     padding: 20px;
     border-radius: 10px;
