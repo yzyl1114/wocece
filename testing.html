@@ -620,7 +620,7 @@
         body {
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4efe9 100%);
+            background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%); /* 修改：更新背景渐变 */
             min-height: 100vh;
             max-height: 100vh;
             overflow: hidden;
@@ -654,7 +654,7 @@
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            color: #667eea;
+            color: #00B894; /* 修改：更新颜色 */
         }
 
         .progress-info {
@@ -671,7 +671,7 @@
             display: flex;
             align-items: center;
             padding: 12px 15px;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(135deg, #00B894, #00CEC9); /* 修改：更新渐变 */
             border-bottom: 1px solid #f0f0f0;
             height: 80px;
             min-height: 80px;
@@ -773,16 +773,16 @@
         }
 
         .option:hover {
-            border-color: #667eea;
+            border-color: #00B894; /* 修改：更新颜色 */
         }
 
         .option.selected {
-            border-color: #667eea;
+            border-color: #00B894; /* 修改：更新颜色 */
             background: rgba(102, 126, 234, 0.05);
         }
 
         .option-label {
-            background: #667eea;
+            background: #00B894; /* 修改：更新颜色 */
             color: white;
             width: 28px;
             height: 28px;
@@ -803,7 +803,7 @@
         }
 
         .option.selected .option-label {
-            background: #764ba2;
+            background: #00CEC9; /* 修改：更新颜色 */
         }
 
         .option-text {
@@ -841,8 +841,8 @@
         }
 
         .multiple-option.selected .option-checkbox {
-            background: #667eea;
-            border-color: #667eea;
+            background: #00B894; /* 修改：更新颜色 */
+            border-color: #00B894;
         }
 
         /* 排序题样式 */
@@ -869,13 +869,13 @@
         .sort-item.dragging {
             opacity: 0.9;
             transform: rotate(2deg);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 184, 148, 0.2); /* 修改：更新颜色 */
             z-index: 1000;
-            border-color: #667eea;
+            border-color: #00B894; /* 修改：更新颜色 */
         }
 
         .sort-handle {
-            color: #667eea;
+            color: #00B894; /* 修改：更新颜色 */
             font-size: 16px;
             cursor: grab;
             padding: 6px 10px;
@@ -891,7 +891,7 @@
 
         .sort-item:active .sort-handle {
             cursor: grabbing;
-            background: #667eea;
+            background: #00B894; /* 修改：更新颜色 */
             color: white;
         }
 
@@ -903,7 +903,7 @@
         }
 
         .sort-position {
-            color: #667eea;
+            color: #00B894; /* 修改：更新颜色 */
             font-size: 14px;
             font-weight: bold;
             background: #f0f4ff;
@@ -939,12 +939,12 @@
 
         .prev-btn {
             background: white;
-            color: #667eea;
-            border: 2px solid #667eea;
+            color: #00B894; /* 修改：更新颜色 */
+            border: 2px solid #00B894; /* 修改：更新颜色 */
         }
 
         .prev-btn:hover:not(:disabled) {
-            background: #667eea;
+            background: #00B894; /* 修改：更新颜色 */
             color: white;
         }
 
@@ -956,7 +956,7 @@
         }
 
         .next-btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #00B894, #00CEC9); /* 修改：更新渐变 */
             color: white;
         }
 

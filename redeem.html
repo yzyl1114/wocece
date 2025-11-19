@@ -287,14 +287,14 @@
         }
 
         .redeem-input:focus {
-            border-color: #667eea;
+            border-color: #00B894; /* 修改：更新颜色 */
             outline: none;
         }
 
         .redeem-btn {
             width: 100%;
             padding: 15px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #00B894, #00CEC9); /* 修改：更新渐变 */
             color: white;
             border: none;
             border-radius: 8px;
@@ -331,6 +331,13 @@
             color: #666;
             position: relative;
             padding-left: 15px;
+        }
+
+        .redeem-tips li:before {
+            content: "•";
+            color: #00B894; /* 修改：更新颜色 */
+            position: absolute;
+            left: 0;
         }
     </style>
 </body>
