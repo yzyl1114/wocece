@@ -157,15 +157,14 @@ const ReportComponents = {
     'animal-header': {
         render: (data, config) => {
             const animalData = AnimalDisplayData[data.animal] || {};
-            const headerColor = animalData.color || '#667eea';
+            const headerColor = '#8E8E93'; // 中性灰
             
             return `
-                <section class="result-header" style="background: linear-gradient(135deg, ${headerColor}, #764ba2);">
-                    <div class="result-title">动物人格测试完成！</div>
+                <section class="result-header" style="background: linear-gradient(135deg, ${headerColor}, #AEAEB2); padding: 25px 15px; height: 180px;">
                     <div class="result-content">
-                        <div class="animal-emoji" style="font-size: 60px; margin-bottom: 10px;">${animalData.emoji || '🐾'}</div>
-                        <div class="result-label">你的灵魂动物是</div>
-                        <div class="result-text" style="font-size: 28px;">${data.animal || '未知'}</div>
+                        <div class="animal-emoji" style="font-size: 50px; margin-bottom: 8px;">${animalData.emoji || '🐾'}</div>
+                        <div class="result-label" style="margin-bottom: 5px;">你的灵魂动物是</div>
+                        <div class="result-text" style="font-size: 24px;">${data.animal || '未知'}</div>
                     </div>
                 </section>
             `;
@@ -319,19 +318,16 @@ const ReportComponents = {
     // === 动物人格测试专用组件 ===
     'animal-similarity': {
         render: (data, config) => {
-            const animalData = AnimalDisplayData[data.animal] || {};
-            const headerColor = animalData.color || '#667eea';
-            
             return `
                 <section class="analysis-section">
                     <h3>匹配度分析</h3>
                     <div class="score-display">
-                        <div class="score-circle" style="background: linear-gradient(135deg, ${headerColor}, #764ba2);">
+                        <div class="score-circle" style="background: linear-gradient(135deg, #8E8E93, #AEAEB2); border: 3px solid #F0F0F0;">
                             ${data.score || 0}%
                         </div>
                         <div class="score-label">与 ${data.animal} 的契合度</div>
                         <div class="similarity-desc" style="margin-top: 10px; color: #666; font-size: 14px;">
-                            这个百分比反映了你的性格特质与 ${data.animal} 原型的相似程度
+                            百分比反映了你的性格特质与 ${data.animal} 原型的相似程度
                         </div>
                     </div>
                 </section>
@@ -750,12 +746,14 @@ const ReportComponents = {
     'spiritual-header': {
         render: (data, config) => {
             const topDim = data.topDimensions[0];
+            const headerColor = '#1ABC9C'; // 协调的蓝绿色
+            
             return `
-                <section class="result-header" style="background: linear-gradient(135deg, ${topDim.color}, #764ba2); padding: 20px 15px;">
+                <section class="result-header" style="background: linear-gradient(135deg, ${headerColor}, #16A085); padding: 25px 15px; height: 160px;">
                     <div class="result-content">
-                        <div class="result-label">你的核心精神需求</div>
-                        <div class="result-text">${topDim.name}</div>
-                        <div class="score-label" style="color: white;>综合匹配度</div>
+                        <div class="result-label" style="margin-bottom: 8px;">你的核心精神需求</div>
+                        <div class="result-text" style="font-size: 26px;">${topDim.name}</div>
+                        <div class="score-label" style="color: white; opacity: 0.9; margin-top: 5px;">综合匹配度 ${data.score}%</div>
                     </div>
                 </section>
             `;
