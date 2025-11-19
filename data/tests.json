@@ -172,7 +172,7 @@
       
       "theory": {
         "content": "SCL-90症状自评量表是世界上最著名的心理健康测试量表之一，由L.R.Derogatis编制。\n\nSCL-90从感觉、思维、情感、意识、行为等方面全面评估心理健康程度，是当前使用最广泛的精神和心理门诊检查量表。",
-        "image": "images/theory-scl90.jpg"
+        "image": null
       },
       
       "requirements": {
@@ -184,7 +184,7 @@
           "偏重 - 表示有症状且有相当程度影响",
           "严重 - 表示症状的频度、强度、影响都十分严重"
         ],
-        "image": "images/requirements-scl90.jpg"
+        "image": null
       },
       
       "reportExample": {
@@ -200,7 +200,7 @@
             "description": "阳性因子严重程度评估及状态解读"
           }
         ],
-        "image": "images/report-scl90.jpg"
+        "image": null
       },
       
       "dimensions": {
@@ -402,7 +402,7 @@
     "7": {
       "id": "7",
       "title": "动物人格测试",
-      "description": "60道题揭秘你的灵魂动物原型，发现隐藏的人格特质",
+      "description": "动物人格测试基于荣格心理学和原型理论，通过60道精心设计的题目，揭示你内心深处的动物原型。\n\n每种动物原型代表不同的性格特质和行为模式，帮助你更好地理解自己的天赋、挑战和成长方向。\n\n请根据你的第一感觉选择答案，不要过多思考。测试结果将显示你的主导动物原型及其特质。",
       "templateType": "fun",
       "category": "fun",
       "resultDisplayType": "animal",
@@ -1094,7 +1094,7 @@
       
       "theory": {
         "content": "精神需求测试基于心理学和哲学理论，评估个体在10个核心精神维度的需求强度。\n\n这些维度反映了人类在满足基本生存需求后，对生命意义、情感连接、自我实现等更高层次需求的追求。",
-        "image": "images/theory-spiritual.jpg"
+        "image": null
       },
       
       "requirements": {
@@ -1105,7 +1105,7 @@
           "所有题目没有对错之分，请诚实作答",
           "测试时间约15分钟，建议在安静环境下完成"
         ],
-        "image": "images/requirements-spiritual.jpg"
+        "image": null
       },
       
       "reportExample": {
@@ -1126,7 +1126,7 @@
             "description": "基于结果提供深度分析和建议"
           }
         ],
-        "image": "images/report-spiritual.jpg"
+        "image": null
       },
 
       "dimensions": {
