@@ -115,20 +115,6 @@
                     console.log('从out_trade_no中提取到testId:', testId);
                 }
             }
-            
-            // 添加调试信息到页面
-            const debugInfo = document.createElement('div');
-            debugInfo.style.cssText = 'background: #f5f5f5; padding: 10px; margin: 10px; border-radius: 5px; font-size: 12px;';
-            debugInfo.innerHTML = `
-                <strong>调试信息:</strong><br>
-                testId: ${testId}<br>
-                success: ${success}<br>
-                trade_status: ${tradeStatus}<br>
-                out_trade_no: ${outTradeNo}<br>
-                提取的testId: ${testId}<br>
-                完整URL: ${window.location.href}
-            `;
-            document.querySelector('.success-container').prepend(debugInfo);
 
             // 扩展支付成功状态检测
             const isPaymentSuccess = 
@@ -179,27 +165,6 @@
                 } catch (error) {
                     console.error('保存支付记录时出错:', error);
                 }
-                
-                // 添加存储状态显示到页面
-                const statusDisplay = document.createElement('div');
-                statusDisplay.style.cssText = 'background: #e6f7ff; padding: 10px; margin: 10px; border-radius: 5px; font-size: 12px; border: 1px solid #91d5ff;';
-                
-                // 检查最终的支付状态
-                let finalPaidStatus = false;
-                if (window.storageManager) {
-                    finalPaidStatus = storageManager.hasPaidForTest(testId);
-                } else {
-                    const paidTests = JSON.parse(localStorage.getItem('paid_tests') || '[]');
-                    finalPaidStatus = paidTests.includes(testId);
-                }
-                
-                statusDisplay.innerHTML = `
-                    <strong>支付状态:</strong><br>
-                    测试ID: ${testId}<br>
-                    本地支付状态: ${finalPaidStatus ? '✅ 已支付' : '❌ 未支付'}<br>
-                    存储验证: ${typeof storageManager !== 'undefined' ? '✅ storageManager可用' : '❌ storageManager不可用'}
-                `;
-                document.querySelector('.success-container').prepend(statusDisplay);
                 
                 // 设置开始测试按钮
                 const startTestBtn = document.getElementById('startTestBtn');
