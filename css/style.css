@@ -529,6 +529,12 @@ body {
     font-size: 12px; /* 更小的字体 */
 }
 
+.zodiac-tabs .tab.active {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border-color: var(--primary-color);
+}
+
 /* 反馈页面样式 */
 .feedback-section {
     background: white;
