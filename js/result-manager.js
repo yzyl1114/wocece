@@ -690,9 +690,8 @@ class ResultManager {
      */
     async getRandomRecommendations(count = 3) {
         try {
-            const response = await fetch('data/tests.json');
-            const data = await response.json();
-            const allTests = Object.values(data.tests);
+            // 修改这一行：从 tests.json → app.js
+            const allTests = window.app?.tests || [];
             
             // 过滤掉当前测试
             const availableTests = allTests.filter(test => test.id !== this.testId);
@@ -708,7 +707,7 @@ class ResultManager {
             return shuffled.slice(0, count);
         } catch (error) {
             console.error('获取推荐测试失败:', error);
-            return [];
+            return []; // ✅ 直接返回空数组，没有重复声明
         }
     }
 

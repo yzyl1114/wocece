@@ -1435,3 +1435,45 @@ body {
         border: 1px solid #667eea;
     }
 }
+
+/* 推荐测试缩略图样式优化 */
+.recommendations .test-thumb {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #f0f0f0; /* 备用背景色 */
+    position: relative;
+}
+
+.recommendations .test-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.recommendations .test-list-item:hover .test-thumb img {
+    transform: scale(1.05);
+}
+
+/* 推荐测试描述样式优化 */
+.recommendations .test-desc {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 无推荐时的样式 */
+.no-recommendations {
+    text-align: center;
+    color: #666;
+    padding: 20px;
+    font-size: 14px;
+}
