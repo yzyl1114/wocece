@@ -776,6 +776,7 @@ body {
     color: #666;
     font-size: 12px;
     line-height: 1.6;
+    padding-bottom: 80px; /* 新增：为底部导航留出空间 */
 }
 
 /* SCL-90 专用样式 - 专业心理健康测试 */
