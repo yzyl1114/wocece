@@ -9,7 +9,7 @@
       "resultDisplayType": "text", 
       "price": 1,
       "questions": 10,
-      "image": "images/test1.jpg",
+      "image": "images/detail1.jpg",
       "questions": [
         {
           "id": 1,
@@ -55,7 +55,7 @@
       "resultDisplayType": "text", 
       "price": 1,
       "questions": 8,
-      "image": "images/test2.jpg",
+      "image": "images/detail2.jpg",
       "questions": [
         {
           "id": 1,
@@ -90,7 +90,7 @@
       "resultDisplayType": "text", 
       "price": 1,
       "questions": 12,
-      "image": "images/test3.jpg",
+      "image": "images/detail3.jpg",
       "questions": [
         {
           "id": 1,
@@ -114,7 +114,7 @@
       "resultDisplayType": "text", 
       "price": 1,
       "questions": 15,
-      "image": "images/test4.jpg",
+      "image": "images/detail4.jpg",
       "questions": [
         {
           "id": 1,
@@ -138,7 +138,7 @@
       "resultDisplayType": "text", 
       "price": 1,
       "questions": 10,
-      "image": "images/test5.jpg",
+      "image": "images/detail5.jpg",
       "questions": [
         {
           "id": 1,
@@ -162,7 +162,7 @@
       "resultDisplayType": "score",
       "price": 0.01,
       "questions": 90,
-      "image": "images/scl90.jpg",
+      "image": "images/detail6.jpg",
       
       "basicInfo": {
         "questions": 90,
@@ -408,7 +408,7 @@
       "resultDisplayType": "animal",
       "price": 0.01,
       "questions": 60,
-      "image": "images/test7.jpg",
+      "image": "images/detail7.jpg",
       "calculationType": "animal_personality",
       "questions": [
         {
@@ -1083,7 +1083,7 @@
       "resultDisplayType": "dimension",
       "price": 0.01,
       "questions": 60,
-      "image": "images/spiritual-needs.jpg",
+      "image": "images/detail8.jpg",
       "calculationType": "spiritual_needs",
       
       "basicInfo": {

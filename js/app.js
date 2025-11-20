@@ -128,7 +128,7 @@ class PsychTestApp {
                 templateType: 'standard', // 新增字段
                 price: 0.01,
                 questions: 90,
-                image: 'images/scl90.jpg'
+                image: 'images/test6.jpg'
             },
             {
                 id: '7',  // 动物塑测试
@@ -138,7 +138,7 @@ class PsychTestApp {
                 templateType: 'fun', // 新增字段
                 price: 0.01,
                 questions: 60,
-                image: 'images/animal-personality.jpg'
+                image: 'images/test7.jpg'
             },
             {
             id: '8',
@@ -148,7 +148,7 @@ class PsychTestApp {
             templateType: 'standard',
             price: 0.01,
             questions: 60,
-            image: 'images/spiritual-needs.jpg'
+            image: 'images/test8.jpg'
             }            
         ];
     }
@@ -161,8 +161,8 @@ class PsychTestApp {
     renderFeaturedTests() {
         const featuredContainer = document.getElementById('featuredTests');
         if (featuredContainer) {
-            // 指定2个测试作为特色测试：1,2
-            const featuredIds = ['1', '2'];
+            // 指定2个测试作为特色测试
+            const featuredIds = ['6', '7'];
             const featuredTests = this.tests.filter(test => featuredIds.includes(test.id));
             
             featuredContainer.innerHTML = featuredTests.map(test => `
