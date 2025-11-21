@@ -1583,14 +1583,14 @@ const ReportComponents = {
                 </section>
 
                 <!-- 成长建议 -->
-                <section class="analysis-section">
-                    <div class="section-header">
-                        <h3>成长建议</h3>
-                    </div>
-                    <div class="advice-content">
-                        <p>${data.advice}</p>
-                    </div>
-                </section>
+                <div class="professional-advice">
+                    <div class="advice-title">成长建议</div>
+                    <ul class="advice-list">
+                        <li>${data.advice}</li>
+                        <li>每个人都是独特的，这份报告旨在帮助你更好地了解自己，而非定义你。</li>
+                        <li>把你的结果分享给TA，这可能是你们一次非常有趣的深度对话开端。</li>
+                    </ul>
+                </div>
             `;
         }
     },
