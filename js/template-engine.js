@@ -65,7 +65,7 @@ class TemplateEngine {
                 'weather-description', 
                 'weather-dimensions',
                 'weather-summary',
-                'share-actions'
+                'save-actions'
             ],
             styles: 'fun-styles'
         },
@@ -77,9 +77,8 @@ class TemplateEngine {
                 'holland-core-traits', 
                 'holland-world-script',
                 'holland-reality-awakening',
-                'holland-dimensions',
                 'holland-summary',
-                'share-actions'
+                'save-actions'
             ],
             styles: 'fun-styles'
         },
