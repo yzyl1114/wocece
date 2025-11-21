@@ -77,8 +77,8 @@ class PsychTestApp {
         this.tests = [
             {
                 id: '1',
-                title: '性格色彩测试',
-                description: '了解最真实的你自己',
+                title: '你的精神老家',
+                description: '你的性格最适合居住在哪个城市',
                 category: 'fun',
                 price: 1,
                 questions: 10,

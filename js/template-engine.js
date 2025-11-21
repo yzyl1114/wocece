@@ -56,33 +56,51 @@ class TemplateEngine {
                 'save-actions'
             ],
             styles: 'spiritual-styles'
-        }        
+        },
+        
+        // 心灵气象图模板
+        'weather-personality': {
+            components: [
+                'weather-header',
+                'weather-description', 
+                'weather-dimensions',
+                'weather-summary',
+                'share-actions'
+            ],
+            styles: 'fun-styles'
+        },
     };
 
     getTemplate(testConfig) {
-        console.log('🔍 获取模板, 测试配置:', testConfig);
+        console.log('获取模板, 测试配置:', testConfig);
         
         // SCL-90测试使用专业模板
         if (testConfig && testConfig.id === '6') {
-            console.log('🎯 强制使用SCL-90专业模板');
+            console.log('使用SCL-90专业模板');
             return this.constructor.TEMPLATES['scl90-professional'];
         }
         
         // 动物人格测试使用动物模板
         if (testConfig && testConfig.id === '7') {
-            console.log('🎯 强制使用动物人格模板');
+            console.log('使用动物人格模板');
             return this.constructor.TEMPLATES['animal-personality'];
         }
 
         if (testConfig && (testConfig.id === '8' || testConfig.calculationType === 'spiritual_needs')) {
-            console.log('🎯 强制使用精神需求测试模板');
+            console.log('使用精神需求测试模板');
             return this.constructor.TEMPLATES['spiritual-needs'];
+        }
+
+        // 心灵气象图测试
+        if (testConfig && testConfig.id === '1') {
+            console.log('使用心灵气象图模板');
+            return this.constructor.TEMPLATES['weather-personality'];
         }
 
         // 原有逻辑作为备用
         if (testConfig?.resultTemplate) {
             const template = this.constructor.TEMPLATES[testConfig.resultTemplate];
-            console.log('📋 使用指定模板:', testConfig.resultTemplate);
+            console.log('使用指定模板:', testConfig.resultTemplate);
             return template;
         }
         

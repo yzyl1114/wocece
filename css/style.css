@@ -1478,3 +1478,358 @@ body {
     padding: 20px;
     font-size: 14px;
 }
+
+/* === 心灵气象图测评专用样式 === */
+
+/* 横向柱状图样式 - 用于维度分析 */
+.horizontal-bars-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.bar-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.bar-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.bar-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    flex-shrink: 0;
+}
+
+.bar-score {
+    font-weight: bold;
+    color: #333;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.bar-track {
+    width: 100%;
+    height: 20px;
+    background: #f0f0f0;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 1s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* 维度项目样式 */
+.dimension-bar-item {
+    margin-bottom: 15px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.dimension-bar-item:last-child {
+    margin-bottom: 0;
+}
+
+/* 心灵气象图头部优化 */
+.weather-result-header {
+    background: linear-gradient(135deg, #00B894, #00CEC9) !important;
+    padding: 25px 20px !important;
+    height: 160px !important;
+    min-height: 160px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.weather-result-header .result-content {
+    text-align: center;
+}
+
+.weather-result-header .result-text {
+    font-size: 26px !important;
+    margin: 8px 0;
+}
+
+.weather-result-header .score-label {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* 城市解读卡片样式 */
+.city-interpretation {
+    background: white;
+    padding: 20px;
+    margin: 15px 0;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.city-interpretation h3 {
+    color: #333;
+    margin-bottom: 15px;
+    border-left: 4px solid #00B894;
+    padding-left: 10px;
+    font-size: 18px;
+}
+
+/* 情绪特质标签 */
+.emotion-tag {
+    display: inline-block;
+    padding: 4px 8px;
+    background: rgba(0, 184, 148, 0.1);
+    color: #00B894;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-left: 8px;
+}
+
+/* 气候标签样式 */
+.climate-tag {
+    display: inline-block;
+    padding: 4px 8px;
+    background: rgba(0, 206, 201, 0.1);
+    color: #00CEC9;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    margin: 0 4px;
+}
+
+/* 核心气质标识 */
+.core-temperament {
+    display: inline-block;
+    padding: 4px 8px;
+    background: linear-gradient(135deg, #00B894, #00CEC9);
+    color: white;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    margin: 0 4px;
+}
+
+/* 旅行建议特殊样式 */
+.weather-advice {
+    background: linear-gradient(135deg, #00B894, #00CEC9) !important;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+
+.weather-advice .advice-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.weather-advice .advice-title:before {
+    content: "✈️";
+    margin-right: 8px;
+}
+
+.weather-advice .advice-list {
+    list-style: none;
+    padding: 0;
+}
+
+.weather-advice .advice-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    position: relative;
+    padding-left: 20px;
+}
+
+.weather-advice .advice-list li:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #ffd32a;
+}
+
+.weather-advice .advice-list li:last-child {
+    border-bottom: none;
+}
+
+/* 城市特色图标 */
+.city-feature {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 10px 0;
+    padding: 8px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 6px;
+}
+
+.city-feature-icon {
+    font-size: 16px;
+}
+
+.city-feature-text {
+    font-size: 14px;
+}
+
+/* 响应式调整 */
+@media (max-width: 480px) {
+    .weather-result-header {
+        height: 140px !important;
+        min-height: 140px !important;
+        padding: 20px 15px !important;
+    }
+    
+    .weather-result-header .result-text {
+        font-size: 22px !important;
+    }
+    
+    .bar-info {
+        flex-direction: row;
+    }
+    
+    .bar-label {
+        font-size: 13px;
+    }
+    
+    .bar-score {
+        font-size: 13px;
+    }
+    
+    .bar-track {
+        height: 16px;
+    }
+    
+    .city-interpretation {
+        padding: 15px;
+    }
+    
+    .city-interpretation h3 {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 375px) {
+    .bar-info {
+        flex-direction: row;
+        align-items: center;
+    }
+    
+    .bar-label {
+        width: auto;
+        margin-right: 10px;
+    }
+    
+    .weather-result-header .result-text {
+        font-size: 20px !important;
+    }
+}
+
+/* 心灵气象图动画效果 */
+@keyframes weatherFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.weather-result-header,
+.city-interpretation,
+.weather-advice {
+    animation: weatherFadeIn 0.6s ease;
+}
+
+/* 进度条颜色匹配 */
+.weather-progress .progress {
+    background: linear-gradient(90deg, #00B894, #00CEC9) !important;
+}
+
+/* 按钮样式匹配 */
+.weather-btn {
+    background: linear-gradient(135deg, #00B894, #00CEC9) !important;
+    color: white !important;
+    border: none !important;
+}
+
+.weather-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 184, 148, 0.3);
+}
+
+/* 标签云样式 - 用于显示城市特色 */
+.weather-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 15px 0;
+}
+
+.weather-tag {
+    padding: 6px 12px;
+    background: rgba(0, 184, 148, 0.1);
+    color: #00B894;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* 城市对比样式 */
+.city-comparison {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.city-card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.city-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.city-card.current {
+    border: 2px solid #00B894;
+}
+
+.city-emoji {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.city-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.city-match {
+    font-size: 12px;
+    color: #00B894;
+    font-weight: bold;
+}

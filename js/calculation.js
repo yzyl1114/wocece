@@ -9,11 +9,13 @@ class CalculationManager {
     calculateResult(testId, answers, testData) {
         // 根据测试ID选择计分方法
         switch(testId) {
+            case '1':
+                return this.calculateWeatherPersonalityV2(answers, testData);
             case '6':
                 return this.calculateSCL90(answers, testData);
             case '7':
                 return this.calculateAnimalPersonality(answers);
-            case '8': // 新增精神需求测试
+            case '8':
                 return this.calculateSpiritualNeeds(answers, testData);            
             default:
                 throw new Error(`未找到测试ID: ${testId} 的计分方法`);
@@ -488,11 +490,187 @@ class CalculationManager {
     }
 
     /**
-     * 未来可以在这里添加其他测评的计分方法
-     * 例如：
-     * calculateTest8(answers, testData) { ... }
-     * calculateTest9(answers, testData) { ... }
+     * 心灵气象图计分逻辑 V2 (第二版方案)
      */
+    calculateWeatherPersonalityV2(answers, testData) {
+        console.log('使用第二版心灵气象图计分方案');
+        
+        // 第一步：确定核心气质（使用第1,2,3,5题）
+        const coreTemperament = this.determineCoreTemperamentV2(answers);
+        
+        // 第二步：微调匹配城市条件（使用第4,6,7,8,9,10题）
+        const matchResult = this.matchCityConditionV2(coreTemperament, answers);
+        
+        // 第三步：生成情绪描述
+        const emotionDesc = this.generateEmotionDescription(answers);
+        
+        // 返回纯计算数据，不包含展示文案
+        return {
+            score: this.calculateScore(coreTemperament.code, matchResult.conditionKey),
+            coreCode: coreTemperament.code,
+            conditionKey: matchResult.conditionKey,
+            emotionDesc: emotionDesc,
+            testType: 'weather_personality_v2',
+            testId: '1'
+        };
+    }
+
+    /**
+     * 确定核心气质 V2
+     */
+    determineCoreTemperamentV2(answers) {
+        // 第1、2题判断外向性(E)
+        const e1 = this.getTemperamentScore(answers[0], 'E');
+        const e2 = this.getTemperamentScore(answers[1], 'E');
+        let E;
+        
+        if ((e1 === '高' && e2 === '高') || (e1 === '低' && e2 === '低')) {
+            E = e1; // 两题倾向一致，取该倾向
+        } else {
+            E = '中'; // 倾向混合，取中
+        }
+        
+        // 第3题判断开放性(O)
+        const O = this.getTemperamentScore(answers[2], 'O');
+        
+        // 第5题判断尽责性(C)  
+        const C = this.getTemperamentScore(answers[4], 'C');
+        
+        // 核心气质匹配
+        const temperamentMap = {
+            '高高高': { code: 'A1', name: '热情的规划师' },
+            '高高中': { code: 'A2', name: '奔放的探险家' },
+            '高低高': { code: 'A2', name: '奔放的探险家' },
+            '高中高': { code: 'B1', name: '可靠的社交家' },
+            '高中中': { code: 'B2', name: '随和的享乐者' },
+            '高低中': { code: 'B2', name: '随和的享乐者' },
+            '高高低': { code: 'C1', name: '恋旧的暖阳' },
+            '高中低': { code: 'C1', name: '恋旧的暖阳' },
+            '中高高': { code: 'D1', name: '独立的沉思者' },
+            '中高中': { code: 'D1', name: '独立的沉思者' },
+            '中高低': { code: 'D2', name: '自由的灵魂' },
+            '低高高': { code: 'D1', name: '独立的沉思者' },
+            '低高中': { code: 'D1', name: '独立的沉思者' },
+            '低高低': { code: 'D2', name: '自由的灵魂' },
+            '中中高': { code: 'E1', name: '精致的鉴赏家' },
+            '中低高': { code: 'E1', name: '精致的鉴赏家' },
+            '低中高': { code: 'E1', name: '精致的鉴赏家' },
+            '低低高': { code: 'E1', name: '精致的鉴赏家' },
+            '中中中': { code: 'E2', name: '淡然的隐士' },
+            '中中低': { code: 'E2', name: '淡然的隐士' },
+            '中低中': { code: 'E2', name: '淡然的隐士' },
+            '中低低': { code: 'E2', name: '淡然的隐士' },
+            '低中中': { code: 'E2', name: '淡然的隐士' },
+            '低中低': { code: 'E2', name: '淡然的隐士' },
+            '低低中': { code: 'E2', name: '淡然的隐士' },
+            '低低低': { code: 'E2', name: '淡然的隐士' }
+        };
+        
+        const key = E + O + C;
+        console.log('核心气质计算:', { E, O, C, key });
+        
+        return temperamentMap[key] || { code: 'E2', name: '淡然的隐士' };
+    }
+
+    /**
+     * 获取气质分数
+     */
+    getTemperamentScore(answer, dimension) {
+        const scoreMap = {
+            'E': { 'A': '高', 'B': '低', 'C': '中' }, // 外向性
+            'O': { 'A': '高', 'B': '中', 'C': '低' }, // 开放性
+            'C': { 'A': '高', 'B': '中', 'C': '低' }  // 尽责性
+        };
+        
+        return scoreMap[dimension][answer] || '中';
+    }
+
+    /**
+     * 匹配城市条件 V2 - 只返回条件代码，不包含展示文案
+     */
+    matchCityConditionV2(coreTemperament, answers) {
+        let conditionKey;
+        
+        switch(coreTemperament.code) {
+            case 'A1':
+            case 'A2':
+            case 'B1':
+            case 'B2':
+            case 'E1':
+            case 'E2':
+                conditionKey = this.getAnswer7Type(answers[6]);
+                break;
+            case 'C1':
+                conditionKey = this.getAnswer6Type(answers[5]);
+                break;
+            case 'D1':
+                conditionKey = this.getAnswer7Type(answers[6]);
+                break;
+            case 'D2':
+                conditionKey = this.getD2Condition(answers[3], answers[8]);
+                break;
+            default:
+                conditionKey = 'A/B';
+        }
+        
+        console.log('城市条件匹配:', { code: coreTemperament.code, conditionKey });
+        
+        return { conditionKey };
+    }
+
+    /**
+     * 获取第7题类型
+     */
+    getAnswer7Type(answer7) {
+        return answer7 === 'C' ? 'C' : 'A/B';
+    }
+
+    /**
+     * 获取第6题类型  
+     */
+    getAnswer6Type(answer6) {
+        return answer6 === 'C' ? 'C' : 'A/B';
+    }
+
+    /**
+     * 获取D2核心气质条件
+     */
+    getD2Condition(answer4, answer9) {
+        // 第4题选B/C 且 第9题选B/C → condition1
+        // 第4题选A 或 第9题选A → condition2
+        if ((answer4 === 'B' || answer4 === 'C') && answer9 === 'B') {
+            return 'condition1';
+        } else {
+            return 'condition2';
+        }
+    }
+
+    /**
+     * 生成情绪描述
+     */
+    generateEmotionDescription(answers) {
+        const answer9 = answers[8]; // 第9题
+        const answer10 = answers[9]; // 第10题
+        
+        if (answer9 === 'A' || answer10 === 'A') {
+            return '高敏感性';
+        } else if (answer9 === 'B' && answer10 === 'B') {
+            return '情绪稳定';
+        } else {
+            return '平衡型';
+        }
+    }
+
+    /**
+     * 计算分数
+     */
+    calculateScore(coreCode, conditionKey) {
+        const baseScores = {
+            'A1': 88, 'A2': 87, 'B1': 84, 'B2': 82, 
+            'C1': 79, 'D1': 83, 'D2': 79, 'E1': 81, 'E2': 75
+        };
+        return baseScores[coreCode] || 80;
+    }
 }
 
 // 全局计算实例

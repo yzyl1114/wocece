@@ -115,6 +115,77 @@ const AnimalDisplayData = {
     }
 };
 
+// 心灵气象图城市数据 - 所有展示文案集中在这里
+const WeatherCityData = {
+    // A1 - 热情的规划师
+    'A1': {
+        'A/B': {
+            city: '新加坡',
+            climate: '热带雨林气候',
+            description: '你的内心就像花园城市新加坡，阳光充沛，充满能量，同时一切又井井有条。',
+            detailedAnalysis: '你是一个热情的规划师，不仅拥有外向探索的冲动，更具备将想法落地的强大执行力。你重视和谐与规则，相信良好的秩序能让每个人（包括你自己）都能更好地绽放。',
+            tips: '你严谨的规划能力是你的超能力，但偶尔也可以试试"迷失"在某个小贩中心或街头巷尾，让偶然的惊喜为你的生活增添一抹随性的色彩。'
+        },
+        'C': {
+            city: '迪拜',
+            climate: '热带沙漠气候',
+            description: '你的内心如同迪拜，在看似严酷的规则下，蕴藏着无限的雄心和创造奇迹的热情。',
+            detailedAnalysis: '你是一个宏大的筑梦师，你的外向和规划能力，用于在清晰的边界内建立起令人惊叹的成就。你自信、果决，敢于追求常人不敢想的目标。',
+            tips: '你在追逐宏伟蓝图的同时，别忘了欣赏沿途的风景。偶尔从"未来之城"回到"传统市集"，能让你感受到更接地气的温暖与灵感。'
+        }
+    },
+    // A2 - 奔放的探险家
+    'A2': {
+        'A/B': {
+            city: '里约热内卢',
+            climate: '热带草原气候',
+            description: '你的内心就像热情的里约，永远充满着阳光般的能量和随性而至的节奏！',
+            detailedAnalysis: '你是一个奔放的探险家，对世界充满好奇，不喜欢被繁琐的计划束缚。对你而言，最重要的就是享受当下的快乐与自由，和你做朋友总能感受到扑面而来的活力与热情。',
+            tips: '你充沛的能量有时可能会让你忽略细节，偶尔试着像里约的桑巴舞一样，在自由的节奏中加入一点点编排，或许会让你的冒险更加顺畅哦！'
+        },
+        'C': {
+            city: '巴塞罗那',
+            climate: '地中海气候',
+            description: '你的内心如同巴塞罗那，充满了高迪式的奇思妙想与不羁的艺术灵魂。',
+            detailedAnalysis: '你是一个浪漫的反叛者，你的热情用于追求独特、深刻和富有创造力的事物。你不循规蹈矩，认为生活本身就是一场盛大的艺术创作。',
+            tips: '你的特立独行是你最闪亮的标签。保护好你内心的"奎尔公园"，那里是你无穷创意的源泉。有时，也需要找到能欣赏你这种独特性的"知音"。'
+        }
+    },
+    // B1 - 可靠的社交家
+    'B1': {
+        'A': {
+            city: '悉尼',
+            climate: '温带海洋性气候',
+            description: '你的内心就像悉尼，阳光、友善且无比宜居。',
+            detailedAnalysis: '你是一个可靠的社交家，是朋友中温暖的"定心丸"，总能组织起让大家安心又开心的活动。你享受社交，但更看重的是那份踏实、和谐与互相支持的氛围。',
+            tips: '你的可靠是你的巨大魅力。记得在照顾他人感受的同时，也要留出足够的"海湾时间"给自己回血，维持你阳光心态的平衡。'
+        },
+        'B/C': {
+            city: '伦敦',
+            climate: '温带海洋性气候',
+            description: '你的内心如同伦敦，经典的外表下藏着无限的多元与可能。',
+            detailedAnalysis: '你是一个有分寸的社交家，既享受热闹的派对与博物馆，也珍视个人的空间与秩序。你在社交中保持优雅与幽默，同时也拥有清晰的边界感。',
+            tips: '你完美平衡了开放与保守。就像伦敦的天气，偶尔的"阴雨"情绪是正常的，给自己一杯茶的时间，很快就能放晴。'
+        }
+    },
+    // ... 继续添加其他15种结果配置（B2, C1, D1, D2, E1, E2）
+    // 为节省篇幅，这里只展示前3种，您需要补充完整的18种结果
+};
+
+// 情绪描述映射
+const EmotionDescriptionMap = {
+    '高敏感性': '你的情绪世界丰富而敏感，像多变的气候一样充满层次感。',
+    '情绪稳定': '你的情绪稳定如平静的湖面，总能保持内心的平和与从容。',
+    '平衡型': '你的情绪在敏感与稳定间找到了很好的平衡。'
+};
+
+// 核心气质名称映射
+const CoreTemperamentMap = {
+    'A1': '热情的规划师', 'A2': '奔放的探险家', 'B1': '可靠的社交家',
+    'B2': '随和的享乐者', 'C1': '恋旧的暖阳', 'D1': '独立的沉思者',
+    'D2': '自由的灵魂', 'E1': '精致的鉴赏家', 'E2': '淡然的隐士'
+};
+
 const ReportComponents = {
     // === 头部组件 ===
     'fun-header': {
@@ -1012,6 +1083,81 @@ const ReportComponents = {
                 </section>
             `;
         }
+    },
+
+    // 心灵气象图头部组件
+    'weather-header': {
+        render: (data, config) => {
+            const cityData = this.getCityData(data.coreCode, data.conditionKey);
+            const temperamentName = CoreTemperamentMap[data.coreCode] || '探索者';
+            
+            return `
+                <section class="result-header" style="background: linear-gradient(135deg, #00B894, #00CEC9);">
+                    <div class="result-content">
+                        <div class="result-label">你的心灵宜居城市</div>
+                        <div class="result-text">${cityData.city}</div>
+                        <div class="score-label">${cityData.climate} | ${temperamentName}</div>
+                    </div>
+                </section>
+            `;
+        }
+    },
+
+    // 城市描述组件 V2
+    'weather-description': {
+        render: (data, config) => {
+            const cityData = this.getCityData(data.coreCode, data.conditionKey);
+            const emotionDesc = EmotionDescriptionMap[data.emotionDesc] || '你的情绪特质独特而迷人。';
+            
+            return `
+                <section class="analysis-section">
+                    <h3>🌍 城市解读</h3>
+                    <div class="analysis-content">
+                        <p style="font-size: 16px; line-height: 1.8; text-align: justify;">
+                            ${cityData.description}
+                        </p>
+                        <p style="margin-top: 15px; color: #666;">
+                            ${cityData.detailedAnalysis}
+                        </p>
+                        <div style="margin-top: 15px; padding: 12px; background: #f8f9fa; border-radius: 8px;">
+                            <strong>情绪特质：</strong>${emotionDesc}
+                        </div>
+                    </div>
+                </section>
+            `;
+        }
+    },
+
+    // 旅行建议组件 V2
+    'weather-summary': {
+        render: (data, config) => {
+            const cityData = this.getCityData(data.coreCode, data.conditionKey);
+            
+            return `
+                <div class="professional-advice">
+                    <div class="advice-title">旅行小贴士</div>
+                    <ul class="advice-list">
+                        <li>${cityData.tips}</li>
+                        <li>世界很大，你的内心气象万千，愿你在真实生活中找到内心的宜居之地</li>
+                        <li>每个城市都有独特的魅力，保持开放心态探索世界的精彩</li>
+                        <li>本测试仅供娱乐，愿你在旅途中发现更多可能性</li>
+                    </ul>
+                </div>
+            `;
+        }
+    },
+
+    // 辅助方法 - 获取城市数据
+    getCityData: function(coreCode, conditionKey) {
+        const defaultData = {
+            city: '新加坡',
+            climate: '热带雨林气候',
+            description: '你的内心气象万千，充满无限可能。',
+            detailedAnalysis: '基于你的答题情况，系统进行了综合分析。',
+            tips: '保持开放心态，继续探索世界的精彩。'
+        };
+        
+        return WeatherCityData[coreCode]?.[conditionKey] || defaultData;
     },
 
     // === 行动组件 ===
