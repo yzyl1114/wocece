@@ -1884,3 +1884,20 @@ body {
         justify-content: center;
     }
 }
+
+/* 关系舒适区测评微调样式 */
+.relationship-match-desc {
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    margin-top: 8px;
+}
+
+.relationship-type-tag {
+    background: rgba(0, 184, 148, 0.1);
+    color: #00B894;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+}

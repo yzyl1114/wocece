@@ -86,7 +86,7 @@ class PsychTestApp {
             },
             {
                 id: '2',
-                title: '异世界职业探秘', 
+                title: '你在异世界的职业', 
                 description: '9题解锁你的隐藏天赋，发现你的异世界命定身份！',
                 category: 'fun',
                 templateType: 'fun',
@@ -96,11 +96,11 @@ class PsychTestApp {
             },
             {
                 id: '3',
-                title: '焦虑水平测试',
-                description: '评估你的焦虑程度和应对方式',
+                title: '你是什么型恋人',
+                description: '探索你在亲密关系中的习惯与偏好',
                 category: 'fun',
                 price: 1,
-                questions: 12,
+                questions: 10,
                 image: 'images/test3.jpg'
             },
             {

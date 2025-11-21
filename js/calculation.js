@@ -13,6 +13,8 @@ class CalculationManager {
                 return this.calculateWeatherPersonalityV2(answers, testData);
             case '2':
                 return this.calculateHollandAdapt(answers, testData);
+            case '3':
+                return this.calculateRelationshipComfort(answers, testData);
             case '6':
                 return this.calculateSCL90(answers, testData);
             case '7':
@@ -806,6 +808,87 @@ class CalculationManager {
     };
     
     return traits[resultType] || '你的独特天赋组合让你在异世界中拥有无限可能。';
+    }
+
+    /**
+     * 关系舒适区测试计分逻辑 - 测试ID: 3
+     */
+    calculateRelationshipComfort(answers, testData) {
+        // 统计每个选项的数量
+        const scoreCount = { A: 0, B: 0, C: 0, D: 0 };
+        
+        answers.forEach(answer => {
+            if (answer && scoreCount.hasOwnProperty(answer)) {
+                scoreCount[answer]++;
+            }
+        });
+
+        // 找出最高分的选项
+        const scores = Object.entries(scoreCount);
+        scores.sort((a, b) => b[1] - a[1]);
+        
+        const maxScore = scores[0][1];
+        const topTypes = scores.filter(([type, score]) => score === maxScore).map(([type]) => type);
+        
+        // 按照优先级排序：D > A > C > B
+        const priorityOrder = ['D', 'A', 'C', 'B'];
+        let resultType = topTypes[0];
+        
+        // 如果有并列，按照优先级选择
+        if (topTypes.length > 1) {
+            for (const type of priorityOrder) {
+                if (topTypes.includes(type)) {
+                    resultType = type;
+                    break;
+                }
+            }
+        }
+        
+        // 结果映射
+        const resultMap = {
+            'B': { 
+                name: '阳光树懒型',
+                description: '心态放松，享受在一起的温暖，也安然于各自的独处',
+                detailed: '你的关系模式就像一只在阳光下慵懒的树懒，情绪稳定，容易满足。你善于沟通，懂得尊重彼此的边界，既能给予温暖的回应，也能保持自我的充实。',
+                advice: '你的稳定是关系的宝藏。可以偶尔主动创造一些小惊喜或深度对话，为关系注入持续的新鲜感。'
+            },
+            'A': { 
+                name: '暖心考拉型', 
+                description: '渴望紧密的连接，细心呵护关系',
+                detailed: '你就像一只喜欢紧紧抱住树干的小考拉，渴望高浓度的亲密和及时的回应。你对关系高度投入，情感细腻且富有同理心，愿意付出，同时也希望得到对方明确的爱意表达来获得安心。',
+                advice: '在感到不安时，可以尝试先进行自我安抚，告诉自己"我是被爱的"。同时，发展自己的兴趣爱好和社会支持圈，让情感的支点更多元。'
+            },
+            'C': { 
+                name: '独立猫猫型',
+                description: '珍视个人空间与自主性，来去自如',
+                detailed: '你非常珍视个人空间与自主性，就像一只来去自如的猫。你享受亲密，但更需要保持"我自己"的完整感。你独立、自信、不依赖他人来获得自我价值感，能给伴侣充分的信任和空间。',
+                advice: '记得偶尔主动与伴侣分享你的内心世界和日常趣事，一句"今天遇到件有趣的事……"就是很好的开始。适度的自我暴露和依赖，能让亲密感更上一层楼。'
+            },
+            'D': { 
+                name: '机警海螺型',
+                description: '渴望深刻亲密但又害怕受伤，谨慎试探',
+                detailed: '你就像一只优雅的海螺，拥有一个坚硬而美丽的外壳来保护内部柔软的身体。你极度渴望深刻而安全的亲密，但又非常害怕在关系中受伤。你的内心世界丰富而深邃，对情感有极强的洞察力。',
+                advice: '建立关系时，请给自己和对方多一点耐心。尝试小步地、循序渐进地敞开心扉。学会识别哪些是过去的伤痛在发出警报，哪些是当下关系中真实存在的问题。'
+            }
+        };
+        
+        const result = resultMap[resultType] || resultMap['B'];
+        
+        // 计算匹配度分数
+        const totalQuestions = answers.length;
+        const consistencyScore = Math.round((maxScore / totalQuestions) * 100);
+        
+        return {
+            score: consistencyScore,
+            resultType: resultType,
+            resultName: result.name,
+            resultDescription: result.description,
+            detailedAnalysis: result.detailed,
+            advice: result.advice,
+            dimensionScores: scoreCount,
+            testType: 'relationship_comfort',
+            testId: '3'
+        };
     }
 }
 

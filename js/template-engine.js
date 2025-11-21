@@ -58,7 +58,6 @@ class TemplateEngine {
             styles: 'spiritual-styles'
         },
         
-        // 心灵气象图模板
         'weather-personality': {
             components: [
                 'weather-header',
@@ -78,6 +77,18 @@ class TemplateEngine {
                 'holland-world-script',
                 'holland-reality-awakening',
                 'holland-summary',
+                'save-actions'
+            ],
+            styles: 'fun-styles'
+        },
+
+        'relationship-comfort': {
+            components: [
+                'relationship-header',
+                'relationship-similarity', 
+                'relationship-description',
+                'relationship-breakdown',
+                'relationship-advice',
                 'save-actions'
             ],
             styles: 'fun-styles'
@@ -114,6 +125,12 @@ class TemplateEngine {
         if (testConfig && testConfig.id === '2') {
         console.log('使用异世界职业测评模板');
         return this.constructor.TEMPLATES['holland-adapt'];
+        }
+
+        // 关系舒适区测试
+        if (testConfig && testConfig.id === '3') {
+            console.log('使用关系舒适区模板');
+            return this.constructor.TEMPLATES['relationship-comfort'];
         }
 
         // 原有逻辑作为备用
