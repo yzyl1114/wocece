@@ -168,8 +168,113 @@ const WeatherCityData = {
             tips: '你完美平衡了开放与保守。就像伦敦的天气，偶尔的"阴雨"情绪是正常的，给自己一杯茶的时间，很快就能放晴。'
         }
     },
-    // ... 继续添加其他15种结果配置（B2, C1, D1, D2, E1, E2）
-    // 为节省篇幅，这里只展示前3种，您需要补充完整的18种结果
+    // === B2 - 随和的享乐者 ===
+    'B2': {
+        'A/B': {
+            city: '曼谷',
+            climate: '热带季风气候',
+            description: '你的内心就像曼谷，充满活力、美食遍地，且无比随和包容。',
+            detailedAnalysis: '你是一个快乐的享乐主义者，懂得享受生活中一切美好的事物——美食、友情和放松的时刻。你为人亲切，不拘小节，和你相处总是轻松又愉快。',
+            tips: '你享受生活的能力是天赋。只是偶尔在"逛吃"的快乐之余，也可以为自己规划一个"禅修"般的短休，让身心得到更深度的恢复。'
+        },
+        'C': {
+            city: '新奥尔良',
+            climate: '湿润亚热带气候',
+            description: '你的内心如同新奥尔良，自由、不羁，灵魂里流淌着爵士乐。',
+            detailedAnalysis: '你是一个真诚的即兴演奏家，你按照自己的节奏生活，厌恶虚伪和过多的约束。你的热情直接而富有感染力，对文化和情感有着深刻的感知。',
+            tips: '你的真诚是你最动人的旋律。保持你的独特性，这个世界需要像你一样不拘一格、热爱生活的灵魂。'
+        }
+    },
+
+    // === C1 - 恋旧的暖阳 ===
+    'C1': {
+        'A/B': {
+            city: '京都',
+            climate: '温带季风气候',
+            description: '你的内心就像京都，宁静、有序，充满传统之美与仪式感。',
+            detailedAnalysis: '你是一个恋旧的暖阳，在熟悉和深爱的事物中找到无尽的深度与慰藉。你温和而坚定，珍视传承、品质与人与人之间深厚的情谊。',
+            tips: '你的念旧与专注让你富有深度。偶尔像京都迎接樱花季一样，向一些微小而确定的新变化敞开怀抱，能为你的传统注入新的活力。'
+        },
+        'C': {
+            city: '爱丁堡',
+            climate: '温带海洋性气候',
+            description: '你的内心如同爱丁堡，沉稳、厚重，有着独特的历史感与风骨。',
+            detailedAnalysis: '你是一个忠诚的守护者，你的温暖和善意，建立在深刻的个人信念和原则之上。你或许不那么外向，但你的存在对于你在意的人和事物来说，是坚实可靠的堡垒。',
+            tips: '你内心的"古城堡"是你的力量之源。不必强迫自己变得过分热情，你的深沉与忠诚，自会吸引懂得欣赏的人。'
+        }
+    },
+
+    // === D1 - 独立的沉思者 ===
+    'D1': {
+        'A/B': {
+            city: '雷克雅未克',
+            climate: '极地海洋性气候',
+            description: '你的内心就像雷克雅未克，外表清冷宁静，内心却蕴藏着火山般的创意与极光般的敏感思绪。',
+            detailedAnalysis: '你是一个内在宇宙的探索者，极度享受独处，你的精神世界丰富而壮丽。你对世界有自己独特而深刻的见解。',
+            tips: '你无需为"社恐"感到不安，独处是你创造力的土壤。偶尔将你内心的"极光"分享给懂你的人，会让他们为你世界的浩瀚而惊叹。'
+        },
+        'C': {
+            city: '东京',
+            climate: '温带季风气候',
+            description: '你的内心如同东京，在极致的公共秩序之下，藏着最前沿、最独特的亚文化与创造力。',
+            detailedAnalysis: '你是一个高度独立的体系构建者，你在自我构建的精神或生活体系里追求着完美与极致。你冷静、专注，能够在一个领域深耕出惊人的深度。',
+            tips: '你强大的自律和专注是成功的密钥。记得偶尔从你的"秋叶原"或"森美术馆"里走出来，在"代代木公园"里无所事事一下，让灵感自然流动。'
+        }
+    },
+
+    // === D2 - 自由的灵魂 ===
+    'D2': {
+        'condition1': {
+            city: '清迈',
+            climate: '热带季风气候',
+            description: '你的内心就像清迈，悠闲、充满灵性，与自然和谐共处。',
+            detailedAnalysis: '你是一个淡然的修行者，追求内心的平和与自由，远离喧嚣与竞争。你的生活节奏慢而充满觉察，在简单的事物中发现生命的真谛。',
+            tips: '你已找到了生活的智慧。继续保持这份觉察与平和，你的存在本身，就能为周围带来一丝宁静与治愈。'
+        },
+        'condition2': {
+            city: '里斯本',
+            climate: '地中海气候',
+            description: '你的内心如同里斯本，带着一丝忧伤的浪漫，随性地在七丘之上爬升，发现生活的惊喜。',
+            detailedAnalysis: '你的自由带着一种哲思与沧桑感，你喜欢探索，但不止于表面，更渴望触及文化、历史与情感的深处。',
+            tips: '你独特的忧郁气质是你的魅力所在。让"法多"音乐滋养你的灵魂，但别忘了像里斯本的电车一样，始终保持着向前探索的劲头。'
+        }
+    },
+
+    // === E1 - 精致的鉴赏家 ===
+    'E1': {
+        'A/B': {
+            city: '佛罗伦萨',
+            climate: '地中海气候',
+            description: '你的内心就像佛罗伦萨，本身就是一件文艺复兴的瑰宝，处处是艺术、美学与细节。',
+            detailedAnalysis: '你是一个精致的鉴赏家，可能在文学、艺术、美食或任何领域拥有卓越的品味。你在安静中汲取深厚的养分，追求精神上的满足与愉悦。',
+            tips: '你对美的感知力让你生活得无比精致。除了欣赏大师的杰作，也不要忘了创作属于你自己的"文艺复兴"。'
+        },
+        'C': {
+            city: '维也纳',
+            climate: '温带大陆性气候',
+            description: '你的内心如同维也纳，优雅、理性，拥有最高的音乐与咖啡文化标准。',
+            detailedAnalysis: '你是一个品位的捍卫者，你的独立精神体现在对经典、秩序与品质的坚持上。你欣赏一切经过时间淬炼的事物，并以此构建自己高质量的生活。',
+            tips: '你的高标准是你生活品质的保障。偶尔去一次"维也纳森林"，暂时抛开所有规则，纯粹地感受自然，会为你带来新的灵感。'
+        }
+    },
+
+    // === E2 - 淡然的隐士 ===
+    'E2': {
+        'A/B': {
+            city: '因特拉肯',
+            climate: '高山气候',
+            description: '你的内心就像因特拉肯，坐落在宁静壮美的湖光山色之中，与世无争。',
+            detailedAnalysis: '你是一个恬淡的隐士，追求与自然的和谐共处。你内心平和、与人为善，但没有比沉浸在自己热爱的事物或大自然中更让你感到快乐的了。',
+            tips: '你已活成了许多人向往的样子。继续保持这份与自然的连接，你的平静具有强大的感染力。'
+        },
+        'C': {
+            city: '班夫',
+            climate: '亚寒带针叶林气候',
+            description: '你的内心如同班夫国家公园，广阔、原始，充满了荒野的自由气息。',
+            detailedAnalysis: '你是一个孤独的探险家，极度重视个人空间，在孤独中感受到真正的自在与力量。你不需要太多的社交，山川、湖泊、森林就是你最好的伙伴。',
+            tips: '你的独立和坚韧令人敬佩。在享受独行之旅时，确保带上你的"生存指南"（自我关怀），并让关心你的人知道你的"大致方位"。'
+        }
+    }
 };
 
 // 情绪描述映射
@@ -1088,7 +1193,8 @@ const ReportComponents = {
     // 心灵气象图头部组件
     'weather-header': {
         render: (data, config) => {
-            const cityData = this.getCityData(data.coreCode, data.conditionKey);
+            // 修复：使用 ReportComponents.getCityData 而不是 this.getCityData
+            const cityData = ReportComponents.getCityData(data.coreCode, data.conditionKey);
             const temperamentName = CoreTemperamentMap[data.coreCode] || '探索者';
             
             return `
@@ -1103,10 +1209,11 @@ const ReportComponents = {
         }
     },
 
-    // 城市描述组件 V2
+    // 在 weather-description 组件中  
     'weather-description': {
         render: (data, config) => {
-            const cityData = this.getCityData(data.coreCode, data.conditionKey);
+            // 修复：使用 ReportComponents.getCityData
+            const cityData = ReportComponents.getCityData(data.coreCode, data.conditionKey);
             const emotionDesc = EmotionDescriptionMap[data.emotionDesc] || '你的情绪特质独特而迷人。';
             
             return `
@@ -1128,10 +1235,11 @@ const ReportComponents = {
         }
     },
 
-    // 旅行建议组件 V2
+    // 在 weather-summary 组件中
     'weather-summary': {
         render: (data, config) => {
-            const cityData = this.getCityData(data.coreCode, data.conditionKey);
+            // 修复：使用 ReportComponents.getCityData
+            const cityData = ReportComponents.getCityData(data.coreCode, data.conditionKey);
             
             return `
                 <div class="professional-advice">
@@ -1145,19 +1253,6 @@ const ReportComponents = {
                 </div>
             `;
         }
-    },
-
-    // 辅助方法 - 获取城市数据
-    getCityData: function(coreCode, conditionKey) {
-        const defaultData = {
-            city: '新加坡',
-            climate: '热带雨林气候',
-            description: '你的内心气象万千，充满无限可能。',
-            detailedAnalysis: '基于你的答题情况，系统进行了综合分析。',
-            tips: '保持开放心态，继续探索世界的精彩。'
-        };
-        
-        return WeatherCityData[coreCode]?.[conditionKey] || defaultData;
     },
 
     // === 行动组件 ===
@@ -1178,6 +1273,54 @@ const ReportComponents = {
             </section>
         `
     }
+};
+
+// 辅助方法 - 获取城市数据（修复版本）
+ReportComponents.getCityData = function(coreCode, conditionKey) {
+    console.log('获取城市数据:', { coreCode, conditionKey });
+    
+    // 处理 D2 核心气质的特殊条件键
+    let actualConditionKey = conditionKey;
+    if (coreCode === 'D2') {
+        // D2 使用 condition1/condition2，需要转换为 A/B 或 C 格式
+        if (conditionKey === 'condition1') {
+            actualConditionKey = 'A/B'; // 对应中/低开放性，中/低神经质
+        } else if (conditionKey === 'condition2') {
+            actualConditionKey = 'C';   // 对应高开放性，或高神经质
+        }
+    }
+    
+    // 处理 B1 核心气质的特殊条件键
+    if (coreCode === 'B1') {
+        if (conditionKey === 'A') {
+            actualConditionKey = 'A'; // 高宜人性
+        } else {
+            actualConditionKey = 'B/C'; // 中/低宜人性
+        }
+    }
+    
+    const defaultData = {
+        city: '未知城市',
+        climate: '未知气候',
+        description: '你的内心世界丰富多彩，充满无限可能。',
+        detailedAnalysis: '基于你的答题情况，系统进行了综合分析。',
+        tips: '保持开放心态，继续探索世界的精彩。'
+    };
+    
+    // 如果核心气质数据存在
+    if (WeatherCityData[coreCode]) {
+        // 如果具体条件存在，返回对应数据
+        if (WeatherCityData[coreCode][actualConditionKey]) {
+            return WeatherCityData[coreCode][actualConditionKey];
+        }
+        // 否则返回该核心气质的第一个条件数据
+        const firstKey = Object.keys(WeatherCityData[coreCode])[0];
+        console.log('使用备用条件键:', firstKey);
+        return WeatherCityData[coreCode][firstKey];
+    }
+    
+    console.warn('未找到匹配的城市数据，使用默认数据');
+    return defaultData;
 };
 
 // 添加必要的CSS样式到文档中（如果尚未存在）
