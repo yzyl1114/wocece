@@ -11,6 +11,8 @@ class CalculationManager {
         switch(testId) {
             case '1':
                 return this.calculateWeatherPersonalityV2(answers, testData);
+            case '2':
+                return this.calculateHollandAdapt(answers, testData);
             case '6':
                 return this.calculateSCL90(answers, testData);
             case '7':
@@ -670,6 +672,140 @@ class CalculationManager {
             'C1': 79, 'D1': 83, 'D2': 79, 'E1': 81, 'E2': 75
         };
         return baseScores[coreCode] || 80;
+    }
+
+    /**
+     * 异世界职业测评计分逻辑 - 测试ID: 2
+     */
+    calculateHollandAdapt(answers, testData) {
+    // 统计每个选项的数量
+    const scoreCount = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 };
+    
+    answers.forEach(answer => {
+        if (answer && scoreCount.hasOwnProperty(answer)) {
+        scoreCount[answer]++;
+        }
+    });
+
+    // 找出最高分的选项
+    const scores = Object.entries(scoreCount);
+    scores.sort((a, b) => b[1] - a[1]);
+    
+    const maxScore = scores[0][1];
+    const topTypes = scores.filter(([type, score]) => score === maxScore).map(([type]) => type);
+    
+    let resultType, resultName, resultDescription;
+    
+    // 判断结果类型
+    if (topTypes.length === 1) {
+        // 单一主导类型
+        const typeMap = {
+        'A': { name: '神匠之手', desc: '万物皆可造，世界在手中。你是点石成金的大师，相信双手创造的价值。' },
+        'B': { name: '万象贤者', desc: '真理是唯一的信仰。你是真理的追光者，沉迷于世界的运行规律。' },
+        'C': { name: '幻梦诗人', desc: '为世界染上我的颜色。你是情绪的捕捉者，美的创造者。' },
+        'D': { name: '盟约领主', desc: '我的舞台，是整个世界。你是天生的策略家与领导者。' },
+        'E': { name: '心语祭司', desc: '我修复破碎的，联结孤立的。你是最受爱戴的精神领袖。' },
+        'F': { name: '秩序之钥', desc: '我是文明运转的沉默基石。你是王国运转的隐形引擎。' }
+        };
+        
+        resultType = topTypes[0];
+        resultName = typeMap[resultType].name;
+        resultDescription = typeMap[resultType].desc;
+        
+    } else if (topTypes.length === 2) {
+        // 双核融合类型
+        const fusionMap = {
+        'AB': { name: '奥秘工匠', desc: '以双手践行理论，用创造验证真理。你是实践型学者，在工作室与实验室间穿梭。' },
+        'AC': { name: '艺术建筑师', desc: '将想象力浇筑为不朽的现实。你是梦想的筑造师，让艺术拥有实用的骨架。' },
+        'AD': { name: '工程统帅', desc: '我的蓝图，由千军万马来实现。你不仅是设计师，更是伟大的项目总指挥。' },
+        'AE': { name: '守护铸造师', desc: '我铸造武器，是为了守护我想守护的一切。你锻造的武器充满灵性。' },
+        'AF': { name: '精密制造者', desc: '误差，是不存在的词汇。你是品质控，打造完美无瑕的装备。' },
+        'BC': { name: '哲理诗人', desc: '用诗意的语言讲述宇宙真理。你在理性与感性间自由穿梭。' },
+        'BD': { name: '战略顾问', desc: '运筹帷幄之中，决胜千里之外。你是智力与权力的完美结合体。' },
+        'BE': { name: '启蒙导师', desc: '知识若不能启迪心灵，便毫无意义。你是最伟大的教育家。' },
+        'BF': { name: '法典编纂者', desc: '将世界的混乱，归于理性的条文。你编写的法律逻辑严密。' },
+        'CD': { name: '剧团主宰', desc: '我不仅创造美，更经营美的帝国。你是艺术与商业的完美结合。' },
+        'CE': { name: '灵魂歌者', desc: '我的艺术，是为了疗愈每一颗心。你的作品直击灵魂深处。' },
+        'CF': { name: '美学规划师', desc: '在秩序的框架内，演奏最美的乐章。你将创意系统化。' },
+        'DE': { name: '仁心领袖', desc: '用力量守护善意，用智慧引导人心。人们为你而战，也为你所守护的价值观而战。' },
+        'DF': { name: '市政官', desc: '卓越的治理，是无声的史诗。你让百万人口的城市像精密的钟表一样运转。' },
+        'EF': { name: '圣堂执政官', desc: '用温暖的制度，守护每一个人。你是善良与秩序最完美的结合。' }
+        };
+        
+        const fusionKey = topTypes.sort().join('');
+        const fusionResult = fusionMap[fusionKey] || { name: '多面手', desc: '你拥有多种天赋，能在不同领域间自如切换。' };
+        
+        resultType = fusionKey;
+        resultName = fusionResult.name;
+        resultDescription = fusionResult.desc;
+        
+    } else {
+        // 三核或多核类型
+        resultType = 'MULTI';
+        resultName = '创世者';
+        resultDescription = '构想、解构、然后亲手创造新世界。你的灵魂是多种天赋的完美熔炉，能在理性与感性、抽象与具体之间自由穿梭。';
+    }
+
+    // 计算匹配度分数（基于答案一致性）
+    const totalQuestions = answers.length;
+    const consistencyScore = (maxScore / totalQuestions) * 100;
+    
+    return {
+        score: Math.round(consistencyScore),
+        resultType: resultType,
+        resultName: resultName,
+        resultDescription: resultDescription,
+        dimensionScores: scoreCount,
+        testType: 'holland_adapt',
+        testId: '2',
+        detailedAnalysis: this.generateHollandAnalysis(resultType, resultName, scoreCount)
+    };
+    }
+
+    /**
+     * 生成异世界职业测评的详细分析
+     */
+    generateHollandAnalysis(resultType, resultName, scores) {
+    const total = Object.values(scores).reduce((sum, score) => sum + score, 0);
+    
+    let analysis = `恭喜你！经过9个维度的探索，你的异世界身份是「${resultName}」。`;
+    
+    if (resultType.length === 1) {
+        analysis += ` 你在${this.getDimensionName(resultType)}领域达到了极致，是该领域登峰造极的专家。`;
+    } else if (resultType.length === 2) {
+        analysis += ` 你同时拥有${resultType.split('').map(t => this.getDimensionName(t)).join('和')}的双重天赋，这种独特的组合让你在异世界中独树一帜。`;
+    } else {
+        analysis += ` 你是一个罕见的通才，在多个领域都展现出卓越的潜力，这种多样性让你能适应各种挑战。`;
+    }
+    
+    // 添加特质描述
+    analysis += ` ${this.getTraitDescription(resultType)}`;
+    
+    return analysis;
+    }
+
+    getDimensionName(type) {
+    const names = {
+        'A': '动手实践', 'B': '理论研究', 'C': '艺术创作',
+        'D': '领导管理', 'E': '社会服务', 'F': '组织规划'
+    };
+    return names[type] || '未知领域';
+    }
+
+    getTraitDescription(resultType) {
+    const traits = {
+        'A': '你注重实际效果，善于将想法变为现实，在工程、制造等领域能发挥巨大价值。',
+        'B': '你追求真理和知识，擅长深度思考和分析，是推动文明进步的重要力量。', 
+        'C': '你富有创造力和想象力，能为世界带来美和灵感，是文化的塑造者。',
+        'D': '你具备领导才能和战略眼光，善于整合资源达成目标，是天生的组织者。',
+        'E': '你充满同理心和关怀，善于建立和谐关系，是团队中温暖的凝聚者。',
+        'F': '你重视秩序和效率，擅长规划和管理，是系统稳定运行的保障。',
+        'AB': '你能将理论知识与实践技能完美结合，在研发和创新领域表现出色。',
+        'AC': '你在艺术表达和技术实现间找到平衡，适合从事需要创意和技能的工作。',
+        'MULTI': '你的多面性让你能胜任各种角色，建议在保持广度的同时深化核心专长。'
+    };
+    
+    return traits[resultType] || '你的独特天赋组合让你在异世界中拥有无限可能。';
     }
 }
 

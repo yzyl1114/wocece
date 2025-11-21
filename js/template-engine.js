@@ -69,6 +69,18 @@ class TemplateEngine {
             ],
             styles: 'fun-styles'
         },
+
+        'holland-adapt': {
+            components: [
+                'holland-header',
+                'holland-similarity', 
+                'holland-description',
+                'holland-dimensions',
+                'holland-summary',
+                'share-actions'
+            ],
+            styles: 'fun-styles'
+        },
     };
 
     getTemplate(testConfig) {
@@ -95,6 +107,12 @@ class TemplateEngine {
         if (testConfig && testConfig.id === '1') {
             console.log('使用心灵气象图模板');
             return this.constructor.TEMPLATES['weather-personality'];
+        }
+
+        // 异世界职业测评
+        if (testConfig && testConfig.id === '2') {
+        console.log('使用异世界职业测评模板');
+        return this.constructor.TEMPLATES['holland-adapt'];
         }
 
         // 原有逻辑作为备用

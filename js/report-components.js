@@ -1272,7 +1272,139 @@ const ReportComponents = {
                 <button onclick="window.location.href='index.html'" class="action-btn primary">回首页</button>
             </section>
         `
-    }
+    },
+
+    // 异世界职业测评专用组件
+    'holland-header': {
+        render: (data, config) => {
+            const headerColor = '#00B894'; // 使用主题色
+            
+            return `
+            <section class="result-header" style="background: linear-gradient(135deg, ${headerColor}, #00CEC9); padding: 25px 15px; height: 160px;">
+                <div class="result-content">
+                <div class="result-label" style="margin-bottom: 8px;">你的异世界身份</div>
+                <div class="result-text" style="font-size: 26px;">${data.resultName}</div>
+                <div class="score-label" style="color: white; opacity: 0.9; margin-top: 5px;">天赋匹配度 ${data.score}%</div>
+                </div>
+            </section>
+            `;
+        }
+    },
+
+    'holland-similarity': {
+        render: (data, config) => {
+            return `
+            <section class="analysis-section">
+                <h3>匹配度分析</h3>
+                <div class="score-display">
+                <div class="score-circle" style="background: linear-gradient(135deg, #00B894, #00CEC9); border: 3px solid #F0F0F0;">
+                    ${data.score || 0}%
+                </div>
+                <div class="score-label">与 ${data.resultName} 的契合度</div>
+                <div class="similarity-desc" style="margin-top: 10px; color: #666; font-size: 14px;">
+                    百分比反映了你的性格特质与职业身份的匹配程度
+                </div>
+                </div>
+            </section>
+            `;
+        }
+    },
+
+    'holland-description': {
+        render: (data, config) => {
+            return `
+            <section class="analysis-section">
+                <h3>🎯 身份解读</h3>
+                <div class="analysis-content">
+                <p style="font-size: 16px; line-height: 1.8; text-align: justify; color: #333;">
+                    ${data.resultDescription}
+                </p>
+                <p style="margin-top: 15px; color: #666; font-style: italic;">
+                    ${data.detailedAnalysis || ''}
+                </p>
+                </div>
+            </section>
+            `;
+        }
+    },
+
+    'holland-dimensions': {
+        render: (data, config) => {
+            const dimensionConfigs = {
+            'A': { name: '动手实践', color: '#00B894', desc: '善于将想法变为现实' },
+            'B': { name: '理论研究', color: '#667eea', desc: '追求真理和知识' },
+            'C': { name: '艺术创作', color: '#ff6b6b', desc: '富有创造力和想象力' },
+            'D': { name: '领导管理', color: '#f1c40f', desc: '具备领导才能和战略眼光' },
+            'E': { name: '社会服务', color: '#9b59b6', desc: '充满同理心和关怀' },
+            'F': { name: '组织规划', color: '#34495e', desc: '重视秩序和效率' }
+            };
+            
+            const total = Object.values(data.dimensionScores).reduce((sum, score) => sum + score, 0);
+            
+            let html = `
+            <section class="analysis-section">
+                <h3>📊 能力维度分析</h3>
+                <div class="horizontal-bars-container">
+            `;
+            
+            Object.entries(data.dimensionScores)
+            .sort((a, b) => b[1] - a[1])
+            .forEach(([type, score]) => {
+                const dim = dimensionConfigs[type];
+                const percentage = Math.round((score / total) * 100);
+                
+                html += `
+                <div class="bar-item">
+                    <div class="bar-info">
+                    <span class="bar-label">${dim.name}</span>
+                    <span class="bar-score">${score}票</span>
+                    </div>
+                    <div class="bar-track">
+                    <div class="bar-fill" style="width: ${percentage}%; background: ${dim.color};"></div>
+                    </div>
+                    <div class="dimension-desc" style="font-size: 12px; color: #666; margin-top: 4px;">
+                    ${dim.desc}
+                    </div>
+                </div>
+                `;
+            });
+            
+            html += `</div></section>`;
+            return html;
+        }
+    },
+
+    'holland-summary': {
+        render: (data, config) => {
+            const getAdvice = (resultType) => {
+            const adviceMap = {
+                'A': '多参与动手实践项目，在制造、工程等领域发挥你的天赋。',
+                'B': '保持好奇心，在研究和分析领域深耕，你的洞察力很有价值。',
+                'C': '为世界创造更多美，你的艺术表达能触动人心。',
+                'D': '勇敢承担领导责任，你的战略眼光能带领团队走向成功。',
+                'E': '继续用温暖关怀他人，你的共情能力让世界更美好。',
+                'F': '你的组织能力是稀缺资源，在需要秩序的地方大展身手。',
+                'AB': '在研发创新领域发挥优势，将理论转化为实用成果。',
+                'AC': '结合艺术与技术，在创意产业中创造独特价值。',
+                'MULTI': '探索不同领域，找到最适合发挥你多样才华的舞台。'
+            };
+            
+            return adviceMap[resultType] || '基于你的独特天赋组合，在适合的环境中持续成长。';
+            };
+            
+            return `
+            <div class="professional-advice">
+                <div class="advice-title">成长建议</div>
+                <ul class="advice-list">
+                <li>${getAdvice(data.resultType)}</li>
+                <li>每个身份都是异世界不可或缺的一部分，珍惜你的独特天赋</li>
+                <li>在现实生活中寻找能发挥这些特质的机会</li>
+                <li>本测试基于霍兰德职业兴趣理论改编，结果仅供参考</li>
+                </ul>
+            </div>
+            `;
+        }
+    },
 };
 
 // 辅助方法 - 获取城市数据（修复版本）

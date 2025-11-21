@@ -86,11 +86,12 @@ class PsychTestApp {
             },
             {
                 id: '2',
-                title: '心理年龄测试', 
-                description: '测测你的心理年龄是多少',
+                title: '异世界职业探秘', 
+                description: '9题解锁你的隐藏天赋，发现你的异世界命定身份！',
                 category: 'fun',
-                price: 1,
-                questions: 8,
+                templateType: 'fun',
+                price: 0.01,
+                questions: 9,
                 image: 'images/test2.jpg'
             },
             {
