@@ -1833,3 +1833,54 @@ body {
     color: #00B894;
     font-weight: bold;
 }
+
+/* === 异世界职业测评优化样式 === */
+
+/* 口号样式 */
+.slogan-content {
+    background: linear-gradient(135deg, rgba(0, 184, 148, 0.05), rgba(0, 206, 201, 0.05));
+    border-radius: 10px;
+    margin: 10px 0;
+}
+
+/* 特质标签样式 */
+.traits-container {
+    margin: 15px 0;
+}
+
+.trait-tag {
+    transition: all 0.3s ease;
+}
+
+.trait-tag:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 184, 148, 0.2);
+}
+
+/* 异世界剧本特殊样式 */
+.analysis-content p {
+    text-indent: 2em;
+}
+
+/* 主导维度标识 */
+.dominant-indicator {
+    color: #00B894;
+    font-weight: bold;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* 响应式调整 */
+@media (max-width: 480px) {
+    .slogan-text {
+        font-size: 16px !important;
+    }
+    
+    .traits-container {
+        justify-content: center;
+    }
+}

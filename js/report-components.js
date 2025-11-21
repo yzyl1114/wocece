@@ -1255,6 +1255,222 @@ const ReportComponents = {
         }
     },
 
+    // 异世界职业测评专用组件 - 优化版
+    'holland-header': {
+        render: (data, config) => {
+            const headerColor = '#00B894';
+            
+            return `
+                <section class="result-header" style="background: linear-gradient(135deg, ${headerColor}, #00CEC9); padding: 25px 15px; height: 160px;">
+                    <div class="result-content">
+                        <div class="result-label" style="margin-bottom: 8px;">你的异世界身份</div>
+                        <div class="result-text" style="font-size: 26px;">${data.resultName}</div>
+                        <div class="score-label" style="color: white; opacity: 0.9; margin-top: 5px;">天赋匹配度 ${data.score}%</div>
+                    </div>
+                </section>
+            `;
+        }
+    },
+
+    'holland-slogan': {
+        render: (data, config) => {
+            const slogans = {
+                'A': '万物皆可造，世界在手中。',
+                'B': '真理是唯一的信仰。',
+                'C': '为世界染上我的颜色。',
+                'D': '我的舞台，是整个世界。',
+                'E': '我修复破碎的，联结孤立的。',
+                'F': '我是文明运转的沉默基石。',
+                'AB': '以双手践行理论，用创造验证真理。',
+                'AC': '将想象力浇筑为不朽的现实。',
+                'AD': '我的蓝图，由千军万马来实现。',
+                'AE': '我铸造武器，是为了守护我想守护的一切。',
+                'AF': '误差，是不存在的词汇。',
+                'BC': '用诗意的语言讲述宇宙真理。',
+                'BD': '运筹帷幄之中，决胜千里之外。',
+                'BE': '知识若不能启迪心灵，便毫无意义。',
+                'BF': '将世界的混乱，归于理性的条文。',
+                'CD': '我不仅创造美，更经营美的帝国。',
+                'CE': '我的艺术，是为了疗愈每一颗心。',
+                'CF': '在秩序的框架内，演奏最美的乐章。',
+                'DE': '用力量守护善意，用智慧引导人心。',
+                'DF': '卓越的治理，是无声的史诗。',
+                'EF': '用温暖的制度，守护每一个人。',
+                'MULTI': '构想、解构、然后亲手创造新世界。'
+            };
+            
+            const slogan = slogans[data.resultType] || '发现你的独特天赋，创造无限可能。';
+            
+            return `
+                <section class="analysis-section">
+                    <div class="slogan-content" style="text-align: center; padding: 20px 0;">
+                        <div class="slogan-text" style="font-size: 18px; font-weight: 300; color: #00B894; line-height: 1.6; font-style: italic;">
+                            "${slogan}"
+                        </div>
+                    </div>
+                </section>
+            `;
+        }
+    },
+
+    'holland-core-traits': {
+        render: (data, config) => {
+            const traitsMap = {
+                'A': ['务实', '专注', '动手达人', '成果导向'],
+                'B': ['深邃', '逻辑', '极致专注', '追求本源'],
+                'C': ['灵感迸发', '敏感于美', '追求表达', '充满直觉'],
+                'D': ['魄力', '远见', '善于影响', '敢于冒险'],
+                'E': ['共情', '治愈', '无私奉献', '善于凝聚'],
+                'F': ['严谨', '可靠', '极致效率', '追求稳定'],
+                'AB': ['实践型学者', '理论联系实际', '研发创新'],
+                'AC': ['艺术建筑师', '创意与技能结合', '美感与实用并重'],
+                'MULTI': ['多面天才', '跨界思维', '适应性强', '全面发展']
+            };
+            
+            const traits = traitsMap[data.resultType] || ['独特', '创新', '有潜力'];
+            
+            return `
+                <section class="analysis-section">
+                    <h3>🎯 核心特质</h3>
+                    <div class="traits-container" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px;">
+                        ${traits.map(trait => `
+                            <span class="trait-tag" style="display: inline-block; padding: 6px 12px; background: rgba(0, 184, 148, 0.1); color: #00B894; border-radius: 15px; font-size: 13px; font-weight: 500;">
+                                ${trait}
+                            </span>
+                        `).join('')}
+                    </div>
+                </section>
+            `;
+        }
+    },
+
+    'holland-world-script': {
+        render: (data, config) => {
+            const scripts = {
+                'A': `你是矮人与精灵都敬重的大师。你的工作室堆满了图纸和材料，从守护王城的巨弩到公主的魔法首饰，都出自你手。你相信"做出来"才是真理，你的世界是由可触摸、可改造的实体构成的。当盟友需要一件神器时，他们第一个想到的就是你。`,
+                'B': `你常年隐居在魔法高塔或地下书库。对你来说，最大的诱惑不是宝藏，而是未知。你会为了一个古代符文的含义研究三天三夜，为了一条龙类的生态习性踏上远征。你的发现可能一开始不被人理解，但最终会改变整个世界的认知。`,
+                'C': `你是情绪的捕捉者，美的创造者。你可能在剧院赢得满堂彩，也可能在街头随性演奏。你用诗歌记录历史，用画作预言未来。你的情绪丰富而敏锐，这让你能创造出直击灵魂的作品，为这个世界增添不可或缺的色彩与浪漫。`,
+                'D': `你是天生的统治者与开拓者。你能让骄傲的精灵与顽固的矮人坐在同一张谈判桌前。你建立的不是商会，是经济帝国；你率领的不是佣兵团，是改变世界格局的力量。你的一句话，能影响整个大陆的贸易航线。`,
+                'E': `你是最受爱戴的精神领袖。你的治疗术能起死回生，而你的话语能重建破碎的信念。英雄为你而战，平民为你祈福。你不是用权力，而是用纯粹的善意与理解，将整个王国凝聚成一个坚不可摧的大家庭。`,
+                'F': `你是王国的"幕后之王"。整个王国的财政、律法、物流体系都在你精密的大脑中运转。你能让濒临破产的公国恢复元气，能让混乱的军团后勤变得滴水不漏。你的价值不在于一次性的奇迹，而在于让整个系统永不崩溃的伟力。`,
+                'AB': `你的工坊，更像是魔法与机械结合的实验室。你打造的武器不仅锋利，还镌刻着自研的符文；你建造的桥梁不仅坚固，还蕴含着对力学法则的全新应用。你可能不修边幅，沉迷于一个个"不可能"的项目，但王国上下都知道，当遇到现有知识无法解决的难题时，来找你准没错。`,
+                'AC': `你设计的建筑本身就是传奇。你建造的剧院能让最细微的歌声清晰传到每个角落，你修筑的城堡在晨光下会浮现出流动的壁画。国王会为你提供的坚固堡垒方案而满意，但最终让你名垂青史的，是那座堡垒如巨龙盘踞般雄伟而又充满美感的形态。`,
+                'MULTI': `你是终极的发明家与造物主。你的灵魂是理论、艺术与工艺的完美熔炉。你能提出惊世的理论，能用艺术将其表达，最后还能亲手将其变为现实。你的思维在理性与感性、抽象与具体之间自由穿梭，你的工坊/实验室/工作室是这个世界上最混乱也最充满奇迹的地方。`
+            };
+            
+            const script = scripts[data.resultType] || `基于你的独特天赋组合，你在异世界中拥有无限可能。你的多面性让你能胜任各种角色，在复杂的环境中展现出极强的适应性和创造力。`;
+            
+            return `
+                <section class="analysis-section">
+                    <h3>📖 异世界剧本</h3>
+                    <div class="analysis-content">
+                        <p style="font-size: 15px; line-height: 1.8; text-align: justify; color: #333;">
+                            ${script}
+                        </p>
+                    </div>
+                </section>
+            `;
+        }
+    },
+
+    'holland-reality-awakening': {
+        render: (data, config) => {
+            const awakenings = {
+                'A': `你是不可或缺的专家型人才。你的天赋在<strong>工程、制造、外科医学、数据分析、农业</strong>等需要高超实操技能的领域无可替代。在AI时代，你是将虚拟蓝图变为现实产品的关键执行者。`,
+                'B': `你是文明的奠基人与破局者。你的天赋在<strong>科研、学术、金融建模、战略分析、软件架构</strong>等需要深度思考和体系化知识的领域至关重要。你是解决从0到1难题的核心大脑。`,
+                'C': `你是文化与情感的塑造者。你的天赋在<strong>艺术创作、品牌构建、用户体验设计、广告、影视编导</strong>等需要极致创意和共情能力的领域是绝对核心。你为冰冷的技术世界注入温度和意义。`,
+                'D': `你是资源与趋势的驾驭者。你的天赋在<strong>创业、投资、高层管理、销售、政策制定</strong>等需要宏观视野和强大魄力的领域如鱼得水。你是组织在不确定环境中开疆拓土的先锋。`,
+                'E': `你是组织健康的守护神。你的天赋在<strong>教育、心理咨询、医疗服务、人力资源管理、公共服务</strong>等需要极高情商和利他精神的领域无可取代。你为整个社会提供着最珍贵的"情绪价值"和稳定性。`,
+                'F': `你是复杂体系的构建师。你的天赋在<strong>法律、金融、审计、供应链管理、数据库管理</strong>等需要零容错率和极致流程化的领域是定海神针。在信息爆炸的时代，你是赋予数据以意义和秩序的专家。`,
+                'AB': `你是顶尖的<strong>项目总监、工程负责人、制片人</strong>。你擅长将天才的创意落地为宏伟的现实，在研发和创新领域表现出色，能将理论知识与实践技能完美结合。`,
+                'AC': `你是优秀的<strong>建筑师、设计师、艺术总监</strong>。你在艺术表达和技术实现间找到平衡，适合从事需要创意和技能结合的工作，为世界创造既美观又实用的作品。`,
+                'MULTI': `你极有可能是一个"斜杠天才"或终身学习者。你需要寻找能让你综合发挥多种才能的领域，如<strong>产品经理、导演、架构师、跨界艺术家</strong>等。避免将自己局限于过于狭窄的岗位，广阔的天空才是你的极限。`
+            };
+            
+            const awakening = awakenings[data.resultType] || `基于你的独特天赋组合，在现实生活中寻找能发挥这些特质的机会。每个身份都是世界不可或缺的一部分，珍惜你的独特天赋，在适合的环境中持续成长。`;
+            
+            return `
+                <section class="analysis-section">
+                    <h3>💡 现实觉醒</h3>
+                    <div class="analysis-content">
+                        <p style="font-size: 15px; line-height: 1.8; text-align: justify; color: #333;">
+                            ${awakening}
+                        </p>
+                    </div>
+                </section>
+            `;
+        }
+    },
+
+    'holland-dimensions': {
+        render: (data, config) => {
+            const dimensionConfigs = {
+                'A': { name: '动手实践', desc: '善于将想法变为现实', color: '#00B894' },
+                'B': { name: '理论研究', desc: '追求真理和知识', color: '#667eea' },
+                'C': { name: '艺术创作', desc: '富有创造力和想象力', color: '#ff6b6b' },
+                'D': { name: '领导管理', desc: '具备领导才能和战略眼光', color: '#f1c40f' },
+                'E': { name: '社会服务', desc: '充满同理心和关怀', color: '#9b59b6' },
+                'F': { name: '组织规划', desc: '重视秩序和效率', color: '#34495e' }
+            };
+            
+            const total = Object.values(data.dimensionScores).reduce((sum, score) => sum + score, 0);
+            
+            let html = `
+                <section class="analysis-section">
+                    <h3>📊 能力维度分析</h3>
+                    <div class="horizontal-bars-container">
+            `;
+            
+            Object.entries(data.dimensionScores)
+                .sort((a, b) => b[1] - a[1])
+                .forEach(([type, score]) => {
+                    const dim = dimensionConfigs[type];
+                    const percentage = Math.round((score / total) * 100);
+                    const isDominant = data.resultType.includes(type);
+                    
+                    html += `
+                        <div class="bar-item">
+                            <div class="bar-info">
+                                <span class="bar-label">
+                                    ${dim.name}
+                                    ${isDominant ? '<span style="color: #00B894; margin-left: 4px;">★</span>' : ''}
+                                </span>
+                                <span class="bar-score">${score}票</span>
+                            </div>
+                            <div class="bar-track">
+                                <div class="bar-fill" style="width: ${percentage}%; background: ${dim.color};"></div>
+                            </div>
+                            <div class="dimension-desc" style="font-size: 12px; color: #666; margin-top: 4px;">
+                                ${dim.desc}
+                            </div>
+                        </div>
+                    `;
+                });
+            
+            html += `</div></section>`;
+            return html;
+        }
+    },
+
+    'holland-summary': {
+        render: (data, config) => {
+            return `
+                <div class="professional-advice">
+                    <div class="advice-title">✨ 成长指引</div>
+                    <ul class="advice-list">
+                        <li><strong>发挥优势：</strong>在你的核心特质领域深耕，成为不可替代的专家</li>
+                        <li><strong>平衡发展：</strong>关注相对较弱的维度，获得更全面的能力结构</li>
+                        <li><strong>实践应用：</strong>在现实生活中寻找能发挥这些天赋的机会</li>
+                        <li><strong>持续探索：</strong>每个身份都有无限可能，保持学习和成长的心态</li>
+                    </ul>
+                    <div style="margin-top: 15px; font-size: 12px; opacity: 0.8; text-align: center;">
+                        本测试基于霍兰德职业兴趣理论改编，结果仅供参考
+                    </div>
+                </div>
+            `;
+        }
+    },
+
     // === 行动组件 ===
     'save-actions': {
         render: (data, config) => `
@@ -1272,138 +1488,6 @@ const ReportComponents = {
                 <button onclick="window.location.href='index.html'" class="action-btn primary">回首页</button>
             </section>
         `
-    },
-
-    // 异世界职业测评专用组件
-    'holland-header': {
-        render: (data, config) => {
-            const headerColor = '#00B894'; // 使用主题色
-            
-            return `
-            <section class="result-header" style="background: linear-gradient(135deg, ${headerColor}, #00CEC9); padding: 25px 15px; height: 160px;">
-                <div class="result-content">
-                <div class="result-label" style="margin-bottom: 8px;">你的异世界身份</div>
-                <div class="result-text" style="font-size: 26px;">${data.resultName}</div>
-                <div class="score-label" style="color: white; opacity: 0.9; margin-top: 5px;">天赋匹配度 ${data.score}%</div>
-                </div>
-            </section>
-            `;
-        }
-    },
-
-    'holland-similarity': {
-        render: (data, config) => {
-            return `
-            <section class="analysis-section">
-                <h3>匹配度分析</h3>
-                <div class="score-display">
-                <div class="score-circle" style="background: linear-gradient(135deg, #00B894, #00CEC9); border: 3px solid #F0F0F0;">
-                    ${data.score || 0}%
-                </div>
-                <div class="score-label">与 ${data.resultName} 的契合度</div>
-                <div class="similarity-desc" style="margin-top: 10px; color: #666; font-size: 14px;">
-                    百分比反映了你的性格特质与职业身份的匹配程度
-                </div>
-                </div>
-            </section>
-            `;
-        }
-    },
-
-    'holland-description': {
-        render: (data, config) => {
-            return `
-            <section class="analysis-section">
-                <h3>🎯 身份解读</h3>
-                <div class="analysis-content">
-                <p style="font-size: 16px; line-height: 1.8; text-align: justify; color: #333;">
-                    ${data.resultDescription}
-                </p>
-                <p style="margin-top: 15px; color: #666; font-style: italic;">
-                    ${data.detailedAnalysis || ''}
-                </p>
-                </div>
-            </section>
-            `;
-        }
-    },
-
-    'holland-dimensions': {
-        render: (data, config) => {
-            const dimensionConfigs = {
-            'A': { name: '动手实践', color: '#00B894', desc: '善于将想法变为现实' },
-            'B': { name: '理论研究', color: '#667eea', desc: '追求真理和知识' },
-            'C': { name: '艺术创作', color: '#ff6b6b', desc: '富有创造力和想象力' },
-            'D': { name: '领导管理', color: '#f1c40f', desc: '具备领导才能和战略眼光' },
-            'E': { name: '社会服务', color: '#9b59b6', desc: '充满同理心和关怀' },
-            'F': { name: '组织规划', color: '#34495e', desc: '重视秩序和效率' }
-            };
-            
-            const total = Object.values(data.dimensionScores).reduce((sum, score) => sum + score, 0);
-            
-            let html = `
-            <section class="analysis-section">
-                <h3>📊 能力维度分析</h3>
-                <div class="horizontal-bars-container">
-            `;
-            
-            Object.entries(data.dimensionScores)
-            .sort((a, b) => b[1] - a[1])
-            .forEach(([type, score]) => {
-                const dim = dimensionConfigs[type];
-                const percentage = Math.round((score / total) * 100);
-                
-                html += `
-                <div class="bar-item">
-                    <div class="bar-info">
-                    <span class="bar-label">${dim.name}</span>
-                    <span class="bar-score">${score}票</span>
-                    </div>
-                    <div class="bar-track">
-                    <div class="bar-fill" style="width: ${percentage}%; background: ${dim.color};"></div>
-                    </div>
-                    <div class="dimension-desc" style="font-size: 12px; color: #666; margin-top: 4px;">
-                    ${dim.desc}
-                    </div>
-                </div>
-                `;
-            });
-            
-            html += `</div></section>`;
-            return html;
-        }
-    },
-
-    'holland-summary': {
-        render: (data, config) => {
-            const getAdvice = (resultType) => {
-            const adviceMap = {
-                'A': '多参与动手实践项目，在制造、工程等领域发挥你的天赋。',
-                'B': '保持好奇心，在研究和分析领域深耕，你的洞察力很有价值。',
-                'C': '为世界创造更多美，你的艺术表达能触动人心。',
-                'D': '勇敢承担领导责任，你的战略眼光能带领团队走向成功。',
-                'E': '继续用温暖关怀他人，你的共情能力让世界更美好。',
-                'F': '你的组织能力是稀缺资源，在需要秩序的地方大展身手。',
-                'AB': '在研发创新领域发挥优势，将理论转化为实用成果。',
-                'AC': '结合艺术与技术，在创意产业中创造独特价值。',
-                'MULTI': '探索不同领域，找到最适合发挥你多样才华的舞台。'
-            };
-            
-            return adviceMap[resultType] || '基于你的独特天赋组合，在适合的环境中持续成长。';
-            };
-            
-            return `
-            <div class="professional-advice">
-                <div class="advice-title">成长建议</div>
-                <ul class="advice-list">
-                <li>${getAdvice(data.resultType)}</li>
-                <li>每个身份都是异世界不可或缺的一部分，珍惜你的独特天赋</li>
-                <li>在现实生活中寻找能发挥这些特质的机会</li>
-                <li>本测试基于霍兰德职业兴趣理论改编，结果仅供参考</li>
-                </ul>
-            </div>
-            `;
-        }
     },
 };
 
