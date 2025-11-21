@@ -1472,117 +1472,110 @@ const ReportComponents = {
     },
     
     // 关系舒适区测试专用组件
-    'relationship-header': {
+    'relationship-comfort': {
         render: (data, config) => {
-            const headerColor = '#00B894';
-            
-            return `
-                <section class="result-header" style="background: linear-gradient(135deg, ${headerColor}, #00CEC9); padding: 25px 15px; height: 160px;">
-                    <div class="result-content">
-                        <div class="result-label" style="margin-bottom: 8px;">你的关系舒适区类型</div>
-                        <div class="result-text" style="font-size: 26px;">${data.resultName}</div>
-                        <div class="score-label" style="color: white; opacity: 0.9; margin-top: 5px;">匹配度 ${data.score}%</div>
-                    </div>
-                </section>
-            `;
-        }
-    },
-
-    'relationship-similarity': {
-        render: (data, config) => {
-            return `
-                <section class="analysis-section">
-                    <h3>匹配度分析</h3>
-                    <div class="score-display">
-                        <div class="score-circle" style="background: linear-gradient(135deg, #00B894, #00CEC9); border: 3px solid #F0F0F0;">
-                            ${data.score}%
-                        </div>
-                        <div class="score-label">与 ${data.resultName} 的契合度</div>
-                        <div class="similarity-desc" style="margin-top: 10px; color: #666; font-size: 14px;">
-                            反映了你的关系习惯与该类型的匹配程度
-                        </div>
-                    </div>
-                </section>
-            `;
-        }
-    },
-
-    'relationship-description': {
-        render: (data, config) => {
-            return `
-                <section class="analysis-section">
-                    <h3>💝 类型解读</h3>
-                    <div class="analysis-content">
-                        <p style="font-size: 16px; line-height: 1.8; text-align: justify; color: #333;">
-                            ${data.detailedAnalysis}
-                        </p>
-                    </div>
-                </section>
-            `;
-        }
-    },
-
-    'relationship-breakdown': {
-        render: (data, config) => {
-            const typeConfigs = {
-                'A': { name: '暖心考拉型', color: '#FF6B6B', desc: '渴望紧密连接' },
-                'B': { name: '阳光树懒型', color: '#4ECDC4', desc: '平衡稳定' },
-                'C': { name: '独立猫猫型', color: '#45B7D1', desc: '重视独立空间' },
-                'D': { name: '机警海螺型', color: '#96CEB4', desc: '矛盾谨慎' }
+            const typeConfig = {
+                'B': { emoji: '🐨', name: '阳光树懒型', color: '#00B894' },
+                'A': { emoji: '🐨', name: '暖心考拉型', color: '#FF6B6B' },
+                'C': { emoji: '🐱', name: '独立猫猫型', color: '#45B7D1' },
+                'D': { emoji: '🦔', name: '机警海螺型', color: '#96CEB4' }
             };
             
-            const total = Object.values(data.dimensionScores).reduce((sum, score) => sum + score, 0);
+            const currentType = typeConfig[data.resultType] || typeConfig['B'];
             
             return `
+                <!-- 类型解读 -->
                 <section class="analysis-section">
-                    <h3>📊 类型分布</h3>
-                    <div class="horizontal-bars-container">
-                        ${Object.entries(data.dimensionScores)
-                            .sort((a, b) => b[1] - a[1])
-                            .map(([type, score]) => {
-                                const dim = typeConfigs[type];
-                                const percentage = Math.round((score / total) * 100);
-                                const isMainType = data.resultType === type;
-                                
-                                return `
-                                    <div class="bar-item">
-                                        <div class="bar-info">
-                                            <span class="bar-label">
-                                                ${dim.name}
-                                                ${isMainType ? '<span style="color: #00B894; margin-left: 4px;">★</span>' : ''}
-                                            </span>
-                                            <span class="bar-score">${score}票</span>
-                                        </div>
-                                        <div class="bar-track">
-                                            <div class="bar-fill" style="width: ${percentage}%; background: ${dim.color};"></div>
-                                        </div>
-                                        <div class="dimension-desc" style="font-size: 12px; color: #666; margin-top: 4px;">
-                                            ${dim.desc}
-                                        </div>
-                                    </div>
-                                `;
-                            }).join('')}
+                    <div class="section-header">
+                        <span class="section-icon">🌟</span>
+                        <h3>类型深度解读</h3>
+                    </div>
+                    <div class="character-display">
+                        <div class="character-avatar">
+                            <span>${currentType.emoji}</span>
+                        </div>
+                        <div class="character-info">
+                            <h4>${data.resultName}</h4>
+                            <p class="character-desc">${data.detailedAnalysis}</p>
+                        </div>
                     </div>
                 </section>
-            `;
-        }
-    },
 
-    'relationship-advice': {
-        render: (data, config) => {
-            return `
-                <div class="professional-advice">
-                    <div class="advice-title">💡 关系建议</div>
-                    <ul class="advice-list">
-                        <li>${data.advice}</li>
-                        <li>了解自己的关系模式，是建立健康亲密关系的第一步</li>
-                        <li>每种类型都有其独特的优势和挑战，接纳自己的特点</li>
-                        <li>与伴侣分享你的测试结果，开启深度对话</li>
-                    </ul>
-                    <div style="margin-top: 15px; font-size: 12px; opacity: 0.8; text-align: center;">
-                        本测试基于成人依恋理论改编，结果仅供参考
+                <!-- 沟通偏好 -->
+                <section class="analysis-section">
+                    <div class="section-header">
+                        <span class="section-icon">💬</span>
+                        <h3>沟通偏好</h3>
                     </div>
-                </div>
+                    <div class="preference-grid">
+                        <div class="preference-item">
+                            <div class="pref-icon">👍</div>
+                            <div class="pref-content">
+                                <h5>最受用的表达</h5>
+                                <p>${data.communication.preferred}</p>
+                            </div>
+                        </div>
+                        <div class="preference-item">
+                            <div class="pref-icon">👎</div>
+                            <div class="pref-content">
+                                <h5>容易不适的沟通</h5>
+                                <p>${data.communication.uncomfortable}</p>
+                            </div>
+                        </div>
+                        <div class="preference-item">
+                            <div class="pref-icon">💪</div>
+                            <div class="pref-content">
+                                <h5>沟通优势</h5>
+                                <p>${data.communication.strengths}</p>
+                            </div>
+                        </div>
+                        <div class="preference-item">
+                            <div class="pref-icon">💡</div>
+                            <div class="pref-content">
+                                <h5>沟通提示</h5>
+                                <p>${data.communication.tips}</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 类型兼容性 -->
+                <section class="analysis-section">
+                    <div class="section-header">
+                        <span class="section-icon">🤝</span>
+                        <h3>类型兼容性</h3>
+                    </div>
+                    <div class="compatibility-list">
+                        ${data.compatibility.map(compat => {
+                            const compatType = typeConfig[compat.type];
+                            const ratingStars = '⭐'.repeat(compat.rating);
+                            const compatibilityClass = compat.rating >= 4 ? 'ideal' : 
+                                                    compat.rating >= 3 ? 'good' : 'challenge';
+                            
+                            return `
+                                <div class="compat-item ${compatibilityClass}">
+                                    <div class="compat-avatar">${compatType.emoji}</div>
+                                    <div class="compat-info">
+                                        <h5>${compat.name}</h5>
+                                        <div class="compat-rating">${ratingStars}</div>
+                                        <p class="compat-desc">${compat.desc}</p>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </section>
+
+                <!-- 成长建议 -->
+                <section class="analysis-section">
+                    <div class="section-header">
+                        <span class="section-icon">🌱</span>
+                        <h3>成长建议</h3>
+                    </div>
+                    <div class="advice-content">
+                        <p>${data.advice}</p>
+                    </div>
+                </section>
             `;
         }
     },

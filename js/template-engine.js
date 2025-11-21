@@ -85,10 +85,7 @@ class TemplateEngine {
         'relationship-comfort': {
             components: [
                 'relationship-header',
-                'relationship-similarity', 
-                'relationship-description',
-                'relationship-breakdown',
-                'relationship-advice',
+                'relationship-comfort',  // 使用新的综合组件
                 'save-actions'
             ],
             styles: 'fun-styles'
