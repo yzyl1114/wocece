@@ -1472,6 +1472,29 @@ const ReportComponents = {
     },
     
     // 关系舒适区测试专用组件
+    'relationship-header': {
+        render: (data, config) => {
+            const typeConfig = {
+                'B': { name: '阳光树懒型', desc: '平衡独立与亲密的艺术' },
+                'A': { name: '暖心考拉型', desc: '细心呵护关系的温暖' },
+                'C': { name: '独立猫猫型', desc: '珍视个人空间的智慧' },
+                'D': { name: '机警海螺型', desc: '渴望深刻亲密的谨慎' }
+            };
+            
+            const currentType = typeConfig[data.resultType] || typeConfig['B'];
+            
+            return `
+                <section class="result-header">
+                    <div class="result-title">你的关系舒适区类型</div>
+                    <div class="result-content">
+                        <div class="result-text">${currentType.name}</div>
+                        <div class="result-label">${currentType.desc}</div>
+                    </div>
+                </section>
+            `;
+        }
+    },
+    
     'relationship-comfort': {
         render: (data, config) => {
             const typeConfig = {
@@ -1487,15 +1510,10 @@ const ReportComponents = {
                 <!-- 类型解读 -->
                 <section class="analysis-section">
                     <div class="section-header">
-                        <span class="section-icon">🌟</span>
                         <h3>类型深度解读</h3>
                     </div>
                     <div class="character-display">
-                        <div class="character-avatar">
-                            <span>${currentType.emoji}</span>
-                        </div>
                         <div class="character-info">
-                            <h4>${data.resultName}</h4>
                             <p class="character-desc">${data.detailedAnalysis}</p>
                         </div>
                     </div>
@@ -1504,7 +1522,6 @@ const ReportComponents = {
                 <!-- 沟通偏好 -->
                 <section class="analysis-section">
                     <div class="section-header">
-                        <span class="section-icon">💬</span>
                         <h3>沟通偏好</h3>
                     </div>
                     <div class="preference-grid">
@@ -1542,7 +1559,6 @@ const ReportComponents = {
                 <!-- 类型兼容性 -->
                 <section class="analysis-section">
                     <div class="section-header">
-                        <span class="section-icon">🤝</span>
                         <h3>类型兼容性</h3>
                     </div>
                     <div class="compatibility-list">
@@ -1569,7 +1585,6 @@ const ReportComponents = {
                 <!-- 成长建议 -->
                 <section class="analysis-section">
                     <div class="section-header">
-                        <span class="section-icon">🌱</span>
                         <h3>成长建议</h3>
                     </div>
                     <div class="advice-content">

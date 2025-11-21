@@ -1952,6 +1952,50 @@ body {
     line-height: 1.5;
 }
 
+/* 关系舒适区测试移动端优化 */
+.preference-grid-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.preference-item-mobile {
+    background: white;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-left: 4px solid #00B894;
+}
+
+.pref-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.pref-header h5 {
+    margin: 0;
+    font-size: 15px;
+    color: #333;
+}
+
+.preference-item-mobile p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+}
+
+/* 移除原有样式中的图片相关部分 */
+.character-display-simple {
+    display: block;
+}
+
+.character-avatar-simple {
+    display: none;
+}
+
 /* 兼容性列表 */
 .compatibility-list {
     display: flex;
@@ -2066,6 +2110,10 @@ body {
         padding: 12px;
     }
     
+    .preference-item-mobile {
+        padding: 12px;
+    }
+    
     .compat-item {
         padding: 12px;
     }
@@ -2077,6 +2125,18 @@ body {
     
     .section-header h3 {
         font-size: 17px;
+    }
+    
+    .pref-header {
+        gap: 8px;
+    }
+    
+    .pref-header h5 {
+        font-size: 14px;
+    }
+    
+    .preference-item-mobile p {
+        font-size: 13px;
     }
 }
 
@@ -2095,5 +2155,13 @@ body {
     
     .pref-icon {
         align-self: center;
+    }
+    
+    .preference-grid-mobile {
+        gap: 10px;
+    }
+    
+    .preference-item-mobile {
+        padding: 10px;
     }
 }
