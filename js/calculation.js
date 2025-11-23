@@ -954,7 +954,6 @@ class CalculationManager {
         // 题目维度映射
         const questionMapping = {
             1: { A: 'openness', B: 'conscientiousness', C: 'neuroticism', D: 'agreeableness' },
-            1: { A: 'openness', B: 'conscientiousness', C: 'neuroticism', D: 'agreeableness' },
             2: { A: 'conscientiousness', B: 'agreeableness', C: 'neuroticism', D: 'openness' },
             3: { A: 'conscientiousness', B: 'extraversion', C: 'neuroticism', D: 'openness' },
             4: { A: 'openness', B: 'conscientiousness', C: 'neuroticism', D: 'agreeableness' },
@@ -1026,6 +1025,21 @@ class CalculationManager {
     }
 
     /**
+    * 生成大明王朝测评的简要分析
+    */
+    generateMingAnalysis(character, dimensions) {
+        return `根据您的答题情况，系统分析您与《大明王朝》中的「${character}」最为匹配，匹配度达到${this.calculateMingScore(dimensions)}%。这个角色在职场中具有独特的行为模式和处事风格。`;
+    }
+
+    /**
+     * 计算大明王朝测试分数
+     */
+    calculateMingScore(dimensions) {
+        const total = Object.values(dimensions).reduce((sum, score) => sum + score, 0);
+        return Math.round((total / 48) * 100); // 12题 * 4个选项 = 48分满分
+    }
+
+    /**
      * 生成大明王朝测评的详细分析
      */
     generateMingFullReport(character, dimensions) {
@@ -1092,8 +1106,7 @@ class CalculationManager {
             }
         };
         
-        const report = reportMap[character] || reportMap['胡宗宪'];
-        return report;
+        return reportMap[character] || reportMap['胡宗宪'];
     }
 }
 // 全局计算实例
