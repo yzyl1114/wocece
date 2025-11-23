@@ -105,11 +105,11 @@ class PsychTestApp {
             },
             {
                 id: '4',
-                title: '职业倾向测试',
-                description: '发现最适合你的职业方向',
+                title: '大明王朝职场生存人格',
+                description: '测测你是《大明王朝1566》里的谁？',
                 category: 'fun',
                 price: 1,
-                questions: 15,
+                questions: 12,
                 image: 'images/test4.jpg'
             },
             {

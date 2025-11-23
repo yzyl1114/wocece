@@ -15,6 +15,8 @@ class CalculationManager {
                 return this.calculateHollandAdapt(answers, testData);
             case '3':
                 return this.calculateRelationshipComfort(answers, testData);
+            case '4':
+                return this.calculateMingDynasty(answers, testData);
             case '6':
                 return this.calculateSCL90(answers, testData);
             case '7':
@@ -935,6 +937,112 @@ class CalculationManager {
             testType: 'relationship_comfort',
             testId: '3'
         };
+    }
+
+    /**
+    * 大明王朝职场生存人格测评计分逻辑 - 测试ID: 4
+    */
+    calculateMingDynasty(answers, testData) {
+        // 维度定义：开放性、尽责性、宜人性、情绪稳定性
+        const dimensions = {
+            'openness': 0,      // 开放性
+            'conscientiousness': 0, // 尽责性  
+            'agreeableness': 0,     // 宜人性
+            'neuroticism': 0        // 情绪稳定性
+        };
+        
+        // 题目维度映射
+        const questionMapping = {
+            1: { A: 'openness', B: 'conscientiousness', C: 'neuroticism', D: 'agreeableness' },
+            2: { A: 'conscientiousness', B: 'agreeableness', C: 'neuroticism', D: 'openness' },
+            3: { A: 'conscientiousness', B: 'openness', C: 'neuroticism', D: 'openness' },
+            4: { A: 'openness', B: 'conscientiousness', C: 'neuroticism', D: 'agreeableness' },
+            5: { A: 'agreeableness', B: 'agreeableness', C: 'openness', D: 'agreeableness' },
+            6: { A: 'openness', B: 'conscientiousness', C: 'agreeableness', D: 'conscientiousness' },
+            7: { A: 'conscientiousness', B: 'openness', C: 'agreeableness', D: 'neuroticism' },
+            8: { A: 'neuroticism', B: 'agreeableness', C: 'conscientiousness', D: 'neuroticism' },
+            9: { A: 'conscientiousness', B: 'neuroticism', C: 'openness', D: 'agreeableness' },
+            10: { A: 'openness', B: 'neuroticism', C: 'openness', D: 'agreeableness' },
+            11: { A: 'openness', B: 'neuroticism', C: 'agreeableness', D: 'conscientiousness' },
+            12: { A: 'openness', B: 'conscientiousness', C: 'agreeableness', D: 'openness' }
+        };
+        
+        // 计算维度分数
+        answers.forEach((answer, index) => {
+            const questionNum = index + 1;
+            const dimension = questionMapping[questionNum]?.[answer];
+            if (dimension) {
+                dimensions[dimension]++;
+            }
+        });
+        
+        // 角色匹配逻辑
+        const characters = {
+            '嘉靖帝': { openness: 3, conscientiousness: 0, agreeableness: 0, neuroticism: 3 },
+            '海瑞': { openness: 0, conscientiousness: 3, agreeableness: 0, neuroticism: 0 },
+            '胡宗宪': { openness: 1, conscientiousness: 3, agreeableness: 1, neuroticism: 2 },
+            '张居正': { openness: 3, conscientiousness: 3, agreeableness: 1, neuroticism: 0 },
+            '吕芳': { openness: 1, conscientiousness: 1, agreeableness: 3, neuroticism: 0 },
+            '严世蕃': { openness: 3, conscientiousness: 0, agreeableness: 0, neuroticism: 1 },
+            '严嵩': { openness: 0, conscientiousness: 1, agreeableness: 0, neuroticism: 0 },
+            '裕王': { openness: 0, conscientiousness: 1, agreeableness: 3, neuroticism: 2 },
+            '杨金水': { openness: 3, conscientiousness: 1, agreeableness: 0, neuroticism: 3 },
+            '王用汲': { openness: 0, conscientiousness: 3, agreeableness: 3, neuroticism: 0 },
+            '高翰文': { openness: 3, conscientiousness: 0, agreeableness: 3, neuroticism: 3 },
+            '冯保': { openness: 3, conscientiousness: 1, agreeableness: 1, neuroticism: 2 }
+        };
+        
+        // 计算与每个角色的匹配度
+        let bestMatch = '';
+        let bestSimilarity = -1;
+        
+        Object.entries(characters).forEach(([character, charDimensions]) => {
+            let similarity = 0;
+            Object.keys(dimensions).forEach(dim => {
+                similarity += Math.min(dimensions[dim], charDimensions[dim]);
+            });
+            
+            if (similarity > bestSimilarity) {
+                bestSimilarity = similarity;
+                bestMatch = character;
+            }
+        });
+        
+        // 计算匹配度百分比
+        const maxPossible = 12; // 最大可能匹配度
+        const matchPercentage = Math.round((bestSimilarity / maxPossible) * 100);
+        
+        return {
+            score: matchPercentage,
+            character: bestMatch,
+            dimensions: dimensions,
+            similarity: bestSimilarity,
+            testType: 'ming_dynasty',
+            testId: '4',
+            detailedAnalysis: this.generateMingAnalysis(bestMatch, dimensions)
+        };
+    }
+
+    /**
+     * 生成大明王朝测评的详细分析
+     */
+    generateMingAnalysis(character, dimensions) {
+        const analysisMap = {
+            '嘉靖帝': '你就像运筹帷幄的嘉靖帝，拥有顶级的大局观和战略思维，善于在复杂局面中掌控全局。你的开放性让你能看到别人看不到的机会，但要注意平衡掌控欲与团队协作。',
+            '海瑞': '你是刚正不阿的海瑞，原则性极强，是规则的坚定捍卫者。你的尽责性让你成为团队中最可靠的人，但在沟通时可以多一些弹性。',
+            '胡宗宪': '你如同顾全大局的胡宗宪，责任心极强，能在复杂环境中找到实干之路。你的担当精神值得信赖，但要学会适当释放压力。',
+            '张居正': '你就像深谋远虑的张居正，兼具战略眼光与实干精神。你的开放性和尽责性完美结合，是难得的改革型人才。',
+            '吕芳': '你拥有吕芳式的高情商，善于平衡各方关系，是团队的稳定器。你的宜人性让你在人际交往中游刃有余。',
+            '严世蕃': '你如同精明的严世蕃，善于抓住机会，行动力强。你的开放性让你总能找到新的突破口，但要注意长期规划。',
+            '严嵩': '你就像深谙权术的严嵩，懂得组织规则，善于经营关系。你的稳定性让你在复杂环境中游刃有余。',
+            '裕王': '你如同宽厚的裕王，善于倾听和信任他人。你的宜人性让你成为团队中温暖的凝聚者。',
+            '杨金水': '你就像机敏的杨金水，应变能力强，能在压力下完成任务。你的开放性让你善于应对复杂局面。',
+            '王用汲': '你如同务实的王用汲，坚守原则又充满善意。你的尽责性和宜人性让你成为团队的中坚力量。',
+            '高翰文': '你就像才情出众的高翰文，富有理想和创造力。你的开放性让你充满灵感，但要增强现实适应力。',
+            '冯保': '你如同敏锐的冯保，善于把握机会，目标明确。你的多面性让你在不同情境下都能发挥作用。'
+        };
+        
+        return analysisMap[character] || '基于你的选择，系统分析了你的职场人格特质。';
     }
 }
 

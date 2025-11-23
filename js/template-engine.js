@@ -90,6 +90,19 @@ class TemplateEngine {
             ],
             styles: 'fun-styles'
         },
+
+        // 大明王朝模板
+        'ming-dynasty': {
+            components: [
+                'ming-header',
+                'ming-character',
+                'ming-analysis',
+                'ming-dimensions', 
+                'ming-summary',
+                'save-actions'
+            ],
+            styles: 'fun-styles'
+        },
     };
 
     getTemplate(testConfig) {
@@ -128,6 +141,12 @@ class TemplateEngine {
         if (testConfig && testConfig.id === '3') {
             console.log('使用关系舒适区模板');
             return this.constructor.TEMPLATES['relationship-comfort'];
+        }
+
+        // 大明王朝测评
+        if (testConfig && testConfig.id === '4') {
+            console.log('使用大明王朝模板');
+            return this.constructor.TEMPLATES['ming-dynasty'];
         }
 
         // 原有逻辑作为备用

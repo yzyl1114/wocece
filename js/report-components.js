@@ -1595,6 +1595,134 @@ const ReportComponents = {
         }
     },
 
+    // 大明王朝头部组件
+    'ming-header': {
+        render: (data, config) => {
+            const headerColor = '#8B4513'; // 深棕色，符合大明王朝风格
+            
+            return `
+                <section class="result-header" style="background: linear-gradient(135deg, ${headerColor}, #A0522D); padding: 25px 15px; height: 160px;">
+                    <div class="result-content">
+                        <div class="result-label" style="margin-bottom: 8px;">你的大明王朝职场人格</div>
+                        <div class="result-text" style="font-size: 26px;">${data.character}</div>
+                        <div class="score-label" style="color: white; opacity: 0.9; margin-top: 5px;">人格匹配度 ${data.score}%</div>
+                    </div>
+                </section>
+            `;
+        }
+    },
+
+    // 角色展示组件
+    'ming-character': {
+        render: (data, config) => {
+            const characterDesc = {
+                '嘉靖帝': '执棋者·深谋远虑的布局大师',
+                '海瑞': '青天·刚正不阿的规则卫士', 
+                '胡宗宪': '砥柱·顾全大局的实干能臣',
+                '张居正': '改革家·锐意进取的战略家',
+                '吕芳': '定盘星·情商满分的协调者',
+                '严世蕃': '破局者·精明果断的机会主义者',
+                '严嵩': '权相·深谙规则的生存大师',
+                '裕王': '仁主·宽厚温和的守护者',
+                '杨金水': '操盘手·机敏应变的执行者',
+                '王用汲': '善吏·务实善良的实干家',
+                '高翰文': '才子·理想主义的艺术家',
+                '冯保': '攀登者·目标明确的进取者'
+            };
+            
+            return `
+                <section class="analysis-section">
+                    <div class="slogan-content" style="text-align: center; padding: 20px 0;">
+                        <div class="slogan-text" style="font-size: 18px; font-weight: 300; color: #8B4513; line-height: 1.6; font-style: italic;">
+                            "${characterDesc[data.character] || '独具特色的职场人格'}"
+                        </div>
+                    </div>
+                </section>
+            `;
+        }
+    },
+
+    // 详细分析组件
+    'ming-analysis': {
+        render: (data, config) => {
+            return `
+                <section class="analysis-section">
+                    <h3>🎭 角色解读</h3>
+                    <div class="analysis-content">
+                        <p style="font-size: 15px; line-height: 1.8; text-align: justify; color: #333;">
+                            ${data.detailedAnalysis}
+                        </p>
+                    </div>
+                </section>
+            `;
+        }
+    },
+
+    // 维度分析组件
+    'ming-dimensions': {
+        render: (data, config) => {
+            const dimensionConfigs = {
+                'openness': { name: '开放性', desc: '对新事物的接受度和创造力', max: 12 },
+                'conscientiousness': { name: '尽责性', desc: '责任感和条理性', max: 12 },
+                'agreeableness': { name: '宜人性', desc: '合作性和同理心', max: 12 },
+                'neuroticism': { name: '情绪稳定性', desc: '情绪调节能力', max: 12 }
+            };
+            
+            let html = `
+                <section class="analysis-section">
+                    <h3>📊 人格维度分析</h3>
+                    <div class="horizontal-bars-container">
+            `;
+            
+            Object.entries(data.dimensions || {}).forEach(([key, value]) => {
+                const dim = dimensionConfigs[key];
+                if (!dim) return;
+                
+                const percentage = Math.min(100, (value / dim.max) * 100);
+                const barColor = percentage > 66 ? '#8B4513' : 
+                            percentage > 33 ? '#A0522D' : '#DEB887';
+                
+                html += `
+                    <div class="bar-item">
+                        <div class="bar-info">
+                            <span class="bar-label">${dim.name}</span>
+                            <span class="bar-score">${value}/${dim.max}</span>
+                        </div>
+                        <div class="bar-track">
+                            <div class="bar-fill" style="width: ${percentage}%; background: ${barColor};"></div>
+                        </div>
+                        <div class="dimension-desc" style="font-size: 12px; color: #666; margin-top: 4px;">
+                            ${dim.desc}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `</div></section>`;
+            return html;
+        }
+    },
+
+    // 总结组件
+    'ming-summary': {
+        render: (data, config) => {
+            return `
+                <div class="professional-advice">
+                    <div class="advice-title">🏯 职场启示</div>
+                    <ul class="advice-list">
+                        <li><strong>发挥优势：</strong>在你的核心人格特质领域深耕，找到最适合的职场定位</li>
+                        <li><strong>平衡发展：</strong>关注相对较弱的维度，获得更全面的职场能力</li>
+                        <li><strong>情境适应：</strong>不同职场环境需要不同的人格特质，保持灵活性</li>
+                        <li><strong>持续成长：</strong>人格特质会随着经历而变化，保持开放学习的心态</li>
+                    </ul>
+                    <div style="margin-top: 15px; font-size: 12px; opacity: 0.8; text-align: center;">
+                        本测试基于大五人格理论，结合《大明王朝》角色特征设计
+                    </div>
+                </div>
+            `;
+        }
+    },
+
     // === 行动组件 ===
     'save-actions': {
         render: (data, config) => `
