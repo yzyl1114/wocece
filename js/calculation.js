@@ -943,28 +943,29 @@ class CalculationManager {
     * 大明王朝职场生存人格测评计分逻辑 - 测试ID: 4
     */
     calculateMingDynasty(answers, testData) {
-        // 维度定义：开放性、尽责性、宜人性、情绪稳定性
         const dimensions = {
             'openness': 0,      // 开放性
             'conscientiousness': 0, // 尽责性  
             'agreeableness': 0,     // 宜人性
-            'neuroticism': 0        // 情绪稳定性
+            'neuroticism': 0,        // 情绪稳定性
+            'extraversion': 0       // 新增：外向性
         };
         
         // 题目维度映射
         const questionMapping = {
             1: { A: 'openness', B: 'conscientiousness', C: 'neuroticism', D: 'agreeableness' },
+            1: { A: 'openness', B: 'conscientiousness', C: 'neuroticism', D: 'agreeableness' },
             2: { A: 'conscientiousness', B: 'agreeableness', C: 'neuroticism', D: 'openness' },
-            3: { A: 'conscientiousness', B: 'openness', C: 'neuroticism', D: 'openness' },
+            3: { A: 'conscientiousness', B: 'extraversion', C: 'neuroticism', D: 'openness' },
             4: { A: 'openness', B: 'conscientiousness', C: 'neuroticism', D: 'agreeableness' },
-            5: { A: 'agreeableness', B: 'agreeableness', C: 'openness', D: 'agreeableness' },
+            5: { A: 'agreeableness', B: 'agreeableness', C: 'openness', D: 'extraversion' },
             6: { A: 'openness', B: 'conscientiousness', C: 'agreeableness', D: 'conscientiousness' },
-            7: { A: 'conscientiousness', B: 'openness', C: 'agreeableness', D: 'neuroticism' },
+            7: { A: 'conscientiousness', B: 'openness', C: 'agreeableness', D: 'extraversion' },
             8: { A: 'neuroticism', B: 'agreeableness', C: 'conscientiousness', D: 'neuroticism' },
             9: { A: 'conscientiousness', B: 'neuroticism', C: 'openness', D: 'agreeableness' },
-            10: { A: 'openness', B: 'neuroticism', C: 'openness', D: 'agreeableness' },
+            10: { A: 'extraversion', B: 'neuroticism', C: 'openness', D: 'agreeableness' },
             11: { A: 'openness', B: 'neuroticism', C: 'agreeableness', D: 'conscientiousness' },
-            12: { A: 'openness', B: 'conscientiousness', C: 'agreeableness', D: 'openness' }
+            12: { A: 'openness', B: 'conscientiousness', C: 'agreeableness', D: 'extraversion' }
         };
         
         // 计算维度分数
@@ -978,18 +979,18 @@ class CalculationManager {
         
         // 角色匹配逻辑
         const characters = {
-            '嘉靖帝': { openness: 3, conscientiousness: 0, agreeableness: 0, neuroticism: 3 },
-            '海瑞': { openness: 0, conscientiousness: 3, agreeableness: 0, neuroticism: 0 },
-            '胡宗宪': { openness: 1, conscientiousness: 3, agreeableness: 1, neuroticism: 2 },
-            '张居正': { openness: 3, conscientiousness: 3, agreeableness: 1, neuroticism: 0 },
-            '吕芳': { openness: 1, conscientiousness: 1, agreeableness: 3, neuroticism: 0 },
-            '严世蕃': { openness: 3, conscientiousness: 0, agreeableness: 0, neuroticism: 1 },
-            '严嵩': { openness: 0, conscientiousness: 1, agreeableness: 0, neuroticism: 0 },
-            '裕王': { openness: 0, conscientiousness: 1, agreeableness: 3, neuroticism: 2 },
-            '杨金水': { openness: 3, conscientiousness: 1, agreeableness: 0, neuroticism: 3 },
-            '王用汲': { openness: 0, conscientiousness: 3, agreeableness: 3, neuroticism: 0 },
-            '高翰文': { openness: 3, conscientiousness: 0, agreeableness: 3, neuroticism: 3 },
-            '冯保': { openness: 3, conscientiousness: 1, agreeableness: 1, neuroticism: 2 }
+            '嘉靖帝': { openness: 3, conscientiousness: 0, agreeableness: 0, neuroticism: 3, extraversion: 2 },
+            '海瑞': { openness: 0, conscientiousness: 3, agreeableness: 0, neuroticism: 0, extraversion: 1 },
+            '胡宗宪': { openness: 1, conscientiousness: 3, agreeableness: 1, neuroticism: 2, extraversion: 1 },
+            '张居正': { openness: 3, conscientiousness: 3, agreeableness: 1, neuroticism: 0, extraversion: 2 },
+            '吕芳': { openness: 1, conscientiousness: 1, agreeableness: 3, neuroticism: 0, extraversion: 2 },
+            '严世蕃': { openness: 3, conscientiousness: 0, agreeableness: 0, neuroticism: 1, extraversion: 2 },
+            '严嵩': { openness: 0, conscientiousness: 1, agreeableness: 0, neuroticism: 0, extraversion: 1 },
+            '裕王': { openness: 0, conscientiousness: 1, agreeableness: 3, neuroticism: 2, extraversion: 1 },
+            '杨金水': { openness: 3, conscientiousness: 1, agreeableness: 0, neuroticism: 3, extraversion: 1 },
+            '王用汲': { openness: 0, conscientiousness: 3, agreeableness: 3, neuroticism: 0, extraversion: 1 },
+            '高翰文': { openness: 3, conscientiousness: 0, agreeableness: 3, neuroticism: 3, extraversion: 1 },
+            '冯保': { openness: 3, conscientiousness: 1, agreeableness: 1, neuroticism: 2, extraversion: 2 }
         };
         
         // 计算与每个角色的匹配度
@@ -1019,32 +1020,81 @@ class CalculationManager {
             similarity: bestSimilarity,
             testType: 'ming_dynasty',
             testId: '4',
-            detailedAnalysis: this.generateMingAnalysis(bestMatch, dimensions)
+            detailedAnalysis: this.generateMingAnalysis(bestMatch, dimensions),
+            fullReport: this.generateMingFullReport(bestMatch, dimensions)
         };
     }
 
     /**
      * 生成大明王朝测评的详细分析
      */
-    generateMingAnalysis(character, dimensions) {
-        const analysisMap = {
-            '嘉靖帝': '你就像运筹帷幄的嘉靖帝，拥有顶级的大局观和战略思维，善于在复杂局面中掌控全局。你的开放性让你能看到别人看不到的机会，但要注意平衡掌控欲与团队协作。',
-            '海瑞': '你是刚正不阿的海瑞，原则性极强，是规则的坚定捍卫者。你的尽责性让你成为团队中最可靠的人，但在沟通时可以多一些弹性。',
-            '胡宗宪': '你如同顾全大局的胡宗宪，责任心极强，能在复杂环境中找到实干之路。你的担当精神值得信赖，但要学会适当释放压力。',
-            '张居正': '你就像深谋远虑的张居正，兼具战略眼光与实干精神。你的开放性和尽责性完美结合，是难得的改革型人才。',
-            '吕芳': '你拥有吕芳式的高情商，善于平衡各方关系，是团队的稳定器。你的宜人性让你在人际交往中游刃有余。',
-            '严世蕃': '你如同精明的严世蕃，善于抓住机会，行动力强。你的开放性让你总能找到新的突破口，但要注意长期规划。',
-            '严嵩': '你就像深谙权术的严嵩，懂得组织规则，善于经营关系。你的稳定性让你在复杂环境中游刃有余。',
-            '裕王': '你如同宽厚的裕王，善于倾听和信任他人。你的宜人性让你成为团队中温暖的凝聚者。',
-            '杨金水': '你就像机敏的杨金水，应变能力强，能在压力下完成任务。你的开放性让你善于应对复杂局面。',
-            '王用汲': '你如同务实的王用汲，坚守原则又充满善意。你的尽责性和宜人性让你成为团队的中坚力量。',
-            '高翰文': '你就像才情出众的高翰文，富有理想和创造力。你的开放性让你充满灵感，但要增强现实适应力。',
-            '冯保': '你如同敏锐的冯保，善于把握机会，目标明确。你的多面性让你在不同情境下都能发挥作用。'
+    generateMingFullReport(character, dimensions) {
+        const reportMap = {
+            '嘉靖帝': {
+                advantages: '你拥有顶级的大局观和战略思维，是天生的布局者。你善于制衡，能透过迷雾直指核心，在复杂的权力结构中游刃有余。与你博弈，对手常会感到无所遁形。',
+                challenges: '极致的掌控欲可能让你事必躬亲，身心俱疲。对他人缺乏信任，会使你成为孤家寡人，难以培养出真正忠诚的左膀右臂。',
+                advice: '尝试建立一套可靠的授权与监督机制，找到1-2个真正可托付大事的"吕芳"，学会"看不见"，从而解放自己，专注于最顶层的战略思考。'
+            },
+            '海瑞': {
+                advantages: '你原则性极强，是非分明，是规则的坚定捍卫者。你的正直与无畏让你在需要破局时成为一柄利剑，能够打破不合理的现状。',
+                challenges: '过于刚直可能让你缺乏弹性，在需要协作和妥协的情境中容易碰壁，显得"不近人情"，影响团队和谐。',
+                advice: '在坚守底线的前提下，可以尝试学习更富弹性的沟通艺术。让道理变得可接受，本身也是一种重要的能力。'
+            },
+            '胡宗宪': {
+                advantages: '你是团队中最可靠的中流砥柱。责任心极强，敢于担当，能在上司、同僚与下属的复杂期望中，找到那条最艰难的实干之路，并坚持走下去。',
+                challenges: '你习惯把所有人的压力都扛在自己肩上，这让你成为了团队的守护神，却也让你自己不堪重负，容易陷入焦虑和疲惫。',
+                advice: '学会"拆分"压力，将非核心任务交付给值得培养的下属。定期给自己留出"喘息"的空间，意识到有时"慢下来"是为了更好地前进。'
+            },
+            '张居正': {
+                advantages: '你兼具长远眼光与实干精神，是富有魄力的战略家。你不墨守成规，懂得为实现最终目标进行策略性的妥协与谋划。',
+                challenges: '过于强大的目标感，有时可能会让你忽略执行过程中的"人心"细节，显得有些不近人情，影响团队凝聚力。',
+                advice: '在推行宏大计划时，别忘了花些时间向团队阐释愿景，凝聚共识。让人理解，才能让人真心追随。'
+            },
+            '吕芳': {
+                advantages: '你拥有顶级的情商和共情能力，是团队的"粘合剂"和"定盘星"。你总能体贴所有人，在复杂局面中维持和谐与平衡。',
+                challenges: '为了维持表面的和谐，你有时会过度隐藏自己的真实情绪和观点，这可能会让你感到内心孤独，或错失一些表达立场的机会。',
+                advice: '在维持良好关系的同时，可以尝试在关键议题上，更清晰地表达自己的核心诉求。你的善良，应该带点锋芒。'
+            },
+            '严世蕃': {
+                advantages: '你聪明敏锐，善于打破常规，在复杂局面中为自己抓住机会。你的果断和精明是你在竞争中脱颖而出的利器。',
+                challenges: '过于聚焦短期目标和个人利益，可能会让你忽略长期的风险与人际的积累，从而树敌过多，影响长远发展。',
+                advice: '试着在关键决策前，将眼光放得更长远一些。建立稳固的同盟，而非临时的利益组合，能让你的成功之路走得更稳。'
+            },
+            '严嵩': {
+                advantages: '你深谙组织权力的运行规则，拥有极强的政治嗅觉和经营能力。你善于通过对关键人物的服务，来巩固自己的地位。',
+                challenges: '你的权力根基完全建立在上级的宠信和庞大的关系网上，一旦失去庇护，便容易墙倒众人推。',
+                advice: '在经营关系的同时，培养一些不依赖于任何人的核心专业能力。这将为你提供最稳固的底气，让你在任何风浪中都能找到立足之地。'
+            },
+            '裕王': {
+                advantages: '你性格宽厚，善于倾听和信任专家，能营造一个令人安心的团队氛围。你不是独裁者，而是一位优秀的"守护者"与"支持者"。',
+                challenges: '在需要独断专行或快速决策时，你的优柔寡断和过度依赖可能会错失良机，让团队陷入迷茫。',
+                advice: '在广泛听取意见后，要有勇气做出自己的判断并承担责任。温和的领导力也需要坚定的内核。'
+            },
+            '杨金水': {
+                advantages: '你是一个极致的"情景主义者"，为达目的可以全身心投入角色。你心思缜密，演技高超，能完成许多常人无法想象的任务。',
+                challenges: '长期在高压下"扮演"另一个人，会让你身心分离，承受巨大的精神压力，游走在崩溃的边缘。',
+                advice: '需要找到一个可以卸下伪装、安全做自己的空间或人。定期释放压力，是维持这台"精密仪器"长久运转的关键。'
+            },
+            '王用汲': {
+                advantages: '你不忘初心，务实而善良。你遵守规则，同时在规则内尽可能地做好事、帮好人，是混乱局势中难得的温暖和确定性。',
+                challenges: '在需要打破常规才能破局的情境下，你的守成和过于恪守本分，可能会限制你的影响力。',
+                advice: '保持你的善良和务实，这是非常宝贵的品质。同时，可以试着在更大范围内思考，如何用你的方式去影响和改变不合理的"规则"。'
+            },
+            '高翰文': {
+                advantages: '你才华横溢，心怀对"美"与"理想秩序"的追求。你的纯粹和创造力，能带来清新之风，为团队注入艺术气息。',
+                challenges: '你缺乏对现实复杂性和人性幽暗面的认知，易在残酷的竞争中受挫，需要强有力的保护。',
+                advice: '在坚持理想的同时，需要有意识地去理解和学习现实的"游戏规则"。这不是妥协，而是为了让你的理想能更好地落地生根。'
+            },
+            '冯保': {
+                advantages: '你拥有极强的上进心和洞察力，善于抓住机会，懂得在何时隐忍、在何时表现。你对目标有清晰的规划。',
+                challenges: '对权力的极度渴望和过程中的巨大压力，可能让你如履薄冰，心态时常在极度自信与焦虑中摇摆。',
+                advice: '在向上攀登的路上，除了算计，也试着去建立一些真正稳固的、基于信任的同盟。这不仅能让你走得更稳，也能让你的内心更有支点。'
+            }
         };
         
-        return analysisMap[character] || '基于你的选择，系统分析了你的职场人格特质。';
+        const report = reportMap[character] || reportMap['胡宗宪'];
+        return report;
     }
 }
-
 // 全局计算实例
 window.calculationManager = new CalculationManager();

@@ -1598,7 +1598,7 @@ const ReportComponents = {
     // 大明王朝头部组件
     'ming-header': {
         render: (data, config) => {
-            const headerColor = '#8B4513'; // 深棕色，符合大明王朝风格
+            const headerColor = '#00B894'; 
             
             return `
                 <section class="result-header" style="background: linear-gradient(135deg, ${headerColor}, #A0522D); padding: 25px 15px; height: 160px;">
@@ -1645,13 +1645,36 @@ const ReportComponents = {
     // 详细分析组件
     'ming-analysis': {
         render: (data, config) => {
+            const fullReport = data.fullReport || {
+                advantages: '基于你的测试结果，系统分析了你的职场人格特质。',
+                challenges: '在发挥优势的同时，也需要注意潜在的挑战。', 
+                advice: '建议在职场中保持平衡发展，持续学习成长。'
+            };
+            
             return `
                 <section class="analysis-section">
-                    <h3>🎭 角色解读</h3>
+                    <h3>🎭 角色深度解读</h3>
                     <div class="analysis-content">
-                        <p style="font-size: 15px; line-height: 1.8; text-align: justify; color: #333;">
-                            ${data.detailedAnalysis}
-                        </p>
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="color: #00B894; margin-bottom: 8px;">💪 你的职场优势</h4>
+                            <p style="font-size: 15px; line-height: 1.7; color: #333; text-align: justify;">
+                                ${fullReport.advantages}
+                            </p>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="color: #FF6B6B; margin-bottom: 8px;">⚠️ 潜在挑战</h4>
+                            <p style="font-size: 15px; line-height: 1.7; color: #333; text-align: justify;">
+                                ${fullReport.challenges}
+                            </p>
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: #00CEC9; margin-bottom: 8px;">🎯 成长建议</h4>
+                            <p style="font-size: 15px; line-height: 1.7; color: #333; text-align: justify;">
+                                ${fullReport.advice}
+                            </p>
+                        </div>
                     </div>
                 </section>
             `;
@@ -1665,7 +1688,28 @@ const ReportComponents = {
                 'openness': { name: '开放性', desc: '对新事物的接受度和创造力', max: 12 },
                 'conscientiousness': { name: '尽责性', desc: '责任感和条理性', max: 12 },
                 'agreeableness': { name: '宜人性', desc: '合作性和同理心', max: 12 },
-                'neuroticism': { name: '情绪稳定性', desc: '情绪调节能力', max: 12 }
+                'neuroticism': { name: '情绪稳定性', desc: '情绪调节能力', max: 12 },
+                'extraversion': { name: '外向性', desc: '社交活跃度和能量来源', max: 12 }
+            };
+            
+            // 获取等级描述
+            const getLevelText = (value, max) => {
+                const percentage = (value / max) * 100;
+                if (percentage >= 80) return '高';
+                if (percentage >= 60) return '中高';
+                if (percentage >= 40) return '中等';
+                if (percentage >= 20) return '中低';
+                return '低';
+            };
+            
+            // 获取等级对应的颜色
+            const getLevelColor = (value, max) => {
+                const percentage = (value / max) * 100;
+                if (percentage >= 80) return '#00B894'; // 高 - 主题绿色
+                if (percentage >= 60) return '#00CEC9'; // 中高 - 主题青蓝色
+                if (percentage >= 40) return '#FFD93D'; // 中等 - 黄色
+                if (percentage >= 20) return '#FF9F43'; // 中低 - 橙色
+                return '#6C757D'; // 低 - 灰色
             };
             
             let html = `
@@ -1679,14 +1723,14 @@ const ReportComponents = {
                 if (!dim) return;
                 
                 const percentage = Math.min(100, (value / dim.max) * 100);
-                const barColor = percentage > 66 ? '#8B4513' : 
-                            percentage > 33 ? '#A0522D' : '#DEB887';
+                const levelText = getLevelText(value, dim.max);
+                const barColor = getLevelColor(value, dim.max);
                 
                 html += `
                     <div class="bar-item">
                         <div class="bar-info">
                             <span class="bar-label">${dim.name}</span>
-                            <span class="bar-score">${value}/${dim.max}</span>
+                            <span class="bar-score" style="color: ${barColor}; font-weight: bold;">${levelText}</span>
                         </div>
                         <div class="bar-track">
                             <div class="bar-fill" style="width: ${percentage}%; background: ${barColor};"></div>
