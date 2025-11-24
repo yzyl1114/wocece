@@ -391,8 +391,26 @@ class ChartRenderer {
      * 渲染优势矩阵图
      */
     renderStrengthsMatrix(strengthScores, coreStrengths, canvasId) {
+        console.log('🎯 开始渲染优势矩阵图...');
+        console.log('📊 优势分数数据:', strengthScores);
+        console.log('📊 核心优势:', coreStrengths);
+        
         const canvas = document.getElementById(canvasId);
-        if (!canvas) return;
+        if (!canvas) {
+        console.error('❌ 优势矩阵图Canvas不存在:', canvasId);
+        return;
+        }
+        
+        // 🆕 检查数据格式
+        if (!strengthScores || typeof strengthScores !== 'object') {
+            console.error('❌ 优势分数数据格式错误，期望对象格式:', strengthScores);
+            return;
+        }
+        
+        if (!coreStrengths || !Array.isArray(coreStrengths)) {
+            console.error('❌ 核心优势数据格式错误，期望数组格式:', coreStrengths);
+            return;
+        }
         
         canvas.width = 320;
         canvas.height = 280;
@@ -472,6 +490,8 @@ class ChartRenderer {
         ctx.fillStyle = '#333';
         ctx.font = '10px Arial';
         ctx.fillText('● 核心优势 | ○ 其他优势', padding, padding + quadrantSize * 2 + 20);
+
+        console.log('✅ 优势矩阵图渲染完成');
     }
 
     /**

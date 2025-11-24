@@ -115,6 +115,17 @@ class ResultManager {
                 };
             }
             
+            // 确保 strengthScores 是对象格式
+            if (!this.resultData.strengthScores || Array.isArray(this.resultData.strengthScores)) {
+                console.warn('⚠️ 优势分数数据格式不正确，创建默认数据');
+                this.resultData.strengthScores = {
+                    '分析': 9, '行动': 2, '适应': 4, '沟通': 7, '竞争': 3,
+                    '体谅': 5, '责任': 6, '关联': 8, '专注': 7, '战略': 4,
+                    '理念': 3, '统率': 2, '排难': 5, '伯乐': 4, '和谐': 6,
+                    '纪律': 3, '自信': 5
+                };
+            }
+            
             if (!this.resultData.coreStrengths) {
                 this.resultData.coreStrengths = ['分析', '沟通', '适应'];
             }
@@ -358,6 +369,13 @@ class ResultManager {
         
         console.log('📊 图表数据:', chartData);
         
+        // 🆕 调试：打印具体的数据格式
+        console.log('🔍 优势分数数据格式:', {
+            type: typeof chartData.strengthScores,
+            isArray: Array.isArray(chartData.strengthScores),
+            value: chartData.strengthScores
+        });
+
         // 渲染霍兰德雷达图
         setTimeout(() => {
             const hollandSuccess = window.chartRenderer.safeRender(
@@ -374,16 +392,32 @@ class ResultManager {
         
         // 渲染优势矩阵图
         setTimeout(() => {
+            // 确保 strengthScores 是对象格式
+            let strengthScoresData = chartData.strengthScores;
+            if (Array.isArray(strengthScoresData)) {
+                console.warn('⚠️ 转换优势分数数据格式');
+                // 如果是数组，转换为对象格式
+                strengthScoresData = {};
+                chartData.strengthScores.forEach(item => {
+                    if (typeof item === 'object' && item.name && item.score) {
+                        strengthScoresData[item.name] = item.score;
+                    }
+                });
+            }
+            
             const matrixSuccess = window.chartRenderer.safeRender(
                 'renderStrengthsMatrix',
-                chartData.strengthScores,
+                strengthScoresData, // 🆕 确保传递对象格式
                 chartData.coreStrengths,
                 'strengthsMatrixChart'
             );
             
             if (!matrixSuccess) {
                 const fallback = document.getElementById('matrixFallback');
-                if (fallback) fallback.style.display = 'block';
+                if (fallback) {
+                    fallback.style.display = 'block';
+                    fallback.innerHTML = '<p>优势矩阵图渲染失败，数据格式可能不正确</p>';
+                }
             }
         }, 200);
         
