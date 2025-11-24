@@ -413,7 +413,7 @@ class ChartRenderer {
         }
         
         canvas.width = 320;
-        canvas.height = 280;
+        canvas.height = 320;
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 

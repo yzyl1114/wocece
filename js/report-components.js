@@ -2104,7 +2104,7 @@ const ReportComponents = {
                         </div>
                     </div>
                     
-                    <div class="tension-advice" style="margin-top: 20px; padding: 15px; background: #fff8e1; border-radius: 8px; border-left: 4px solid #ffa000;">
+                    <div class="tension-advice" style="margin-top: 20px; padding: 15px; background: #fff8e1; border-radius: 8px;>
                         <h4 style="color: #ffa000; margin-bottom: 8px;">💡 潜在张力与提醒</h4>
                         <p style="margin-bottom: 10px; color: #333;"><strong>潜在张力：</strong>${identity.tension}</p>
                         <p style="color: #333;"><strong>建议：</strong>${identity.advice}</p>
