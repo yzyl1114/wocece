@@ -2131,6 +2131,14 @@ const ReportComponents = {
             const coreStrengths = data.coreStrengths || [];
             const coreValues = data.coreValues || [];
             
+            // 存储图表数据到全局变量
+            window.careerChartData = {
+                hollandScores: hollandScores,
+                strengthScores: strengthScores, 
+                coreStrengths: coreStrengths,
+                coreValues: coreValues
+            };
+            
             return `
                 <section class="analysis-section">
                     <h3>🎯 你的黄金组合</h3>
@@ -2179,94 +2187,6 @@ const ReportComponents = {
                         </div>
                     </div>
                 </section>
-                
-                <script>
-                    // 修复图表渲染逻辑
-                    function renderCareerCharts() {
-                        console.log('🎯 开始渲染职业测评图表...');
-                        
-                        // 检查渲染器是否可用
-                        if (!window.chartRenderer) {
-                            console.warn('⚠️ chartRenderer 未初始化，正在创建...');
-                            window.chartRenderer = new ChartRenderer();
-                        }
-                        
-                        const chartData = ${JSON.stringify({
-                            hollandScores: hollandScores,
-                            strengthScores: strengthScores, 
-                            coreStrengths: coreStrengths,
-                            coreValues: coreValues
-                        })};
-                        
-                        console.log('📊 图表数据:', chartData);
-                        
-                        // 渲染霍兰德雷达图
-                        setTimeout(() => {
-                            const hollandSuccess = window.chartRenderer.safeRender(
-                                'renderHollandRadarChart', 
-                                chartData.hollandScores, 
-                                'hollandRadarChart'
-                            );
-                            
-                            if (!hollandSuccess) {
-                                document.getElementById('hollandFallback')?.style.display?.('block');
-                            }
-                        }, 100);
-                        
-                        // 渲染优势矩阵图
-                        setTimeout(() => {
-                            const matrixSuccess = window.chartRenderer.safeRender(
-                                'renderStrengthsMatrix',
-                                chartData.strengthScores,
-                                chartData.coreStrengths,
-                                'strengthsMatrixChart'
-                            );
-                            
-                            if (!matrixSuccess) {
-                                document.getElementById('matrixFallback')?.style.display?.('block');
-                            }
-                        }, 200);
-                        
-                        // 渲染价值观标签云
-                        setTimeout(() => {
-                            const valuesSuccess = window.chartRenderer.safeRender(
-                                'renderValuesCloud',
-                                chartData.coreValues,
-                                'valuesCloudChart'
-                            );
-                            
-                            if (!valuesSuccess) {
-                                document.getElementById('valuesFallback')?.style.display?.('block');
-                            }
-                        }, 300);
-                    }
-                    
-                    // 多种方式确保图表渲染
-                    if (document.readyState === 'loading') {
-                        document.addEventListener('DOMContentLoaded', renderCareerCharts);
-                    } else {
-                        renderCareerCharts();
-                    }
-                    
-                    // 备用方案：监听容器变化
-                    const observer = new MutationObserver((mutations) => {
-                        mutations.forEach((mutation) => {
-                            if (mutation.type === 'childList') {
-                                mutation.addedNodes.forEach((node) => {
-                                    if (node.nodeType === 1 && node.querySelector && node.querySelector('#hollandRadarChart')) {
-                                        console.log('🔍 检测到图表容器加载，重新渲染...');
-                                        setTimeout(renderCareerCharts, 500);
-                                    }
-                                });
-                            }
-                        });
-                    });
-                    
-                    observer.observe(document.body, {
-                        childList: true,
-                        subtree: true
-                    });
-                </script>
             `;
         }
     },

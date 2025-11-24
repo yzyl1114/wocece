@@ -326,6 +326,80 @@ class ResultManager {
         });
         
         console.log('🎉 renderByTemplate 完成');
+
+        // 🆕 新增：渲染职业测评图表
+        if (this.testId === '5') {
+            console.log('🎯 准备渲染职业测评图表...');
+            setTimeout(() => {
+                this.renderCareerCharts();
+            }, 100);
+        }
+    }
+
+    /**
+     * 新增：渲染职业测评图表
+     */
+    renderCareerCharts() {
+        console.log('🎯 开始渲染职业测评图表...');
+        
+        // 检查渲染器是否可用
+        if (!window.chartRenderer) {
+            console.warn('⚠️ chartRenderer 未初始化，正在创建...');
+            window.chartRenderer = new ChartRenderer();
+        }
+        
+        // 使用全局存储的图表数据
+        const chartData = window.careerChartData || {
+            hollandScores: this.resultData.hollandScores,
+            strengthScores: this.resultData.strengthScores,
+            coreStrengths: this.resultData.coreStrengths,
+            coreValues: this.resultData.coreValues
+        };
+        
+        console.log('📊 图表数据:', chartData);
+        
+        // 渲染霍兰德雷达图
+        setTimeout(() => {
+            const hollandSuccess = window.chartRenderer.safeRender(
+                'renderHollandRadarChart', 
+                chartData.hollandScores, 
+                'hollandRadarChart'
+            );
+            
+            if (!hollandSuccess) {
+                const fallback = document.getElementById('hollandFallback');
+                if (fallback) fallback.style.display = 'block';
+            }
+        }, 100);
+        
+        // 渲染优势矩阵图
+        setTimeout(() => {
+            const matrixSuccess = window.chartRenderer.safeRender(
+                'renderStrengthsMatrix',
+                chartData.strengthScores,
+                chartData.coreStrengths,
+                'strengthsMatrixChart'
+            );
+            
+            if (!matrixSuccess) {
+                const fallback = document.getElementById('matrixFallback');
+                if (fallback) fallback.style.display = 'block';
+            }
+        }, 200);
+        
+        // 渲染价值观标签云
+        setTimeout(() => {
+            const valuesSuccess = window.chartRenderer.safeRender(
+                'renderValuesCloud',
+                chartData.coreValues,
+                'valuesCloudChart'
+            );
+            
+            if (!valuesSuccess) {
+                const fallback = document.getElementById('valuesFallback');
+                if (fallback) fallback.style.display = 'block';
+            }
+        }, 300);
     }
 
     bindEvents() {
