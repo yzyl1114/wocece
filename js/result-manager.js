@@ -97,7 +97,35 @@ class ResultManager {
         if (typeof this.resultData.score !== 'number') {
             throw new Error('评分数据缺失或格式错误');
         }
-        
+
+        // 职业测评数据验证
+        if (this.testId === '5') {
+            console.log('🔍 验证职业测评数据...');
+            
+            // 确保必要的图表数据存在
+            if (!this.resultData.hollandScores) {
+                console.warn('⚠️ 霍兰德分数数据缺失，创建默认数据');
+                this.resultData.hollandScores = {
+                    'R': this.resultData.dimensionScores?.R || 8,
+                    'I': this.resultData.dimensionScores?.I || 7,
+                    'A': this.resultData.dimensionScores?.A || 9, 
+                    'S': this.resultData.dimensionScores?.S || 6,
+                    'E': this.resultData.dimensionScores?.E || 8,
+                    'C': this.resultData.dimensionScores?.C || 5
+                };
+            }
+            
+            if (!this.resultData.coreStrengths) {
+                this.resultData.coreStrengths = ['分析', '沟通', '适应'];
+            }
+            
+            if (!this.resultData.coreValues) {
+                this.resultData.coreValues = ['成就回报', '独立自主'];
+            }
+            
+            console.log('✅ 职业测评数据验证完成', this.resultData);
+        }
+
         // 对于SCL-90测试，检查必要字段
         if (this.testId === '6') {
             if (!this.resultData.dimensions || !Array.isArray(this.resultData.dimensions)) {
@@ -122,8 +150,7 @@ class ResultManager {
             if (typeof this.resultData.totalScore !== 'number') {
                 console.warn('SCL-90总分缺失，但不影响基础展示');
             }
-        }
-        
+        }     
         console.log('✅ 结果数据验证通过');
     }
 

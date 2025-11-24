@@ -2117,21 +2117,38 @@ const ReportComponents = {
     // 黄金组合描述 - 优化版（包含图表）
     'career-golden-combination': {
         render: (data, config) => {
+            // 确保数据存在
+            const hollandScores = data.hollandScores || {
+                'R': data.dimensionScores?.R || 0,
+                'I': data.dimensionScores?.I || 0, 
+                'A': data.dimensionScores?.A || 0,
+                'S': data.dimensionScores?.S || 0,
+                'E': data.dimensionScores?.E || 0,
+                'C': data.dimensionScores?.C || 0
+            };
+            
+            const strengthScores = data.strengthScores || {};
+            const coreStrengths = data.coreStrengths || [];
+            const coreValues = data.coreValues || [];
+            
             return `
                 <section class="analysis-section">
                     <h3>🎯 你的黄金组合</h3>
                     <div class="analysis-content">
                         <p style="font-size: 15px; line-height: 1.8; color: #333; text-align: justify;">
-                            ${data.goldenCombination}
+                            ${data.goldenCombination || '基于你的职业测评结果，系统分析了你的优势组合。'}
                         </p>
                         
                         <div style="margin-top: 25px;">
                             <h4 style="color: #00B894; margin-bottom: 15px; font-size: 16px;">📊 霍兰德代码分析</h4>
                             <div class="chart-container" style="text-align: center; margin: 15px 0; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                                 <canvas id="hollandRadarChart" width="280" height="280"></canvas>
+                                <div class="chart-fallback" id="hollandFallback" style="display: none; padding: 20px; color: #666;">
+                                    <p>图表加载中...</p>
+                                </div>
                             </div>
                             <div style="text-align: center; margin-top: 10px; font-size: 14px; color: #666;">
-                                <strong>你的霍兰德代码：${data.hollandCode}</strong>
+                                <strong>你的霍兰德代码：${data.hollandCode || '未识别'}</strong>
                             </div>
                         </div>
                         
@@ -2139,9 +2156,12 @@ const ReportComponents = {
                             <h4 style="color: #00B894; margin-bottom: 15px; font-size: 16px;">💪 优势矩阵分析</h4>
                             <div class="chart-container" style="text-align: center; margin: 15px 0; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                                 <canvas id="strengthsMatrixChart" width="320" height="280"></canvas>
+                                <div class="chart-fallback" id="matrixFallback" style="display: none; padding: 20px; color: #666;">
+                                    <p>图表加载中...</p>
+                                </div>
                             </div>
                             <div style="text-align: center; margin-top: 10px; font-size: 14px; color: #666;">
-                                <strong>核心优势：${data.coreStrengths.join('、')}</strong>
+                                <strong>核心优势：${coreStrengths.join('、') || '分析中...'}</strong>
                             </div>
                         </div>
                         
@@ -2149,59 +2169,103 @@ const ReportComponents = {
                             <h4 style="color: #00B894; margin-bottom: 15px; font-size: 16px;">❤️ 核心价值观</h4>
                             <div class="chart-container" style="text-align: center; margin: 15px 0; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                                 <canvas id="valuesCloudChart" width="280" height="120"></canvas>
+                                <div class="chart-fallback" id="valuesFallback" style="display: none; padding: 20px; color: #666;">
+                                    <p>图表加载中...</p>
+                                </div>
                             </div>
                             <div style="text-align: center; margin-top: 10px; font-size: 14px; color: #666;">
-                                <strong>核心价值观：${data.coreValues.join('、')}</strong>
+                                <strong>核心价值观：${coreValues.join('、') || '识别中...'}</strong>
                             </div>
                         </div>
                     </div>
                 </section>
                 
                 <script>
-                    // 延迟渲染确保DOM已加载
-                    setTimeout(() => {
-                        console.log('开始渲染图表...');
+                    // 修复图表渲染逻辑
+                    function renderCareerCharts() {
+                        console.log('🎯 开始渲染职业测评图表...');
+                        
+                        // 检查渲染器是否可用
+                        if (!window.chartRenderer) {
+                            console.warn('⚠️ chartRenderer 未初始化，正在创建...');
+                            window.chartRenderer = new ChartRenderer();
+                        }
+                        
+                        const chartData = ${JSON.stringify({
+                            hollandScores: hollandScores,
+                            strengthScores: strengthScores, 
+                            coreStrengths: coreStrengths,
+                            coreValues: coreValues
+                        })};
+                        
+                        console.log('📊 图表数据:', chartData);
                         
                         // 渲染霍兰德雷达图
-                        const hollandCanvas = document.getElementById('hollandRadarChart');
-                        if (hollandCanvas && window.chartRenderer && data.hollandScores) {
-                            console.log('渲染霍兰德雷达图:', data.hollandScores);
-                            window.chartRenderer.renderHollandRadarChart(data.hollandScores, 'hollandRadarChart');
-                        } else {
-                            console.warn('霍兰德雷达图渲染条件不满足:', {
-                                canvas: !!hollandCanvas,
-                                renderer: !!window.chartRenderer,
-                                scores: !!data.hollandScores
-                            });
-                        }
+                        setTimeout(() => {
+                            const hollandSuccess = window.chartRenderer.safeRender(
+                                'renderHollandRadarChart', 
+                                chartData.hollandScores, 
+                                'hollandRadarChart'
+                            );
+                            
+                            if (!hollandSuccess) {
+                                document.getElementById('hollandFallback')?.style.display?.('block');
+                            }
+                        }, 100);
                         
                         // 渲染优势矩阵图
-                        const matrixCanvas = document.getElementById('strengthsMatrixChart');
-                        if (matrixCanvas && window.chartRenderer && data.strengthScores && data.coreStrengths) {
-                            console.log('渲染优势矩阵图:', data.strengthScores);
-                            window.chartRenderer.renderStrengthsMatrix(data.strengthScores, data.coreStrengths, 'strengthsMatrixChart');
-                        } else {
-                            console.warn('优势矩阵图渲染条件不满足:', {
-                                canvas: !!matrixCanvas,
-                                renderer: !!window.chartRenderer,
-                                scores: !!data.strengthScores,
-                                coreStrengths: !!data.coreStrengths
-                            });
-                        }
+                        setTimeout(() => {
+                            const matrixSuccess = window.chartRenderer.safeRender(
+                                'renderStrengthsMatrix',
+                                chartData.strengthScores,
+                                chartData.coreStrengths,
+                                'strengthsMatrixChart'
+                            );
+                            
+                            if (!matrixSuccess) {
+                                document.getElementById('matrixFallback')?.style.display?.('block');
+                            }
+                        }, 200);
                         
                         // 渲染价值观标签云
-                        const valuesCanvas = document.getElementById('valuesCloudChart');
-                        if (valuesCanvas && window.chartRenderer && data.coreValues) {
-                            console.log('渲染价值观标签云:', data.coreValues);
-                            window.chartRenderer.renderValuesCloud(data.coreValues, 'valuesCloudChart');
-                        } else {
-                            console.warn('价值观标签云渲染条件不满足:', {
-                                canvas: !!valuesCanvas,
-                                renderer: !!window.chartRenderer,
-                                values: !!data.coreValues
-                            });
-                        }
-                    }, 500);
+                        setTimeout(() => {
+                            const valuesSuccess = window.chartRenderer.safeRender(
+                                'renderValuesCloud',
+                                chartData.coreValues,
+                                'valuesCloudChart'
+                            );
+                            
+                            if (!valuesSuccess) {
+                                document.getElementById('valuesFallback')?.style.display?.('block');
+                            }
+                        }, 300);
+                    }
+                    
+                    // 多种方式确保图表渲染
+                    if (document.readyState === 'loading') {
+                        document.addEventListener('DOMContentLoaded', renderCareerCharts);
+                    } else {
+                        renderCareerCharts();
+                    }
+                    
+                    // 备用方案：监听容器变化
+                    const observer = new MutationObserver((mutations) => {
+                        mutations.forEach((mutation) => {
+                            if (mutation.type === 'childList') {
+                                mutation.addedNodes.forEach((node) => {
+                                    if (node.nodeType === 1 && node.querySelector && node.querySelector('#hollandRadarChart')) {
+                                        console.log('🔍 检测到图表容器加载，重新渲染...');
+                                        setTimeout(renderCareerCharts, 500);
+                                    }
+                                });
+                            }
+                        });
+                    });
+                    
+                    observer.observe(document.body, {
+                        childList: true,
+                        subtree: true
+                    });
                 </script>
             `;
         }
@@ -2751,6 +2815,34 @@ if (!document.querySelector('#report-components-styles')) {
         .path-item:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 184, 148, 0.15);
+        }
+
+        /* 图表容器样式 */
+        .chart-container {
+            position: relative;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chart-fallback {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.9);
+        }
+
+        /* 确保canvas可见 */
+        canvas {
+            display: block;
+            max-width: 100%;
+            height: auto;
         }
 
         /* 响应式调整 */

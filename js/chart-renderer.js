@@ -529,7 +529,49 @@ class ChartRenderer {
                 ctx.fillText(words.slice(4).join(''), pos.x, pos.y + 6);
             }
         });
-    }  
+    }
+    
+    /**
+     * 安全的图表渲染方法，包含错误处理
+     */
+    safeRender(methodName, data, canvasId, ...args) {
+        try {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) {
+                console.warn(`❌ Canvas元素不存在: ${canvasId}`);
+                return false;
+            }
+            
+            if (!data) {
+                console.warn(`❌ ${methodName}: 数据为空`);
+                return false;
+            }
+            
+            if (typeof this[methodName] !== 'function') {
+                console.warn(`❌ 渲染方法不存在: ${methodName}`);
+                return false;
+            }
+            
+            this[methodName](data, canvasId, ...args);
+            console.log(`✅ ${methodName} 渲染成功`);
+            return true;
+        } catch (error) {
+            console.error(`❌ ${methodName} 渲染失败:`, error);
+            return false;
+        }
+    }
+
+    /**
+     * 调试用：打印数据状态
+     */
+    debugData(data, label) {
+        console.log(`🔍 ${label}:`, data);
+        if (data && typeof data === 'object') {
+            Object.keys(data).forEach(key => {
+                console.log(`   ${key}:`, data[key]);
+            });
+        }
+    }
 }
 
 // 确保 ChartRenderer 类正确导出
