@@ -284,4 +284,250 @@ class ChartRenderer {
             ctx.fillText(`${dim.score}%`, x, y + 15);
         });
     }
+
+    /**
+     * 渲染霍兰德雷达图
+     */
+    renderHollandRadarChart(scores, canvasId) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        
+        canvas.width = 280;
+        canvas.height = 280;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = Math.min(centerX, centerY) - 40;
+        const dimensions = ['R', 'I', 'A', 'S', 'E', 'C'];
+        const dimensionNames = {
+            'R': '现实型', 'I': '研究型', 'A': '艺术型', 
+            'S': '社会型', 'E': '企业型', 'C': '常规型'
+        };
+        const angleStep = (2 * Math.PI) / dimensions.length;
+
+        // 绘制网格
+        ctx.strokeStyle = '#e0e0e0';
+        ctx.lineWidth = 1;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.font = '10px Arial';
+        
+        // 绘制同心圆
+        for (let i = 1; i <= 5; i++) {
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius * i / 5, 0, 2 * Math.PI);
+            ctx.stroke();
+            
+            if (i === 5) {
+                ctx.fillStyle = '#999';
+                ctx.fillText(i.toString(), centerX, centerY - radius * i / 5 - 8);
+            }
+        }
+
+        // 绘制维度轴线
+        ctx.strokeStyle = '#ccc';
+        for (let i = 0; i < dimensions.length; i++) {
+            const angle = i * angleStep - Math.PI / 2;
+            const x = centerX + radius * Math.cos(angle);
+            const y = centerY + radius * Math.sin(angle);
+            
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+        }
+
+        // 绘制数据多边形
+        ctx.fillStyle = 'rgba(0, 184, 148, 0.3)';
+        ctx.strokeStyle = '#00B894';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+
+        for (let i = 0; i < dimensions.length; i++) {
+            const angle = i * angleStep - Math.PI / 2;
+            const maxScore = 12; // 霍兰德每题最高分
+            const valueRadius = radius * (scores[dimensions[i]] / maxScore);
+            const x = centerX + valueRadius * Math.cos(angle);
+            const y = centerY + valueRadius * Math.sin(angle);
+            
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // 绘制数据点
+        ctx.fillStyle = '#00B894';
+        for (let i = 0; i < dimensions.length; i++) {
+            const angle = i * angleStep - Math.PI / 2;
+            const maxScore = 12;
+            const valueRadius = radius * (scores[dimensions[i]] / maxScore);
+            const x = centerX + valueRadius * Math.cos(angle);
+            const y = centerY + valueRadius * Math.sin(angle);
+            
+            ctx.beginPath();
+            ctx.arc(x, y, 3, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+
+        // 绘制维度标签
+        ctx.fillStyle = '#333';
+        ctx.font = '11px Arial';
+        for (let i = 0; i < dimensions.length; i++) {
+            const angle = i * angleStep - Math.PI / 2;
+            const labelRadius = radius + 30;
+            const x = centerX + labelRadius * Math.cos(angle);
+            const y = centerY + labelRadius * Math.sin(angle);
+            
+            ctx.fillText(dimensionNames[dimensions[i]], x, y);
+            ctx.fillText(scores[dimensions[i]].toString(), x, y + 15);
+        }
+    }
+
+    /**
+     * 渲染优势矩阵图
+     */
+    renderStrengthsMatrix(strengthScores, coreStrengths, canvasId) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        
+        canvas.width = 320;
+        canvas.height = 280;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // 优势分类
+        const strengthCategories = {
+            '思维类': ['分析', '战略', '理念', '关联'],
+            '行动类': ['行动', '竞争', '统率', '排难'],
+            '关系类': ['体谅', '伯乐', '和谐', '沟通'],
+            '执行类': ['纪律', '专注', '责任', '适应', '自信']
+        };
+
+        const quadrantSize = 140;
+        const padding = 20;
+        
+        // 绘制四个象限
+        const quadrants = [
+            { x: padding, y: padding, name: '思维类', color: '#FF6B6B' },
+            { x: padding + quadrantSize, y: padding, name: '行动类', color: '#4ECDC4' },
+            { x: padding, y: padding + quadrantSize, name: '关系类', color: '#45B7D1' },
+            { x: padding + quadrantSize, y: padding + quadrantSize, name: '执行类', color: '#96CEB4' }
+        ];
+
+        quadrants.forEach(quadrant => {
+            // 绘制象限背景
+            ctx.fillStyle = quadrant.color + '20';
+            ctx.fillRect(quadrant.x, quadrant.y, quadrantSize, quadrantSize);
+            
+            // 绘制边框
+            ctx.strokeStyle = quadrant.color;
+            ctx.lineWidth = 2;
+            ctx.strokeRect(quadrant.x, quadrant.y, quadrantSize, quadrantSize);
+            
+            // 绘制象限标题
+            ctx.fillStyle = quadrant.color;
+            ctx.font = 'bold 12px Arial';
+            ctx.fillText(quadrant.name, quadrant.x + 10, quadrant.y + 20);
+        });
+
+        // 绘制优势点
+        ctx.font = '10px Arial';
+        quadrants.forEach(quadrant => {
+            const strengths = strengthCategories[quadrant.name];
+            strengths.forEach((strength, index) => {
+                const score = strengthScores[strength] || 0;
+                const isCore = coreStrengths.includes(strength);
+                
+                // 计算位置 (在象限内均匀分布)
+                const row = Math.floor(index / 2);
+                const col = index % 2;
+                const x = quadrant.x + 40 + col * 60;
+                const y = quadrant.y + 40 + row * 30;
+                
+                // 绘制圆点
+                ctx.fillStyle = isCore ? quadrant.color : '#999';
+                ctx.beginPath();
+                const radius = 4 + (score / 18) * 6; // 根据分数调整大小
+                ctx.arc(x, y, radius, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                if (isCore) {
+                    ctx.strokeStyle = '#333';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+                
+                // 绘制优势名称
+                ctx.fillStyle = isCore ? '#333' : '#999';
+                ctx.fillText(strength, x + 8, y + 4);
+                ctx.fillText(score.toString(), x + 8, y + 16);
+            });
+        });
+
+        // 绘制图例
+        ctx.fillStyle = '#333';
+        ctx.font = '10px Arial';
+        ctx.fillText('● 核心优势 | ○ 其他优势', padding, padding + quadrantSize * 2 + 20);
+    }
+
+    /**
+     * 渲染价值观标签云
+     */
+    renderValuesCloud(values, canvasId) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        
+        canvas.width = 280;
+        canvas.height = 120;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        
+        // 价值观位置分布
+        const positions = [
+            { x: centerX - 60, y: centerY - 20 },
+            { x: centerX + 60, y: centerY - 20 },
+            { x: centerX - 40, y: centerY + 30 },
+            { x: centerX + 40, y: centerY + 30 },
+            { x: centerX - 80, y: centerY + 10 },
+            { x: centerX + 80, y: centerY + 10 },
+            { x: centerX, y: centerY - 40 },
+            { x: centerX, y: centerY + 50 }
+        ];
+
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        values.forEach((value, index) => {
+            if (index >= positions.length) return;
+            
+            const pos = positions[index];
+            const isCore = index < 2; // 前两个是核心价值观
+            
+            // 绘制背景圆
+            ctx.fillStyle = isCore ? '#00B894' : '#E0E0E0';
+            ctx.beginPath();
+            ctx.arc(pos.x, pos.y, 25, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // 绘制文字
+            ctx.fillStyle = isCore ? 'white' : '#666';
+            ctx.font = isCore ? 'bold 11px Arial' : '10px Arial';
+            
+            // 处理长文本换行
+            const words = value.split('');
+            if (words.length <= 4) {
+                ctx.fillText(value, pos.x, pos.y);
+            } else {
+                ctx.fillText(words.slice(0, 4).join(''), pos.x, pos.y - 6);
+                ctx.fillText(words.slice(4).join(''), pos.x, pos.y + 6);
+            }
+        });
+    }  
 }
