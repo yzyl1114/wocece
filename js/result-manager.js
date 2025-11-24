@@ -14,6 +14,11 @@ class ResultManager {
         this.renderResult();
         this.bindEvents();
         this.loadRecommendations();
+
+        // 确保图表渲染器可用
+        if (!window.chartRenderer) {
+            window.chartRenderer = new ChartRenderer();
+        }
     }
 
     async loadTestConfig() {
@@ -289,7 +294,7 @@ class ResultManager {
                 container.innerHTML += componentHtml;
                 console.log(`   ✅ ${componentName} 成功`);
             } else {
-                console.error(`   ❌ ${componentName} 渲染为空`);
+                console.error(`   ❌ ${componentName} 渲染为空-检查组件名称是否正确`);
             }
         });
         

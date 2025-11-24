@@ -106,10 +106,8 @@ class TemplateEngine {
         'career-compass': {
             components: [
                 'career-header',
-                'career-identity',
+                'career-identity', 
                 'career-golden-combination',
-                'career-holland-radar',
-                'career-strengths-bars', 
                 'career-path-map',
                 'career-action-plan',
                 'save-actions'

@@ -531,3 +531,13 @@ class ChartRenderer {
         });
     }  
 }
+
+// 确保 ChartRenderer 类正确导出
+if (typeof window !== 'undefined') {
+    window.ChartRenderer = ChartRenderer;
+}
+
+// 创建全局实例 - 这是关键修复！
+window.chartRenderer = new ChartRenderer();
+
+console.log('ChartRenderer 已加载并实例化');

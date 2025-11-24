@@ -2125,33 +2125,32 @@ const ReportComponents = {
                             ${data.goldenCombination}
                         </p>
                         
-                        <div style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                            <div>
-                                <h4 style="color: #00B894; margin-bottom: 10px;">霍兰德代码分析</h4>
-                                <div class="radar-chart-container">
-                                    <canvas id="hollandRadarChart"></canvas>
-                                </div>
-                                <div style="text-align: center; margin-top: 10px; font-size: 12px; color: #666;">
-                                    <strong>代码：${data.hollandCode}</strong>
-                                </div>
+                        <div style="margin-top: 25px;">
+                            <h4 style="color: #00B894; margin-bottom: 15px; font-size: 16px;">📊 霍兰德代码分析</h4>
+                            <div class="chart-container" style="text-align: center; margin: 15px 0; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <canvas id="hollandRadarChart" width="280" height="280"></canvas>
                             </div>
-                            <div>
-                                <h4 style="color: #00B894; margin-bottom: 10px;">优势矩阵分析</h4>
-                                <div class="matrix-chart-container">
-                                    <canvas id="strengthsMatrixChart"></canvas>
-                                </div>
-                                <div style="text-align: center; margin-top: 10px; font-size: 12px; color: #666;">
-                                    <strong>核心优势：${data.coreStrengths.join('、')}</strong>
-                                </div>
+                            <div style="text-align: center; margin-top: 10px; font-size: 14px; color: #666;">
+                                <strong>你的霍兰德代码：${data.hollandCode}</strong>
                             </div>
                         </div>
                         
-                        <div style="margin-top: 20px;">
-                            <h4 style="color: #00B894; margin-bottom: 10px;">核心价值观</h4>
-                            <div class="values-cloud-container">
-                                <canvas id="valuesCloudChart"></canvas>
+                        <div style="margin-top: 30px;">
+                            <h4 style="color: #00B894; margin-bottom: 15px; font-size: 16px;">💪 优势矩阵分析</h4>
+                            <div class="chart-container" style="text-align: center; margin: 15px 0; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <canvas id="strengthsMatrixChart" width="320" height="280"></canvas>
                             </div>
-                            <div style="text-align: center; margin-top: 10px; font-size: 12px; color: #666;">
+                            <div style="text-align: center; margin-top: 10px; font-size: 14px; color: #666;">
+                                <strong>核心优势：${data.coreStrengths.join('、')}</strong>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 30px;">
+                            <h4 style="color: #00B894; margin-bottom: 15px; font-size: 16px;">❤️ 核心价值观</h4>
+                            <div class="chart-container" style="text-align: center; margin: 15px 0; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <canvas id="valuesCloudChart" width="280" height="120"></canvas>
+                            </div>
+                            <div style="text-align: center; margin-top: 10px; font-size: 14px; color: #666;">
                                 <strong>核心价值观：${data.coreValues.join('、')}</strong>
                             </div>
                         </div>
@@ -2159,22 +2158,50 @@ const ReportComponents = {
                 </section>
                 
                 <script>
+                    // 延迟渲染确保DOM已加载
                     setTimeout(() => {
+                        console.log('开始渲染图表...');
+                        
                         // 渲染霍兰德雷达图
-                        if (window.chartRenderer && data.hollandScores) {
+                        const hollandCanvas = document.getElementById('hollandRadarChart');
+                        if (hollandCanvas && window.chartRenderer && data.hollandScores) {
+                            console.log('渲染霍兰德雷达图:', data.hollandScores);
                             window.chartRenderer.renderHollandRadarChart(data.hollandScores, 'hollandRadarChart');
+                        } else {
+                            console.warn('霍兰德雷达图渲染条件不满足:', {
+                                canvas: !!hollandCanvas,
+                                renderer: !!window.chartRenderer,
+                                scores: !!data.hollandScores
+                            });
                         }
                         
                         // 渲染优势矩阵图
-                        if (window.chartRenderer && data.strengthScores && data.coreStrengths) {
+                        const matrixCanvas = document.getElementById('strengthsMatrixChart');
+                        if (matrixCanvas && window.chartRenderer && data.strengthScores && data.coreStrengths) {
+                            console.log('渲染优势矩阵图:', data.strengthScores);
                             window.chartRenderer.renderStrengthsMatrix(data.strengthScores, data.coreStrengths, 'strengthsMatrixChart');
+                        } else {
+                            console.warn('优势矩阵图渲染条件不满足:', {
+                                canvas: !!matrixCanvas,
+                                renderer: !!window.chartRenderer,
+                                scores: !!data.strengthScores,
+                                coreStrengths: !!data.coreStrengths
+                            });
                         }
                         
                         // 渲染价值观标签云
-                        if (window.chartRenderer && data.coreValues) {
+                        const valuesCanvas = document.getElementById('valuesCloudChart');
+                        if (valuesCanvas && window.chartRenderer && data.coreValues) {
+                            console.log('渲染价值观标签云:', data.coreValues);
                             window.chartRenderer.renderValuesCloud(data.coreValues, 'valuesCloudChart');
+                        } else {
+                            console.warn('价值观标签云渲染条件不满足:', {
+                                canvas: !!valuesCanvas,
+                                renderer: !!window.chartRenderer,
+                                values: !!data.coreValues
+                            });
                         }
-                    }, 100);
+                    }, 500);
                 </script>
             `;
         }
@@ -2226,26 +2253,26 @@ const ReportComponents = {
                 <div class="professional-advice">
                     <div class="advice-title">🎯 行动建议</div>
                     <div class="action-plan-content">
-                        <div class="action-category" style="margin-bottom: 20px;">
-                            <h4 style="color: #00B894; margin-bottom: 10px;">立即行动 (下周开始)</h4>
-                            <ul class="advice-list">
-                                ${plan.immediate.map(action => `<li>${action}</li>`).join('')}
+                        <div class="action-category" style="margin-bottom: 20px; padding: 20px; background: rgba(255, 255, 255, 0.8); border-radius: 8px; border-left: 4px solid #00B894;">
+                            <h4 style="color: #333; margin-bottom: 12px; font-size: 16px; font-weight: 600;">🚀 立即行动 (下周开始)</h4>
+                            <ul class="advice-list" style="color: #333;">
+                                ${plan.immediate.map(action => `<li style="margin-bottom: 8px;">${action}</li>`).join('')}
                             </ul>
                         </div>
                         
-                        <div class="action-category" style="margin-bottom: 20px;">
-                            <h4 style="color: #00B894; margin-bottom: 10px;">持续投资 (未来半年)</h4>
-                            <ul class="advice-list">
-                                ${plan.investment.map(action => `<li>${action}</li>`).join('')}
+                        <div class="action-category" style="margin-bottom: 20px; padding: 20px; background: rgba(255, 255, 255, 0.8); border-radius: 8px; border-left: 4px solid #00B894;">
+                            <h4 style="color: #333; margin-bottom: 12px; font-size: 16px; font-weight: 600;">📈 持续投资 (未来半年)</h4>
+                            <ul class="advice-list" style="color: #333;">
+                                ${plan.investment.map(action => `<li style="margin-bottom: 8px;">${action}</li>`).join('')}
                             </ul>
                         </div>
                         
-                        <div class="action-category">
-                            <h4 style="color: #00B894; margin-bottom: 10px;">长远布局 (职业发展)</h4>
-                            <p style="color: #333; margin: 0; padding: 10px; background: rgba(0, 184, 148, 0.1); border-radius: 6px;">${plan.longterm}</p>
+                        <div class="action-category" style="padding: 20px; background: rgba(255, 255, 255, 0.8); border-radius: 8px; border-left: 4px solid #00B894;">
+                            <h4 style="color: #333; margin-bottom: 12px; font-size: 16px; font-weight: 600;">🎯 长远布局 (职业发展)</h4>
+                            <p style="color: #333; margin: 0; line-height: 1.6;">${plan.longterm}</p>
                         </div>
                     </div>
-                    <div style="margin-top: 15px; font-size: 12px; opacity: 0.8; text-align: center;">
+                    <div style="margin-top: 20px; font-size: 12px; opacity: 0.8; text-align: center; color: #666;">
                         本测评基于霍兰德职业兴趣理论和优势识别理论，结果仅供参考
                     </div>
                 </div>
