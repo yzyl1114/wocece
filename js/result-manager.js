@@ -405,18 +405,40 @@ class ResultManager {
                 });
             }
             
-            const matrixSuccess = window.chartRenderer.safeRender(
-                'renderStrengthsMatrix',
-                strengthScoresData, // 🆕 确保传递对象格式
-                chartData.coreStrengths,
-                'strengthsMatrixChart'
-            );
+            console.log('🎯 渲染优势矩阵图参数检查:', {
+                strengthScores: strengthScoresData,
+                coreStrengths: chartData.coreStrengths,
+                canvasId: 'strengthsMatrixChart'
+            });
             
-            if (!matrixSuccess) {
+            // 🆕 修复：直接调用方法，不使用 safeRender
+            try {
+                const canvas = document.getElementById('strengthsMatrixChart');
+                if (!canvas) {
+                    console.error('❌ 优势矩阵图Canvas不存在');
+                    const fallback = document.getElementById('matrixFallback');
+                    if (fallback) {
+                        fallback.style.display = 'block';
+                        fallback.innerHTML = '<p>图表容器加载失败</p>';
+                    }
+                    return;
+                }
+                
+                // 直接调用渲染方法
+                window.chartRenderer.renderStrengthsMatrix(
+                    strengthScoresData,
+                    chartData.coreStrengths,
+                    'strengthsMatrixChart'
+                );
+                
+                console.log('✅ 优势矩阵图渲染调用完成');
+                
+            } catch (error) {
+                console.error('❌ 优势矩阵图渲染失败:', error);
                 const fallback = document.getElementById('matrixFallback');
                 if (fallback) {
                     fallback.style.display = 'block';
-                    fallback.innerHTML = '<p>优势矩阵图渲染失败，数据格式可能不正确</p>';
+                    fallback.innerHTML = `<p>图表渲染失败: ${error.message}</p>`;
                 }
             }
         }, 200);
