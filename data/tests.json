@@ -535,6 +535,50 @@
       "price": 0.01,
       "questions": 48,
       "image": "images/detail5.jpg",
+      "basicInfo": {
+        "questions": 48,
+        "duration": 15,
+        "reportType": "个性化职业发展报告"
+      },
+      "theory": {
+        "content": "职业优势罗盘融合霍兰德职业兴趣理论和盖洛普优势识别理论，通过三个维度精准定位你的职业身份：\n\n• 动力源泉 - 基于霍兰德RIASEC模型，识别你的职业兴趣倾向\n• 优势识别 - 评估18个核心才干，发现你的天赋优势组合\n• 工作价值观 - 明确驱动你职业发展的核心价值观\n\n这套科学的测评体系已在全球帮助数百万人找到职业方向。",
+        "image": null
+      },
+      "requirements": {
+        "content": "测评包含三个部分，请根据第一反应作答：",
+        "items": [
+          "第一部分：选择最符合你实际情况的选项",
+          "第二部分：判断描述与你的符合程度（1-4分）", 
+          "第三部分：选择你最看重的价值观和工作偏好",
+          "全程约需15分钟，请确保在安静环境中完成"
+        ],
+        "image": null
+      },
+      "reportExample": {
+        "steps": [
+          {
+            "title": "Step1",
+            "subtitle": "职业身份定位",
+            "description": "获得专属职业身份标签（如'战略架构师'、'精益求精的专家'等12种身份）"
+          },
+          {
+            "title": "Step2",
+            "subtitle": "黄金组合分析", 
+            "description": "霍兰德代码+核心优势+核心价值观的三维分析图谱"
+          },
+          {
+            "title": "Step3",
+            "subtitle": "职业路径地图",
+            "description": "从起步领域到新兴风口的完整发展路径规划"
+          },
+          {
+            "title": "Step4",
+            "subtitle": "个性化行动建议",
+            "description": "立即行动、持续投资、长远布局的三阶段发展计划"
+          }
+        ],
+        "image": null
+      },
       "questions": [
         {
           "id": 1,
