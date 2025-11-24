@@ -91,7 +91,6 @@ class TemplateEngine {
             styles: 'fun-styles'
         },
 
-        // 大明王朝模板
         'ming-dynasty': {
             components: [
                 'ming-header',
@@ -102,6 +101,20 @@ class TemplateEngine {
                 'save-actions'
             ],
             styles: 'fun-styles'
+        },
+
+        'career-compass': {
+            components: [
+                'career-header',
+                'career-identity',
+                'career-golden-combination',
+                'career-holland-radar',
+                'career-strengths-bars', 
+                'career-path-map',
+                'career-action-plan',
+                'save-actions'
+            ],
+            styles: 'career-styles'
         },
     };
 
@@ -147,6 +160,12 @@ class TemplateEngine {
         if (testConfig && testConfig.id === '4') {
             console.log('使用大明王朝模板');
             return this.constructor.TEMPLATES['ming-dynasty'];
+        }
+
+        // 职业优势罗盘测试
+        if (testConfig && testConfig.id === '5') {
+            console.log('使用职业优势罗盘模板');
+            return this.constructor.TEMPLATES['career-compass'];
         }
 
         // 原有逻辑作为备用

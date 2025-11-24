@@ -80,7 +80,8 @@ class PsychTestApp {
                 title: '你的精神老家',
                 description: '你的性格最适合居住在哪个城市',
                 category: 'fun',
-                price: 1,
+                templateType: 'fun',
+                price: 0.01,
                 questions: 10,
                 image: 'images/test1.jpg'
             },
@@ -99,7 +100,8 @@ class PsychTestApp {
                 title: '你是什么型恋人',
                 description: '探索你在亲密关系中的习惯与偏好',
                 category: 'fun',
-                price: 1,
+                templateType: 'fun',
+                price: 0.01,
                 questions: 10,
                 image: 'images/test3.jpg'
             },
@@ -108,17 +110,19 @@ class PsychTestApp {
                 title: '大明王朝职场生存人格',
                 description: '测测你是《大明王朝1566》里的谁？',
                 category: 'fun',
-                price: 1,
+                templateType: 'fun',
+                price: 0.01,
                 questions: 12,
                 image: 'images/test4.jpg'
             },
             {
                 id: '5',
-                title: '情绪管理测试',
-                description: '了解你的情绪管理能力',
-                category: 'fun',
-                price: 1,
-                questions: 10,
+                title: '职业优势罗盘',
+                description: '发现你的天赋，导航职业未来',
+                category: 'standard',
+                templateType: 'standard',
+                price: 0.01,
+                questions: 48,
                 image: 'images/test5.jpg'
             },
             {
@@ -142,14 +146,14 @@ class PsychTestApp {
                 image: 'images/test7.jpg'
             },
             {
-            id: '8',
-            title: '精神需求测试',
-            description: '发现你内心的精神驱动力',
-            category: 'standard',
-            templateType: 'standard',
-            price: 0.01,
-            questions: 60,
-            image: 'images/test8.jpg'
+                id: '8',
+                title: '精神需求测试',
+                description: '发现你内心的精神驱动力',
+                category: 'standard',
+                templateType: 'standard',
+                price: 0.01,
+                questions: 60,
+                image: 'images/test8.jpg'
             }            
         ];
     }

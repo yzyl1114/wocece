@@ -17,6 +17,8 @@ class CalculationManager {
                 return this.calculateRelationshipComfort(answers, testData);
             case '4':
                 return this.calculateMingDynasty(answers, testData);
+            case '5': 
+                return this.calculateCareerCompass(answers, testData);
             case '6':
                 return this.calculateSCL90(answers, testData);
             case '7':
@@ -1108,6 +1110,259 @@ class CalculationManager {
         
         return reportMap[character] || reportMap['胡宗宪'];
     }
+
+    /**
+     * 职业优势罗盘计分逻辑 - 测试ID: 5
+     */
+    calculateCareerCompass(answers, testData) {
+        // 第一部分：霍兰德兴趣 (1-24题)
+        const hollandScores = { R: 0, I: 0, A: 0, S: 0, E: 0, C: 0 };
+        
+        // 霍兰德题目映射 (1-24题)
+        const hollandMapping = {
+            1: { A: 'I', B: 'R', C: 'E', D: 'C' },
+            2: { A: 'A', B: 'C', C: 'S', D: 'R' },
+            3: { A: 'A', B: 'E', C: 'I', D: 'I' },
+            4: { A: 'C', B: 'I', C: 'S', D: 'R' },
+            5: { A: 'R', B: 'E', C: 'A', D: 'I' },
+            6: { A: 'E', B: 'C', C: 'A', D: 'S' },
+            7: { A: 'A', B: 'S', C: 'C', D: 'R' },
+            8: { A: 'C', B: 'I', C: 'A', D: 'S' },
+            9: { A: 'I', B: 'R', C: 'E', D: 'S' },
+            10: { A: 'I', B: 'A', C: 'S', D: 'E' },
+            11: { A: 'I', B: 'R', C: 'E', D: 'A' },
+            12: { A: 'C', B: 'I', C: 'S', D: 'A' },
+            13: { A: 'R', B: 'I', C: 'E', D: 'A' },
+            14: { A: 'C', B: 'I', C: 'E', D: 'S' },
+            15: { A: 'R', B: 'I', C: 'E', D: 'A' },
+            16: { A: 'E', B: 'C', C: 'A', D: 'S' },
+            17: { A: 'R', B: 'I', C: 'A', D: 'S' },
+            18: { A: 'E', B: 'S', C: 'C', D: 'A' },
+            19: { A: 'C', B: 'A', C: 'S', D: 'R' },
+            20: { A: 'R', B: 'I', C: 'I', D: 'A' },
+            21: { A: 'I', B: 'E', C: 'S', D: 'A' },
+            22: { A: 'I', B: 'C', C: 'S', D: 'A' },
+            23: { A: 'R', B: 'A', C: 'S', D: 'I' },
+            24: { A: 'C', B: 'A', C: 'I', D: 'S' }
+        };
+
+        // 计算霍兰德分数
+        for (let i = 0; i < 24; i++) {
+            const questionNum = i + 1;
+            const answer = answers[i];
+            const type = hollandMapping[questionNum]?.[answer];
+            if (type) {
+                hollandScores[type]++;
+            }
+        }
+
+        // 获取霍兰德主代码 (前3个)
+        const hollandEntries = Object.entries(hollandScores);
+        hollandEntries.sort((a, b) => b[1] - a[1]);
+        const hollandCode = hollandEntries.slice(0, 3).map(entry => entry[0]).join('');
+
+        // 第二部分：核心优势 (25-42题)
+        const strengthScores = {
+            '分析': 0, '行动': 0, '适应': 0, '沟通': 0, '竞争': 0, '关联': 0,
+            '伯乐': 0, '纪律': 0, '体谅': 0, '专注': 0, '和谐': 0, '理念': 0,
+            '包容': 0, '责任': 0, '排难': 0, '自信': 0, '战略': 0, '统率': 0
+        };
+
+        const strengthMapping = {
+            25: '纪律', 26: '体谅', 27: '分析', 28: '排难', 29: '竞争', 30: '关联',
+            31: '沟通', 32: '自信', 33: '沟通', 34: '伯乐', 35: '分析', 36: '战略',
+            37: '专注', 38: '责任', 39: '适应', 40: '统率', 41: '分析', 42: '行动'
+        };
+
+        // 计算优势分数 (25-42题，答案1-4分)
+        for (let i = 24; i < 42; i++) {
+            const questionNum = i + 1;
+            const answer = parseInt(answers[i]);
+            const strength = strengthMapping[questionNum];
+            if (strength && !isNaN(answer) && answer >= 1 && answer <= 4) {
+                strengthScores[strength] += answer;
+            }
+        }
+
+        // 获取核心优势 (前5个)
+        const strengthEntries = Object.entries(strengthScores);
+        strengthEntries.sort((a, b) => b[1] - a[1]);
+        const coreStrengths = strengthEntries.slice(0, 5).map(entry => entry[0]);
+
+        // 第三部分：工作价值观 (43-48题)
+        const valueScores = {
+            '成就回报': 0, '稳定安全': 0, '独立自主': 0, '服务利他': 0,
+            '技术专精': 0, '影响他人': 0, '创新创造': 0, '成长发展': 0
+        };
+
+        const valueMapping = {
+            43: { A: '成就回报', B: '稳定安全', C: '独立自主', D: '服务利他' },
+            44: { A: '技术专精', B: '影响他人', C: '创新创造', D: '成长发展' },
+            45: { A: '创新创造', B: '稳定安全', C: '成长发展', D: '稳定安全' },
+            46: { A: '成长发展', B: '稳定安全', C: '成就回报', D: '独立自主' },
+            47: { A: '成就回报', B: '独立自主', C: '独立自主', D: '影响他人' },
+            48: { A: '成就回报', B: '稳定安全', C: '独立自主', D: '成就回报' }
+        };
+
+        // 计算价值观分数
+        for (let i = 42; i < 48; i++) {
+            const questionNum = i + 1;
+            const answer = answers[i];
+            const value = valueMapping[questionNum]?.[answer];
+            if (value) {
+                valueScores[value]++;
+            }
+        }
+
+        // 获取核心价值观 (前2个)
+        const valueEntries = Object.entries(valueScores);
+        valueEntries.sort((a, b) => b[1] - a[1]);
+        const coreValues = valueEntries.slice(0, 2).map(entry => entry[0]);
+
+        // 身份匹配逻辑
+        const identity = this.matchCareerIdentity(hollandCode, coreStrengths);
+        
+        // 生成黄金组合描述
+        const goldenCombination = this.generateGoldenCombination(hollandCode, coreStrengths);
+
+        return {
+            score: this.calculateCareerScore(hollandScores, strengthScores),
+            hollandCode: hollandCode,
+            hollandScores: hollandScores,
+            coreStrengths: coreStrengths,
+            strengthScores: strengthScores,
+            coreValues: coreValues,
+            identity: identity,
+            goldenCombination: goldenCombination,
+            testType: 'career_compass',
+            testId: '5',
+            detailedAnalysis: this.generateCareerAnalysis(identity, hollandCode, coreStrengths, coreValues)
+        };
+    }
+
+    /**
+     * 匹配职业身份
+     */
+    matchCareerIdentity(hollandCode, coreStrengths) {
+        const primaryType = hollandCode[0]; // 取第一个字母作为主类型
+        
+        const identityMatrix = {
+            'R': {
+                '排难,专注': { id: 'R_01', name: '精益求精的专家' },
+                '责任,纪律': { id: 'R_02', name: '稳健的守护者' }
+            },
+            'I': {
+                '分析,战略': { id: 'I_01', name: '深度分析师' },
+                '战略,理念': { id: 'I_02', name: '战略架构师' }
+            },
+            'A': {
+                '理念,自信': { id: 'A_01', name: '特立独行的创作者' },
+                '沟通,适应': { id: 'A_02', name: '故事讲述者' }
+            },
+            'S': {
+                '体谅,和谐': { id: 'S_01', name: '心灵关怀师' },
+                '伯乐,自信': { id: 'S_02', name: '激励型导师' }
+            },
+            'E': {
+                '统率,竞争': { id: 'E_01', name: '雄心勃勃的领导者' },
+                '沟通,适应': { id: 'E_02', name: '魅力影响者' }
+            },
+            'C': {
+                '纪律,专注': { id: 'C_01', name: '高效执行者' },
+                '责任,和谐': { id: 'C_02', name: '可靠大管家' }
+            }
+        };
+
+        const top2Strengths = coreStrengths.slice(0, 2).join(',');
+        const matrix = identityMatrix[primaryType];
+        
+        if (matrix && matrix[top2Strengths]) {
+            return matrix[top2Strengths];
+        }
+        
+        // 默认身份
+        const defaultIdentities = {
+            'R': { id: 'R_01', name: '精益求精的专家' },
+            'I': { id: 'I_01', name: '深度分析师' },
+            'A': { id: 'A_01', name: '特立独行的创作者' },
+            'S': { id: 'S_01', name: '心灵关怀师' },
+            'E': { id: 'E_01', name: '雄心勃勃的领导者' },
+            'C': { id: 'C_01', name: '高效执行者' }
+        };
+        
+        return defaultIdentities[primaryType] || { id: 'G_01', name: '多面发展者' };
+    }
+
+    /**
+     * 生成黄金组合描述
+     */
+    generateGoldenCombination(hollandCode, coreStrengths) {
+        const hollandDescriptions = {
+            'R': '你热衷于运用工具和技术解决具体问题',
+            'I': '你享受透过现象探究事物背后的原理与规律', 
+            'A': '你渴望通过新颖、独特的方式来表达自我和创意',
+            'S': '你真诚地关心他人，并从帮助与合作中获得能量',
+            'E': '你乐于影响和带动他人，为实现目标不懈努力',
+            'C': '你重视秩序与效率，善于在清晰的框架内追求卓越'
+        };
+
+        const strengthDescriptions = {
+            '分析': '而分析的优势让你不满足于表面答案，总能洞察到更深层的逻辑关联。',
+            '排难': '而排难的本能让你在面对挑战时异常兴奋，善于从复杂局面中找到突破口。',
+            '沟通': '而沟通的才干让你能清晰地阐述复杂概念，有效地与他人达成共识。',
+            '统率': '而统率的魄力让你敢于在不确定性中做出决策，带领人们朝着目标前进。',
+            '专注': '而专注的特质让你能够长时间深耕于复杂任务，确保成果的深度与质量。',
+            '适应': '而适应的灵活性让你不惧变化，能在外界环境变动时迅速调整策略。',
+            '理念': '而理念的思维让你总能连接不相关的领域，产生出人意料的新颖想法。',
+            '责任': '而责任感驱使你对承诺一丝不苟，是团队中最值得信赖的伙伴。',
+            '纪律': '而纪律性让你为自己和团队建立高效的工作节奏，保证计划的稳步推进。',
+            '体谅': '而体谅之心让你能敏锐感知他人的情绪与需求，自然而然地提供支持。',
+            '行动': '而行动力让你不尚空谈，总是第一时间将想法付诸实践。',
+            '竞争': '而竞争意识推动你不断设定更高目标，在压力下表现更佳。',
+            '关联': '而关联思维让你善于发现事物间的内在联系，构建整体认知。',
+            '伯乐': '而伯乐的眼光让你善于发现他人潜能，并乐于帮助他们成长。',
+            '和谐': '而和谐的需求让你致力于营造积极合作的团队氛围。',
+            '自信': '而自信心让你对自己的判断充满信心，敢于坚持己见。',
+            '战略': '而战略思维让你总能从全局视角规划路径，预见未来趋势。'
+        };
+
+        const primaryType = hollandCode[0];
+        let combination = hollandDescriptions[primaryType] || '你拥有独特的职业特质';
+        
+        // 添加前两个优势的描述
+        if (coreStrengths.length > 0) {
+            combination += strengthDescriptions[coreStrengths[0]] || '';
+        }
+        if (coreStrengths.length > 1) {
+            combination += strengthDescriptions[coreStrengths[1]] || '';
+        }
+        
+        combination += '这二者的结合，使你在职业发展中具备了独特的竞争优势。';
+        
+        return combination;
+    }
+
+    /**
+     * 计算职业测评分数
+     */
+    calculateCareerScore(hollandScores, strengthScores) {
+        const hollandTotal = Object.values(hollandScores).reduce((sum, score) => sum + score, 0);
+        const strengthTotal = Object.values(strengthScores).reduce((sum, score) => sum + score, 0);
+        
+        // 标准化到0-100分
+        const hollandPercent = (hollandTotal / 24) * 50; // 霍兰德部分占50分
+        const strengthPercent = (strengthTotal / (18 * 4)) * 50; // 优势部分占50分
+        
+        return Math.round(hollandPercent + strengthPercent);
+    }
+
+    /**
+     * 生成职业分析
+     */
+    generateCareerAnalysis(identity, hollandCode, coreStrengths, coreValues) {
+        return `基于48个维度的深度探索，你的职业身份是「${identity.name}」。你的霍兰德代码为${hollandCode}，核心优势包括${coreStrengths.join('、')}，最重视的价值观是${coreValues.join('和')}。这份报告将为你揭示独特的职业发展路径。`;
+    }
+
 }
 // 全局计算实例
 window.calculationManager = new CalculationManager();

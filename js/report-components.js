@@ -1767,6 +1767,197 @@ const ReportComponents = {
         }
     },
 
+    // 职业测评头部组件
+    'career-header': {
+        render: (data, config) => {
+            const headerColor = '#00B894';
+            
+            return `
+                <section class="result-header" style="background: linear-gradient(135deg, ${headerColor}, #00CEC9); padding: 25px 15px; height: 160px;">
+                    <div class="result-content">
+                        <div class="result-label" style="margin-bottom: 8px;">你的职业身份</div>
+                        <div class="result-text" style="font-size: 26px;">${data.identity.name}</div>
+                        <div class="score-label" style="color: white; opacity: 0.9; margin-top: 5px;">职业匹配度 ${data.score}%</div>
+                    </div>
+                </section>
+            `;
+        }
+    },
+
+    // 职业身份展示
+    'career-identity': {
+        render: (data, config) => {
+            const identityData = {
+                'R_01': {
+                    slogan: '系统与质量的终极守护者',
+                    desc: '当他人为复杂问题感到焦虑时，你却能沉浸在排除故障、优化流程的心流中。你相信，卓越藏于细节，而你的价值就在于用专业的技术和严谨的态度，将抽象的标准变为无可挑剔的现实。'
+                },
+                'R_02': {
+                    slogan: '组织中最可靠的基石', 
+                    desc: '你坚信，卓越的运营源于对流程的尊重和对承诺的恪守。你并非追求闪光灯的焦点，而是在幕后确保一切井井有条、稳步运行的关键人物。'
+                },
+                'I_01': {
+                    slogan: '真相的挖掘者与智慧的提炼者',
+                    desc: '在信息爆炸的时代，你善于拨开迷雾，通过严谨的逻辑与数据，洞察事物背后的本质与规律。你不满足于表面的"是什么"，而是执着于探究深层的"为什么"。'
+                },
+                'I_02': {
+                    slogan: '未来的构建者与蓝图的绘制者',
+                    desc: '你拥有在混沌中预见秩序、在平凡中发现可能的非凡能力。你总是比别人想得更远、更系统，善于将分散的灵感编织成清晰的、可执行的战略路径。'
+                },
+                'A_01': {
+                    slogan: '独特视角的美学创造者',
+                    desc: '你眼中的世界充满无限可能，常规与束缚让你感到窒息。你渴望通过独特的表达方式，将内心的情感与思考转化为触动他人的作品。'
+                },
+                'A_02': {
+                    slogan: '情感共鸣的故事编织者',
+                    desc: '你善于捕捉生活中的细微情感，并用生动的方式将其呈现。你的表达不仅传递信息，更能引发共鸣，在人与人之间搭建理解的桥梁。'
+                },
+                'S_01': {
+                    slogan: '温暖坚定的心灵支持者',
+                    desc: '你天生具备理解他人、抚慰人心的能力。在快节奏的社会中，你的存在就像一处宁静的港湾，为疲惫的灵魂提供慰藉与力量。'
+                },
+                'S_02': {
+                    slogan: '潜能发掘的人生导师', 
+                    desc: '你有一双发现他人闪光点的眼睛，并真心为他人的成长感到喜悦。你不仅是知识的传授者，更是信心的建立者和梦想的点燃者。'
+                },
+                'E_01': {
+                    slogan: '目标驱动的团队引领者',
+                    desc: '你享受在复杂局面中做出决策的快感，善于凝聚团队力量攻克难关。对你而言，最大的成就感来自于带领团队实现那些看似不可能的目标。'
+                },
+                'E_02': {
+                    slogan: '人际网络的魅力连接者',
+                    desc: '你拥有感染他人的热情和构建关系网络的天赋。通过真诚的沟通和富有说服力的表达，你能将不同背景的人凝聚在共同的目标周围。'
+                },
+                'C_01': {
+                    slogan: '流程优化的高效执行者',
+                    desc: '在混乱中建立秩序是你的天赋。你擅长将复杂任务分解为清晰的步骤，并通过严格的自我要求确保每个环节的精准执行。'
+                },
+                'C_02': {
+                    slogan: '体系维护的可靠管理者',
+                    desc: '你重视稳定与可预测性，是组织正常运转的保障者。通过建立清晰的规则和流程，你为团队创造了一个高效且安心的工作环境。'
+                }
+            };
+
+            const currentIdentity = identityData[data.identity.id] || identityData['R_01'];
+            
+            return `
+                <section class="analysis-section">
+                    <div class="slogan-content" style="text-align: center; padding: 20px 0;">
+                        <div class="slogan-text" style="font-size: 18px; font-weight: 300; color: #00B894; line-height: 1.6; font-style: italic;">
+                            "${currentIdentity.slogan}"
+                        </div>
+                        <div class="identity-desc" style="margin-top: 15px; font-size: 15px; line-height: 1.7; color: #666; text-align: justify;">
+                            ${currentIdentity.desc}
+                        </div>
+                    </div>
+                </section>
+            `;
+        }
+    },
+
+    // 黄金组合描述
+    'career-golden-combination': {
+        render: (data, config) => {
+            return `
+                <section class="analysis-section">
+                    <h3>🎯 你的黄金组合</h3>
+                    <div class="analysis-content">
+                        <p style="font-size: 15px; line-height: 1.8; color: #333; text-align: justify;">
+                            ${data.goldenCombination}
+                        </p>
+                        <div style="margin-top: 15px; padding: 12px; background: #f8f9fa; border-radius: 8px;">
+                            <strong>霍兰德代码：</strong>${data.hollandCode} | 
+                            <strong>核心优势：</strong>${data.coreStrengths.join('、')} | 
+                            <strong>核心价值观：</strong>${data.coreValues.join('、')}
+                        </div>
+                    </div>
+                </section>
+            `;
+        }
+    },
+
+    // 职业路径地图
+    'career-path-map': {
+        render: (data, config) => {
+            const pathData = {
+                'R_01': {
+                    start: 'DevOps工程师、QE工程师、精密仪器维修师',
+                    master: '从技术支援走向高级工程师或技术专家，在特定领域成为首席技师',
+                    cross: '从技术岗转向技术培训师，或成为技术文档工程师',
+                    trend: 'AI运维专家 - 利用IoT和AI技术，实现设备的预测性维护'
+                },
+                'R_02': {
+                    start: '供应链管理、IT支持、合规专员',
+                    master: '成为生产经理、运维经理、质量体系负责人', 
+                    cross: '项目经理（尤其擅长执行期）',
+                    trend: '数据治理专家 - 为企业建立可靠、安全、合规的数据管理框架'
+                }
+                // 其他身份的数据可以继续添加...
+            };
+
+            const currentPath = pathData[data.identity.id] || pathData['R_01'];
+            
+            return `
+                <section class="analysis-section">
+                    <h3>🗺️ 你的职业路径地图</h3>
+                    <div class="career-path-content">
+                        <div class="path-item">
+                            <h4 style="color: #00B894; margin-bottom: 8px;">🚀 起步领域</h4>
+                            <p>${currentPath.start}</p>
+                        </div>
+                        <div class="path-item">
+                            <h4 style="color: #00B894; margin-bottom: 8px;">📈 精通路径</h4>
+                            <p>${currentPath.master}</p>
+                        </div>
+                        <div class="path-item">
+                            <h4 style="color: #00B894; margin-bottom: 8px;">🔄 跨界可能</h4>
+                            <p>${currentPath.cross}</p>
+                        </div>
+                        <div class="path-item">
+                            <h4 style="color: #00B894; margin-bottom: 8px;">💡 新兴风口</h4>
+                            <p>${currentPath.trend}</p>
+                        </div>
+                    </div>
+                </section>
+            `;
+        }
+    },
+
+    // 行动计划
+    'career-action-plan': {
+        render: (data, config) => {
+            return `
+                <div class="professional-advice">
+                    <div class="advice-title">🎯 行动建议</div>
+                    <ul class="advice-list">
+                        <li><strong>立即行动 (下周开始)：</strong>
+                            <ul>
+                                <li>梳理你的核心技能，制作一份个人能力清单</li>
+                                <li>关注3个与你职业身份相关的行业公众号或博主</li>
+                                <li>尝试用你的优势解决一个工作或生活中的实际问题</li>
+                            </ul>
+                        </li>
+                        <li><strong>持续投资 (未来半年)：</strong>
+                            <ul>
+                                <li>深入学习一项与你的霍兰德代码相关的专业技能</li>
+                                <li>建立行业人脉，参加相关领域的线下活动或社群</li>
+                            </ul>
+                        </li>
+                        <li><strong>长远布局 (职业发展)：</strong>
+                            <ul>
+                                <li>在3-5年内成为你所在领域的专业人才</li>
+                                <li>持续关注行业趋势，适时调整职业发展方向</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <div style="margin-top: 15px; font-size: 12px; opacity: 0.8; text-align: center;">
+                        本测评基于霍兰德职业兴趣理论和优势识别理论，结果仅供参考
+                    </div>
+                </div>
+            `;
+        }
+    },
+
     // === 行动组件 ===
     'save-actions': {
         render: (data, config) => `
