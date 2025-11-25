@@ -72,7 +72,6 @@ class TemplateEngine {
         'holland-adapt': {
             components: [
                 'holland-header',
-                'holland-slogan',
                 'holland-core-traits', 
                 'holland-world-script',
                 'holland-reality-awakening',

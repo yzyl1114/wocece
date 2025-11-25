@@ -1563,20 +1563,8 @@ const ReportComponents = {
     'holland-header': {
         render: (data, config) => {
             const headerColor = '#00B894';
-            
-            return `
-                <section class="result-header" style="background: linear-gradient(135deg, ${headerColor}, #00CEC9); padding: 25px 15px; height: 160px;">
-                    <div class="result-content">
-                        <div class="result-label" style="margin-bottom: 8px;">你的异世界身份</div>
-                        <div class="result-text" style="font-size: 26px;">${data.resultName}</div>
-                    </div>
-                </section>
-            `;
-        }
-    },
-
-    'holland-slogan': {
-        render: (data, config) => {
+         
+            // 获取对应的slogan
             const slogans = {
                 'A': '万物皆可造，世界在手中。',
                 'B': '真理是唯一的信仰。',
@@ -1600,16 +1588,15 @@ const ReportComponents = {
                 'DF': '卓越的治理，是无声的史诗。',
                 'EF': '用温暖的制度，守护每一个人。',
                 'MULTI': '构想、解构、然后亲手创造新世界。'
-            };
-            
+            };   
             const slogan = slogans[data.resultType] || '发现你的独特天赋，创造无限可能。';
             
             return `
-                <section class="analysis-section">
-                    <div class="slogan-content" style="text-align: center; padding: 20px 0;">
-                        <div class="slogan-text" style="font-size: 18px; font-weight: 300; color: #00B894; line-height: 1.6; font-style: italic;">
-                            "${slogan}"
-                        </div>
+                <section class="result-header" style="background: linear-gradient(135deg, ${headerColor}, #00CEC9); padding: 25px 15px; height: 160px;">
+                    <div class="result-content">
+                        <div class="result-label" style="margin-bottom: 8px;">你的异世界身份</div>
+                        <div class="result-text" style="font-size: 26px;">${data.resultName}</div>
+                        <div class="score-label" style="color: white; opacity: 0.9; margin-top: 5px; font-style: italic;">${slogan}</div>
                     </div>
                 </section>
             `;
