@@ -78,7 +78,7 @@ class PsychTestApp {
             {
                 id: '1',
                 title: '你的精神老家',
-                description: '你的性格最适合居住在哪个城市',
+                description: '你的性格最适合居住在哪个城市？',
                 category: 'fun',
                 templateType: 'fun',
                 price: 0.01,
@@ -88,7 +88,7 @@ class PsychTestApp {
             {
                 id: '2',
                 title: '你在异世界的职业', 
-                description: '9题解锁你的隐藏天赋，发现你的异世界命定身份！',
+                description: '解锁你的隐藏天赋，发现异世界命定身份！',
                 category: 'fun',
                 templateType: 'fun',
                 price: 0.01,
@@ -98,7 +98,7 @@ class PsychTestApp {
             {
                 id: '3',
                 title: '你是什么型恋人',
-                description: '探索你在亲密关系中的习惯与偏好',
+                description: '你是独立猫猫型还是阳光树懒型？探索你的亲密关系模式',
                 category: 'fun',
                 templateType: 'fun',
                 price: 0.01,
@@ -108,7 +108,7 @@ class PsychTestApp {
             {
                 id: '4',
                 title: '大明王朝职场生存人格',
-                description: '测测你是《大明王朝1566》里的谁？',
+                description: '测一测你是《大明王朝1566》里的谁？',
                 category: 'fun',
                 templateType: 'fun',
                 price: 0.01,
@@ -117,8 +117,8 @@ class PsychTestApp {
             },
             {
                 id: '5',
-                title: '职业优势罗盘',
-                description: '发现你的天赋，导航职业未来',
+                title: '职业优势识别器（专业版）',
+                description: '发现你的天赋和优势能力，为你导航职业未来',
                 category: 'standard',
                 templateType: 'standard',
                 price: 0.01,
@@ -127,8 +127,8 @@ class PsychTestApp {
             },
             {
                 id: '6',  // SCL-90测试
-                title: 'SCL-90心理健康测试',
-                description: '专业心理健康状态评估',
+                title: 'SCL-90心理健康测试（专业版）',
+                description: '90题全面扫描你的心理健康状态，提供改善方案',
                 category: 'standard',
                 templateType: 'standard', // 新增字段
                 price: 0.01,
@@ -148,9 +148,9 @@ class PsychTestApp {
             {
                 id: '8',
                 title: '精神需求测试',
-                description: '发现你内心的精神驱动力',
-                category: 'standard',
-                templateType: 'standard',
+                description: '你最核心的精神驱动力是什么？是权力金钱还是爱？',
+                category: 'fun',
+                templateType: 'fun',
                 price: 0.01,
                 questions: 60,
                 image: 'images/test8.jpg'
@@ -167,7 +167,7 @@ class PsychTestApp {
         const featuredContainer = document.getElementById('featuredTests');
         if (featuredContainer) {
             // 指定2个测试作为特色测试
-            const featuredIds = ['6', '7'];
+            const featuredIds = ['4', '5'];
             const featuredTests = this.tests.filter(test => featuredIds.includes(test.id));
             
             featuredContainer.innerHTML = featuredTests.map(test => `
