@@ -840,7 +840,7 @@ class ResultManager {
      */
     async loadRecommendations() {
         try {
-            const recommendations = await this.getRandomRecommendations(3);
+            const recommendations = await this.getRandomRecommendations(2);
             this.renderRecommendations(recommendations);
         } catch (error) {
             console.error('加载推荐失败:', error);
@@ -850,7 +850,7 @@ class ResultManager {
     /**
      * 获取随机推荐测试
      */
-    async getRandomRecommendations(count = 3) {
+    async getRandomRecommendations(count = 2) {
         try {
             // 修改这一行：从 tests.json → app.js
             const allTests = window.app?.tests || [];

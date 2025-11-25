@@ -183,6 +183,8 @@
             font-size: 16px;
             opacity: 0.9;
             font-weight: 500;
+            color: white !important;
+            opacity: 0.9;
         }
 
         .result-label {
@@ -217,7 +219,7 @@
         .analysis-content {
             line-height: 1.8;
             color: #666;
-            text-align: justify;
+            text-align: left;
         }
 
         /* 维度项目基础样式 */
@@ -290,8 +292,13 @@
             color: #666;
             line-height: 1.8;
         }
-
-        /* 行动按钮 */
+        
+        /* 隐藏保存按钮 */
+        #saveResultBtn,
+        .action-btn.secondary[onclick*="saveResultAsImage"] {
+            display: none !important;
+        }
+        
         .result-actions {
             display: flex;
             gap: 10px;
@@ -319,9 +326,14 @@
             border: 2px solid #00B894; /* 修改：更新颜色 */
         }
 
+        /* 如果只有一个按钮，让它居中显示 */
+        .result-actions:has(button:only-child) {
+            justify-content: center;
+        }
+
         /* 推荐区域 */
         .recommendations {
-            margin: 30px 0;
+            margin: 10px; /* 减少上边距 */
         }
 
         .recommendations h3 {
