@@ -165,17 +165,11 @@
             margin: -15px -15px 20px -15px;
         }
 
-        /* 针对异世界职业测评的头图调整 */
-        .result-header:has(.result-label:contains("你的异世界身份")) .result-content {
-            padding-top: 20px;
-        }
-
-        .result-header:has(.result-label:contains("你的异世界身份")) .result-label {
-            margin-bottom: 15px;
-        }
-
-        .result-header:has(.result-label:contains("你的异世界身份")) .result-text {
-            margin-top: 10px;
+        /* 调整ID2头图高度 */
+        .result-header:has(.result-label:contains("你的异世界身份")) {
+            height: 130px !important; /* 从160px减小到130px */
+            padding: 20px 20px !important;
+            min-height: auto !important;
         }
 
         .result-title {
