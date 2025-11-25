@@ -8,12 +8,13 @@
     <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
-    <div class="container">
-        <!-- 顶部导航 -->
-        <nav class="navbar">
+    <nav class="navbar">
+        <div class="container">
             <div class="logo" id="backButton">← 返回</div>
-        </nav>
+        </div>
+    </nav>
 
+    <div class="container">
         <!-- 测试封面 -->
         <div class="test-cover">
             <img id="testCoverImage" src="" alt="测试封面" class="cover-image">
@@ -542,14 +543,21 @@
             position: relative;
             min-height: 100vh;
         }
-        /* 修复返回按钮样式 */
+
         .navbar {
+            width: 100%;
             display: flex;
             align-items: center;
-            padding: 20px 15px 15px; /* 增加上边距，向下移动 */
+            padding: 20px 15px 15px;
             background: #00B894;
-            border-bottom: 1px solid var(--border-color);
-            min-height: 60px; /* 确保有足够高度 */
+            border-bottom: none;
+            min-height: 60px;
+        }
+
+        .navbar .container {
+            display: flex;
+            align-items: center;
+            padding: 20px 15px 15px;
         }
 
         .logo {
