@@ -11,12 +11,12 @@
     <div class="container">
         <!-- 导航栏 -->
         <nav class="navbar">
-            <div class="logo" id="backButton">← 返回</div>
+            <div class="nav-back" id="backButton">← 返回</div>
             <div class="nav-title" id="testTitle">测试标题</div>
-            <div class="nav-placeholder"></div> <!-- 右侧留空 -->
+            <div class="nav-placeholder"></div>
         </nav>
 
-        <!-- 进度条区域 - 替换原来的test-header -->
+        <!-- 进度条区域 -->
         <section class="progress-section">
             <div class="progress-bar-container">
                 <div class="progress-bar">
@@ -650,8 +650,7 @@
             display: flex;
             flex-direction: column;
             padding: 0;
-            margin: 0 auto;
-             margin: 0 auto; /* 添加这行实现居中 */
+            margin: 0 auto; /* 添加这行实现居中 */
             max-width: 750px;
             width: 100%;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
@@ -677,6 +676,7 @@
             cursor: pointer;
             color: white;
             flex-shrink: 0;
+            padding: 8px 0;
         }
 
         .nav-title {
@@ -694,13 +694,6 @@
         .nav-placeholder {
             width: 60px; /* 与返回按钮宽度平衡 */
             flex-shrink: 0;
-        }
-
-        .logo {
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            color: #00B894; /* 修改：更新颜色 */
         }
 
         /* 进度条区域 */
@@ -760,7 +753,7 @@
             font-weight: 600;
             line-height: 1.5;
             color: #333;
-            text-align: center;
+            text-align: left;
             margin: 0;
             padding: 0 10px;
         }
