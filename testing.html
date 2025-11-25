@@ -624,6 +624,7 @@
             min-height: 100vh;
             max-height: 100vh;
             overflow: hidden;
+            width: 100%;
         }
 
         .container {
@@ -632,9 +633,10 @@
             flex-direction: column;
             padding: 0;
             margin: 0 auto;
-            max-width: 750px; /* 最大宽度限制 */
+             margin: 0 auto; /* 添加这行实现居中 */
+            max-width: 750px;
             width: 100%;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1); /* 添加阴影增强立体感 */
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
             background: white;
         }
 
@@ -1031,6 +1033,22 @@
             .container {
                 max-width: 100%;
                 box-shadow: none;
+            }
+        }
+
+        /* 在大屏幕上确保居中 */
+        @media (min-width: 751px) {
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%);
+            }
+            
+            .container {
+                margin: 0 auto;
+                height: 100vh;
+                max-height: 100vh;
             }
         }
 
