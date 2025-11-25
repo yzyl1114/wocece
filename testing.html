@@ -12,18 +12,17 @@
         <!-- 导航栏 -->
         <nav class="navbar">
             <div class="logo" id="backButton">← 返回</div>
-            <div class="progress-info">
-                <span id="progressText">第1题/共10题</span>
-            </div>
+            <div class="nav-title" id="testTitle">测试标题</div>
+            <div class="nav-placeholder"></div> <!-- 右侧留空 -->
         </nav>
 
-        <!-- 测试头图 -->
-        <section class="test-header" id="testHeader">
-            <div class="header-image">
-                <img id="testCover" src="" alt="测试封面">
-            </div>
-            <div class="header-content">
-                <h2 id="testTitle">测试标题</h2>
+        <!-- 进度条区域 - 替换原来的test-header -->
+        <section class="progress-section">
+            <div class="progress-bar-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <span class="progress-text" id="progressText">1/10</span>
             </div>
         </section>
 
@@ -573,9 +572,28 @@
             updateProgress() {
                 if (!this.testData || !this.testData.questions) return;
                 
-                document.getElementById('progressText').textContent = 
-                    `第${this.currentQuestionIndex + 1}题/共${this.testData.questions.length}题`;
-            }
+                const totalQuestions = this.testData.questions.length;
+                const currentQuestion = this.currentQuestionIndex + 1;
+                const progressPercent = (currentQuestion / totalQuestions) * 100;
+                
+                // 更新进度条
+                const progressFill = document.getElementById('progressFill');
+                if (progressFill) {
+                    progressFill.style.width = `${progressPercent}%`;
+                }
+                
+                // 更新进度文字
+                const progressText = document.getElementById('progressText');
+                if (progressText) {
+                    progressText.textContent = `${currentQuestion}/${totalQuestions}`;
+                }
+                
+                // 更新导航栏标题（如果DOM结构已修改）
+                const navTitle = document.getElementById('navTitle'); // 注意ID要匹配
+                if (navTitle && this.testData.title) {
+                    navTitle.textContent = this.testData.title;
+                }
+            }            
 
             saveProgress() {
                 console.log('进度保存已禁用');
@@ -644,11 +662,37 @@
         .navbar {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             padding: 15px;
-            background: white;
+            background: #00B894;
             border-bottom: 1px solid #e1e1e1;
             height: 60px;
             min-height: 60px;
+            flex-shrink: 0;
+        }
+
+        .nav-back {
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .nav-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            text-align: center;
+            flex: 1;
+            margin: 0 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .nav-placeholder {
+            width: 60px; /* 与返回按钮宽度平衡 */
             flex-shrink: 0;
         }
 
@@ -659,54 +703,47 @@
             color: #00B894; /* 修改：更新颜色 */
         }
 
-        .progress-info {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
+        /* 进度条区域 */
+        .progress-section {
+            padding: 15px;
+            background: white;
+            border-bottom: 1px solid #f0f0f0;
+            flex-shrink: 0;
+        }
+
+        .progress-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 6px;
+            background: #f0f0f0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #00B894, #00CEC9);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+            width: 10%; /* 初始值 */
+        }
+
+        .progress-text {
             font-size: 14px;
             color: #666;
             font-weight: 500;
-        }
-
-        /* 测试头图 */
-        .test-header {
-            display: flex;
-            align-items: center;
-            padding: 12px 15px;
-            background: linear-gradient(135deg, #00B894, #00CEC9); /* 修改：更新渐变 */
-            border-bottom: 1px solid #f0f0f0;
-            height: 80px;
-            min-height: 80px;
+            min-width: 40px;
             flex-shrink: 0;
-            color: white;
-        }
-
-        .header-image {
-            display: none; /* 隐藏图片容器 */
-        }
-
-        .header-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .header-content {
-            flex: 1;
-            text-align: center;
-        }
-
-        .header-content h2 {
-            margin: 0;
-            font-size: 18px;
-            font-weight: 600;
-            color: white;
-            line-height: 1.3;
         }
 
         /* 题目区域 */
         .question-section {
-            padding: 15px;
+            padding: 25px 15px 15px;;
             flex-shrink: 0;
         }
 
@@ -719,12 +756,13 @@
         }
 
         .question-text {
-            font-size: 17px;
+            font-size: 20px;
             font-weight: 600;
             line-height: 1.5;
             color: #333;
             text-align: center;
             margin: 0;
+            padding: 0 10px;
         }
 
         .question-image {
@@ -741,7 +779,7 @@
         /* 选项区域 */
         .options-section {
             flex: 1;
-            padding: 0 15px;
+            padding: 20px 15px 0;;
             overflow: hidden;
         }
 
