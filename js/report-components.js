@@ -1569,7 +1569,6 @@ const ReportComponents = {
                     <div class="result-content">
                         <div class="result-label" style="margin-bottom: 8px;">你的异世界身份</div>
                         <div class="result-text" style="font-size: 26px;">${data.resultName}</div>
-                        <div class="score-label" style="color: white; opacity: 0.9; margin-top: 5px;">天赋匹配度 ${data.score}%</div>
                     </div>
                 </section>
             `;
@@ -1762,13 +1761,12 @@ const ReportComponents = {
                 <div class="professional-advice">
                     <div class="advice-title">✨ 成长指引</div>
                     <ul class="advice-list">
-                        <li><strong>发挥优势：</strong>在你的核心特质领域深耕，成为不可替代的专家</li>
-                        <li><strong>平衡发展：</strong>关注相对较弱的维度，获得更全面的能力结构</li>
-                        <li><strong>实践应用：</strong>在现实生活中寻找能发挥这些天赋的机会</li>
-                        <li><strong>持续探索：</strong>每个身份都有无限可能，保持学习和成长的心态</li>
+                        <li><strong>发挥优势：</strong>在你的核心特质领域深耕，成为不可替代的专家。</li>
+                        <li><strong>实践应用：</strong>在现实生活中寻找能发挥这些天赋的机会。</li>
+                        <li><strong>持续探索：</strong>每个身份都有无限可能，保持学习和成长的心态。</li>
                     </ul>
                     <div style="margin-top: 15px; font-size: 12px; opacity: 0.8; text-align: center;">
-                        本测试基于霍兰德职业兴趣理论改编，结果仅供参考
+                        测试基于霍兰德职业兴趣理论改编，结果供参考
                     </div>
                 </div>
             `;
