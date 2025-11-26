@@ -1938,16 +1938,19 @@ body {
     flex-shrink: 0;
     width: 24px;
     text-align: center;
+    margin-top: 2px; /* 微调图标垂直位置 */
 }
 
 .pref-content h5 {
     margin: 0 0 6px 0;
     font-size: 15px;
     color: #333;
+    display: inline; /* 改为行内元素，与图标同行 */
+    vertical-align: middle; /* 垂直居中 */
 }
 
 .pref-content p {
-    margin: 0;
+    margin: 4px 0 0 0; /* 减少上边距 */
     font-size: 14px;
     color: #666;
     line-height: 1.5;
