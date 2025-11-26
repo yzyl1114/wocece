@@ -1947,21 +1947,21 @@ const ReportComponents = {
                         <div style="margin-bottom: 20px;">
                             <h4 style="color: #00B894; margin-bottom: 8px;">💪 你的职场优势</h4>
                             <p style="font-size: 15px; line-height: 1.7; color: #333; text-align: left;">
-                                ${fullReport.advantages}
+${fullReport.advantages}
                             </p>
                         </div>
                         
                         <div style="margin-bottom: 20px;">
                             <h4 style="color: #FF6B6B; margin-bottom: 8px;">⚠️ 潜在挑战</h4>
                             <p style="font-size: 15px; line-height: 1.7; color: #333; text-align: left;">
-                                ${fullReport.challenges}
+${fullReport.challenges}
                             </p>
                         </div>
                         
                         <div>
                             <h4 style="color: #00CEC9; margin-bottom: 8px;">🎯 成长建议</h4>
                             <p style="font-size: 15px; line-height: 1.7; color: #333; text-align: left;">
-                                ${fullReport.advice}
+${fullReport.advice}
                             </p>
                         </div>
                     </div>
