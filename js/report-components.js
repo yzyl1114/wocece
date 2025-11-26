@@ -2338,8 +2338,9 @@ if (!document.querySelector('#report-components-styles')) {
         }
 
         .score-label {
-            color: #666;
+            color: #333 !important;
             font-size: 14px;
+            font-weight: 500;
         }
 
         .score-value {
