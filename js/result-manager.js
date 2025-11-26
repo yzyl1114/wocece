@@ -213,6 +213,10 @@ class ResultManager {
     }
 
     renderStandardResult() {
+        console.log('🔍 renderStandardResult 调试:');
+        console.log('this.testId:', this.testId);
+        console.log('this.testConfig:', this.testConfig);
+        
         document.getElementById('funAnalysis').style.display = 'none';
         document.getElementById('standardAnalysis').style.display = 'block';
 
@@ -222,6 +226,11 @@ class ResultManager {
             this.renderByTemplate(template, 'standard');
         } else if (this.testId === '6') {
             this.renderSCL90Report();
+        } else if (this.testId === '5') {
+            // 🔧 新增：强制id5使用职业测评模板
+            console.log('强制使用职业测评模板');
+            const template = this.templateEngine.getTemplate(this.testConfig);
+            this.renderByTemplate(template, 'standard');
         } else {
             this.renderBasicStandardReport();
         }
@@ -297,7 +306,7 @@ class ResultManager {
     }
 
     renderBasicStandardReport() {
-        const template = this.templateEngine.getTemplate('standard-basic');
+        const template = this.templateEngine.getTemplate(this.testConfig);
         this.renderByTemplate(template, 'standard');
     }
 
