@@ -75,8 +75,8 @@ class ChartRenderer {
      * 绘制数据多边形
      */
     drawDataPolygon(ctx, centerX, centerY, radius, dimensions, angleStep) {
-        ctx.fillStyle = 'rgba(102, 126, 234, 0.3)';
-        ctx.strokeStyle = '#667eea';
+        ctx.fillStyle = 'rgba(0, 184, 148, 0.3)'; // 主题绿色，30%透明度
+        ctx.strokeStyle = '#00B894'; // 主题绿色
         ctx.lineWidth = 2;
         ctx.beginPath();
 
@@ -98,7 +98,7 @@ class ChartRenderer {
         ctx.stroke();
 
         // 绘制数据点
-        ctx.fillStyle = '#667eea';
+        ctx.fillStyle = '#00B894';
         for (let i = 0; i < dimensions.length; i++) {
             const angle = i * angleStep - Math.PI / 2;
             const valueRadius = radius * (dimensions[i].score / 100);

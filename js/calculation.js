@@ -150,15 +150,15 @@ class CalculationManager {
         if (totalScore > 250) {
             assessment.level = '严重';
             assessment.description = '您的症状比较严重';
-            assessment.suggestion = '需要作医学上的详细检查，很可能要做针对性的心理治疗或在医生的指导下服药';
+            assessment.suggestion = '需要作医学上的详细检查，很可能要做针对性的心理治疗或在医生的指导下服药。';
         } else if (totalScore > 200) {
             assessment.level = '明显';
             assessment.description = '您有明显心理问题的可能性';
-            assessment.suggestion = '可求助于心理咨询，进行专业的心理评估';
+            assessment.suggestion = '可求助于心理咨询，进行专业的心理评估。';
         } else if (totalScore > 160) {
             assessment.level = '关注';
             assessment.description = '您的总分超过临界值，建议关注';
-            assessment.suggestion = '应作进一步检查，关注自身心理健康状态';
+            assessment.suggestion = '应作进一步检查，关注自身心理健康状态。';
         }
         
         // 检查是否有因子分超过2分
@@ -166,7 +166,7 @@ class CalculationManager {
         if (highFactors.length > 0) {
             assessment.hasHighFactors = true;
             assessment.highFactors = highFactors;
-            assessment.factorSuggestion = '部分因子分超过2分，建议重点关注这些方面的症状';
+            assessment.factorSuggestion = '部分因子分超过2分，建议重点关注这些方面的症状。';
         }
         
         return assessment;
