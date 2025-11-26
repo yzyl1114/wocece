@@ -835,13 +835,13 @@ const ReportComponents = {
     'animal-dimensions': {
         render: (data, config) => {
             const dimensionConfigs = {
-                'DOM': { max: 36, name: '支配性', desc: '领导力与掌控欲' },
-                'STR': { max: 32, name: '策略性', desc: '智慧与谋略' },
-                'COM': { max: 28, name: '社交性', desc: '亲和力与沟通' },
-                'SOL': { max: 32, name: '孤独性', desc: '独立与内省' },
-                'AGI': { max: 30, name: '灵活性', desc: '适应与变通' },
-                'SEC': { max: 34, name: '安全性', desc: '稳定与守护' },
-                'AES': { max: 24, name: '审美性', desc: '艺术与美感' }
+                'DOM': { max: 36, name: '支配性', desc: '领导掌控' },
+                'STR': { max: 32, name: '策略性', desc: '智慧谋略' },
+                'COM': { max: 28, name: '社交性', desc: '亲和力' },
+                'SOL': { max: 32, name: '孤独性', desc: '独立内省' },
+                'AGI': { max: 30, name: '灵活性', desc: '适应变通' },
+                'SEC': { max: 34, name: '安全性', desc: '稳定守护' },
+                'AES': { max: 24, name: '审美性', desc: '艺术美感' }
             };
             
             // 获取维度等级
@@ -2888,18 +2888,19 @@ if (!document.querySelector('#report-components-styles')) {
 
         .level-badge {
             display: inline-block;
-            padding: 4px 8px;
-            border-radius: 12px;
+            padding: 2px 6px;
             font-size: 11px;
             font-weight: 500;
             margin-top: 4px;
+            background: transparent !important;
+            border: none !important;
         }
 
-        .level-badge.high { background: #ffebee; color: #d32f2f; }
-        .level-badge.medium-high { background: #fff3e0; color: #f57c00; }
-        .level-badge.medium { background: #e8f5e8; color: #388e3c; }
-        .level-badge.low { background: #e3f2fd; color: #1976d2; }
-        .level-badge.very-low { background: #f3e5f5; color: #7b1fa2; }
+        .level-badge.high { color: #d32f2f; }
+        .level-badge.medium-high { color: #f57c00; }
+        .level-badge.medium { color: #388e3c; }
+        .level-badge.low { color: #1976d2; }
+        .level-badge.very-low { color: #7b1fa2; }
 
         .dimension-analysis {
             font-size: 14px;
@@ -2908,16 +2909,36 @@ if (!document.querySelector('#report-components-styles')) {
             text-align: left;
         }
 
-        /* 响应式调整 */
         @media (max-width: 375px) {
+            .dimension-card {
+                padding: 12px 10px; /* 减小内边距 */
+                margin-bottom: 10px; /* 减小卡片间距 */
+            }
+            
             .dimension-header {
                 flex-direction: column;
                 align-items: flex-start;
+                margin-bottom: 6px; /* 减小头部与内容的间距 */
             }
             
             .dimension-score-display {
                 text-align: left;
-                margin-top: 8px;
+                margin-top: 6px; /* 减小分数显示的上边距 */
+            }
+            
+            .dimension-analysis {
+                margin-top: 6px !important; /* 减小详细分析与头部的间距 */
+                font-size: 13px; /* 稍微减小字体 */
+                line-height: 1.5; /* 紧凑行高 */
+            }
+            
+            .dimension-title h4 {
+                font-size: 15px; /* 稍微减小标题字体 */
+                margin-bottom: 2px; /* 减小标题与描述的间距 */
+            }
+            
+            .dimension-desc {
+                font-size: 12px; /* 稍微减小描述字体 */
             }
         }
     `;
