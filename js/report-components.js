@@ -637,7 +637,7 @@ const ReportComponents = {
     'animal-header': {
         render: (data, config) => {
             const animalData = AnimalDisplayData[data.animal] || {};
-            const headerColor = '#8E8E93'; // 中性灰
+            const headerColor = '#00B894'; // 中性灰
             
             return `
                 <section class="result-header" style="background: linear-gradient(135deg, ${headerColor}, #AEAEB2); padding: 25px 15px; height: 180px;">
@@ -807,7 +807,7 @@ const ReportComponents = {
                         </div>
                         <div class="score-label">与 ${data.animal} 的契合度</div>
                         <div class="similarity-desc" style="margin-top: 10px; color: #666; font-size: 14px;">
-                            百分比反映了你的性格特质与 ${data.animal} 原型的相似程度
+                            你的性格特质与 ${data.animal} 原型的相似程度
                         </div>
                     </div>
                 </section>
@@ -950,7 +950,7 @@ const ReportComponents = {
                             </div>
                         </div>
                         
-                        <div class="dimension-analysis">
+                        <div class="dimension-analysis" style="text-align: left; margin-top: 12px;">
                             ${getDetailedDimensionAnalysis(key, value, percentage)}
                         </div>
                     </div>
@@ -1174,43 +1174,55 @@ const ReportComponents = {
                 const hasHighSOL = highDimensions.some(d => d.key === 'SOL');
                 const hasHighSEC = highDimensions.some(d => d.key === 'SEC');
                 
+                // 优势组合建议
                 if (hasHighDOM && hasHighSTR) {
-                    advice += '<li>🎯 <strong>领导战略型</strong>：你具备优秀的领导力和战略思维，适合承担管理或决策角色</li>';
+                    advice += '<li><strong>领导战略型</strong>：你具备优秀的领导力和战略思维，适合承担管理或决策角色，在团队中发挥引领作用。</li>';
                 }
                 
                 if (hasHighCOM && hasHighAGI) {
-                    advice += '<li>🤝 <strong>社交适应型</strong>：你的社交能力和适应力突出，善于在不同环境中建立关系</li>';
+                    advice += '<li><strong>社交适应型</strong>：你的社交能力和适应力突出，善于在不同环境中建立关系，适合需要频繁沟通的工作。</li>';
                 }
                 
                 if (hasHighAES && hasHighSOL) {
-                    advice += '<li>🎨 <strong>艺术创造型</strong>：你具有强烈的审美感知和独立思考能力，适合创意领域</li>';
+                    advice += '<li><strong>艺术创造型</strong>：你具有强烈的审美感知和独立思考能力，适合创意领域，能够产出独特的作品。</li>';
                 }
                 
                 if (hasHighSEC && hasHighSTR) {
-                    advice += '<li>🛡️ <strong>稳健策划型</strong>：你的安全意识和策略思维结合，适合需要规划的工作</li>';
+                    advice += '<li><strong>稳健策划型</strong>：你的安全意识和策略思维结合，适合需要长期规划和风险控制的工作。</li>';
                 }
                 
                 // 基于待发展维度给出建议
-                if (lowDimensions.some(d => d.key === 'SOL')) {
-                    advice += '<li>🌱 <strong>培养独处能力</strong>：适当安排独处时间，有助于深度思考和自我认知</li>';
-                }
+                lowDimensions.forEach(dim => {
+                    switch(dim.key) {
+                        case 'SOL':
+                            advice += '<li><strong>培养独处能力</strong>：适当安排独处时间，有助于深度思考和自我认知，提升内在稳定性。</li>';
+                            break;
+                        case 'AGI':
+                            advice += '<li><strong>提升适应能力</strong>：多接触新环境，尝试不同的解决问题方式，提升应对变化的能力。</li>';
+                            break;
+                        case 'COM':
+                            advice += '<li><strong>拓展社交圈</strong>：逐步建立更广泛的人际网络，参与社交活动，提升沟通技巧。</li>';
+                            break;
+                        case 'AES':
+                            advice += '<li><strong>培养审美感知</strong>：多接触艺术、音乐、自然美景，培养对美的敏感度和创造力。</li>';
+                            break;
+                        case 'DOM':
+                            advice += '<li><strong>锻炼领导力</strong>：在小组活动中尝试承担组织角色，学习决策和协调技巧。</li>';
+                            break;
+                        case 'STR':
+                            advice += '<li><strong>加强策略思维</strong>：多进行逻辑思考训练，学习制定长期计划和应对方案。</li>';
+                            break;
+                        case 'SEC':
+                            advice += '<li><strong>建立安全感</strong>：培养稳定的生活习惯，建立可靠的支持系统，适度接受挑战。</li>';
+                            break;
+                    }
+                });
                 
-                if (lowDimensions.some(d => d.key === 'AGI')) {
-                    advice += '<li>🔄 <strong>提升适应能力</strong>：多接触新环境，提升应对变化的能力</li>';
-                }
-                
-                if (lowDimensions.some(d => d.key === 'COM')) {
-                    advice += '<li>💬 <strong>拓展社交圈</strong>：逐步建立更广泛的人际网络</li>';
-                }
-                
-                if (lowDimensions.some(d => d.key === 'AES')) {
-                    advice += '<li>✨ <strong>培养审美感知</strong>：多接触艺术和自然美景</li>';
-                }
-                
-                // 通用建议
-                if (advice === '<div class="professional-advice"><div class="advice-title">综合建议</div><ul class="advice-list">') {
-                    advice += '<li>🌟 基于你的动物人格特征，在适合的环境中发挥个人优势</li>';
-                    advice += '<li>📈 关注各维度的平衡发展，持续个人成长</li>';
+                // 通用建议 - 确保至少有2条建议
+                const currentAdviceCount = (advice.match(/<li>/g) || []).length;
+                if (currentAdviceCount < 2) {
+                    advice += '<li>🌟 <strong>发挥个人优势</strong>：基于你的动物人格特征，在适合的环境中持续发挥你的独特优势。</li>';
+                    advice += '<li>📈 <strong>关注平衡发展</strong>：在各维度间找到平衡点，持续个人成长，实现全面发展。</li>';
                 }
                 
                 advice += '</ul></div>';
@@ -2823,6 +2835,89 @@ if (!document.querySelector('#report-components-styles')) {
             
             .dimension-analysis-item {
                 padding: 12px;
+            }
+        }
+
+        /* 人格维度分析卡片布局 */
+        .dimension-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-left: 4px solid #00B894;
+        }
+
+        .dimension-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .dimension-title h4 {
+            margin: 0 0 4px 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .dimension-desc {
+            font-size: 13px;
+            color: #666;
+            display: block;
+        }
+
+        .dimension-score-display {
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .dimension-score-display .score {
+            font-size: 20px;
+            font-weight: bold;
+            color: #00B894;
+            display: block;
+        }
+
+        .dimension-score-display .score small {
+            font-size: 12px;
+            color: #999;
+            font-weight: normal;
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        .level-badge.high { background: #ffebee; color: #d32f2f; }
+        .level-badge.medium-high { background: #fff3e0; color: #f57c00; }
+        .level-badge.medium { background: #e8f5e8; color: #388e3c; }
+        .level-badge.low { background: #e3f2fd; color: #1976d2; }
+        .level-badge.very-low { background: #f3e5f5; color: #7b1fa2; }
+
+        .dimension-analysis {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
+            text-align: left;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 375px) {
+            .dimension-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .dimension-score-display {
+                text-align: left;
+                margin-top: 8px;
             }
         }
     `;
