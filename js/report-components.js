@@ -722,16 +722,16 @@ const ReportComponents = {
                 <h3>核心临床指标</h3>
                 <div class="score-details">
                     <div class="score-item">
-                        <span class="score-label" style="color: #333; font-weight: 500;">总分</span>
-                        <span class="score-value" style="color: #333; font-weight: bold;">${data.totalScore || 0}</span>
+                        <span class="score-label" style="color: #333 !important; font-weight: 600; opacity: 1 !important;">总分</span>
+                        <span class="score-value" style="color: #333 !important; font-weight: bold; opacity: 1 !important;">${data.totalScore || 0}</span>
                     </div>
                     <div class="score-item">
-                        <span class="score-label" style="color: #333; font-weight: 500;">阳性项目数</span>
-                        <span class="score-value" style="color: #333; font-weight: bold;">${data.positiveItems || 0}</span>
+                        <span class="score-label" style="color: #333 !important; font-weight: 600; opacity: 1 !important;">阳性项目数</span>
+                        <span class="score-value" style="color: #333 !important; font-weight: bold; opacity: 1 !important;">${data.positiveItems || 0}</span>
                     </div>
                     <div class="score-item">
-                        <span class="score-label" style="color: #333; font-weight: 500;">阳性症状均分</span>
-                        <span class="score-value" style="color: #333; font-weight: bold;">${data.positiveAverage ? data.positiveAverage.toFixed(2) : '0.00'}</span>
+                        <span class="score-label" style="color: #333 !important; font-weight: 600; opacity: 1 !important;">阳性症状均分</span>
+                        <span class="score-value" style="color: #333 !important; font-weight: bold; opacity: 1 !important;">${data.positiveAverage ? data.positiveAverage.toFixed(2) : '0.00'}</span>
                     </div>
                 </div>
             </section>
