@@ -637,7 +637,7 @@ const ReportComponents = {
     'animal-header': {
         render: (data, config) => {
             const animalData = AnimalDisplayData[data.animal] || {};
-            const headerColor = '#00B894'; // 中性灰
+            const headerColor = '#00B894';
             
             return `
                 <section class="result-header" style="background: linear-gradient(135deg, ${headerColor}, #AEAEB2); padding: 25px 15px; height: 180px;">
@@ -1238,7 +1238,7 @@ const ReportComponents = {
     'spiritual-header': {
         render: (data, config) => {
             const topDim = data.topDimensions[0];
-            const headerColor = '#1ABC9C'; // 协调的蓝绿色
+            const headerColor = '#00B894';
             
             return `
                 <section class="result-header" style="background: linear-gradient(135deg, ${headerColor}, #16A085); padding: 25px 15px; height: 160px;">
