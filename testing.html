@@ -638,11 +638,12 @@
         body {
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%); /* 修改：更新背景渐变 */
+            background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%);
             min-height: 100vh;
             max-height: 100vh;
             overflow: hidden;
             width: 100%;
+            /* 确保在桌面端居中 */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -653,7 +654,7 @@
             display: flex;
             flex-direction: column;
             padding: 0;
-            margin: 0 auto; /* 添加这行实现居中 */
+            margin: 0 auto;
             max-width: 750px;
             width: 100%;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
@@ -1069,11 +1070,13 @@
                 display: block; /* 移动端恢复默认布局 */
                 justify-content: initial;
                 align-items: initial;
+                padding: 0; /* 确保移动端没有内边距 */
             }
             .container {
                 max-width: 100%;
                 box-shadow: none;
                 height: 100vh;
+                border-radius: 0; /* 移动端移除圆角 */
             }
         }
 
@@ -1090,6 +1093,7 @@
             .container {
                 height: 90vh;
                 max-height: 90vh;
+                border-radius: 12px; /* 添加圆角 */
                 overflow: hidden;
                 box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             }
