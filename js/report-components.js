@@ -925,7 +925,7 @@ const ReportComponents = {
 
             let html = `
                 <section class="analysis-section">
-                    <h3>📊 人格维度分析</h3>
+                    <h3>人格维度分析</h3>
                     <div class="dimensions-detail">
             `;
             
@@ -1942,25 +1942,25 @@ const ReportComponents = {
             
             return `
                 <section class="analysis-section">
-                    <h3>🎭 角色深度解读</h3>
+                    <h3>角色深度解读</h3>
                     <div class="analysis-content">
                         <div style="margin-bottom: 20px;">
                             <h4 style="color: #00B894; margin-bottom: 8px;">💪 你的职场优势</h4>
-                            <p style="font-size: 15px; line-height: 1.7; color: #333; text-align: justify;">
+                            <p style="font-size: 15px; line-height: 1.7; color: #333; text-align: left;">
                                 ${fullReport.advantages}
                             </p>
                         </div>
                         
                         <div style="margin-bottom: 20px;">
                             <h4 style="color: #FF6B6B; margin-bottom: 8px;">⚠️ 潜在挑战</h4>
-                            <p style="font-size: 15px; line-height: 1.7; color: #333; text-align: justify;">
+                            <p style="font-size: 15px; line-height: 1.7; color: #333; text-align: left;">
                                 ${fullReport.challenges}
                             </p>
                         </div>
                         
                         <div>
                             <h4 style="color: #00CEC9; margin-bottom: 8px;">🎯 成长建议</h4>
-                            <p style="font-size: 15px; line-height: 1.7; color: #333; text-align: justify;">
+                            <p style="font-size: 15px; line-height: 1.7; color: #333; text-align: left;">
                                 ${fullReport.advice}
                             </p>
                         </div>
@@ -2003,7 +2003,7 @@ const ReportComponents = {
             
             let html = `
                 <section class="analysis-section">
-                    <h3>📊 人格维度分析</h3>
+                    <h3>人格维度分析</h3>
                     <div class="horizontal-bars-container">
             `;
             
@@ -2041,15 +2041,14 @@ const ReportComponents = {
         render: (data, config) => {
             return `
                 <div class="professional-advice">
-                    <div class="advice-title">🏯 职场启示</div>
+                    <div class="advice-title">职场启示</div>
                     <ul class="advice-list">
-                        <li><strong>发挥优势：</strong>在你的核心人格特质领域深耕，找到最适合的职场定位</li>
-                        <li><strong>平衡发展：</strong>关注相对较弱的维度，获得更全面的职场能力</li>
-                        <li><strong>情境适应：</strong>不同职场环境需要不同的人格特质，保持灵活性</li>
-                        <li><strong>持续成长：</strong>人格特质会随着经历而变化，保持开放学习的心态</li>
+                        <li><strong>发挥优势：</strong>在你的核心人格特质领域深耕，找到最适合的职场定位。</li>
+                        <li><strong>情境适应：</strong>不同职场环境需要不同的人格特质，保持灵活性。</li>
+                        <li><strong>持续成长：</strong>人格特质会随着经历而变化，保持开放学习的心态。</li>
                     </ul>
-                    <div style="margin-top: 15px; font-size: 12px; opacity: 0.8; text-align: center;">
-                        本测试基于大五人格理论，结合《大明王朝》角色特征设计
+                    <div style="margin-top: 15px; font-size: 12px; opacity: 0.8; text-align: left;">
+                        本测试基于大五人格理论，结合《大明王朝》角色特征设计。
                     </div>
                 </div>
             `;
