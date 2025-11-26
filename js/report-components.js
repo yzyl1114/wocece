@@ -1753,7 +1753,7 @@ const ReportComponents = {
                         <li><strong>持续探索：</strong>每个身份都有无限可能，保持学习和成长的心态。</li>
                     </ul>
                     <div style="margin-top: 15px; font-size: 12px; opacity: 0.8; text-align: center;">
-                        测试基于霍兰德职业兴趣理论改编，结果供参考
+                        趣味测试结果仅供参考，如需专业测评请前往“职业优势识别器（专业版）”。
                     </div>
                 </div>
             `;
