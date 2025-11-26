@@ -307,15 +307,15 @@ const CareerIdentityData = {
         },
         actionPlan: {
             immediate: [
-                '为你负责的系统创建一份"常见故障与解决方案"手册',
-                '选择一项与你工作相关的软件或工具，花一周时间入门',
-                '主动承担一项有挑战性的设备检修或系统优化任务'
+                '为你负责的系统创建一份"常见故障与解决方案"手册。',
+                '选择一项与你工作相关的软件或工具，花一周时间入门。',
+                '主动承担一项有挑战性的设备检修或系统优化任务。'
             ],
             investment: [
-                '争取获得一项行业内认可的高级技术认证',
-                '参与一个从安装、调试到交付的全流程项目'
+                '争取获得一项行业内认可的高级技术认证。',
+                '参与一个从安装、调试到交付的全流程项目。'
             ],
-            longterm: '有意识地在公司内外塑造你"技术过硬、值得信赖"的个人品牌'
+            longterm: '有意识地在公司内外塑造你"技术过硬、值得信赖"的个人品牌。'
         }
     },
     'R_02': {
@@ -332,15 +332,15 @@ const CareerIdentityData = {
         },
         actionPlan: {
             immediate: [
-                '审视你当前的工作，找出一个可以标准化并形成检查清单的环节',
-                '主动跟进一项悬而未决的常规任务，并将其彻底闭环',
-                '向你的上级提供一份关于工作流程的微小改进建议'
+                '审视你当前的工作，找出一个可以标准化并形成检查清单的环节。',
+                '主动跟进一项悬而未决的常规任务，并将其彻底闭环。',
+                '向你的上级提供一份关于工作流程的微小改进建议。'
             ],
             investment: [
-                '学习项目管理或质量管理体系方法论',
-                '深入了解你所在行业的合规性要求与标准'
+                '学习项目管理或质量管理体系方法论。',
+                '深入了解你所在行业的合规性要求与标准。'
             ],
-            longterm: '成为团队中那个"有你在，我们就放心"的人，这种口碑是你最宝贵的资产'
+            longterm: '成为团队中那个"有你在，我们就放心"的人，这种口碑是你最宝贵的资产。'
         }
     },
     'I_01': {
@@ -357,15 +357,15 @@ const CareerIdentityData = {
         },
         actionPlan: {
             immediate: [
-                '选择一份你领域的复杂报告，尝试用一张图提炼出其核心逻辑链',
-                '对你手头的数据，提出三个之前未被验证的假设并尝试检验',
-                '在团队讨论中，扮演那个提出"我们如何知道这是对的？"角色'
+                '选择一份你领域的复杂报告，尝试用一张图提炼出其核心逻辑链。',
+                '对你手头的数据，提出三个之前未被验证的假设并尝试检验。',
+                '在团队讨论中，扮演那个提出"我们如何知道这是对的？"角色。'
             ],
             investment: [
-                '精通一门高级数据分析工具或学习博弈论',
-                '深入阅读你所在领域的经典理论著作'
+                '精通一门高级数据分析工具或学习博弈论。',
+                '深入阅读你所在领域的经典理论著作。'
             ],
-            longterm: '定期撰写行业分析或深度思考文章，打造你"深度思考者"的个人品牌'
+            longterm: '定期撰写行业分析或深度思考文章，打造你"深度思考者"的个人品牌。'
         }
     },
     'I_02': {
@@ -382,15 +382,15 @@ const CareerIdentityData = {
         },
         actionPlan: {
             immediate: [
-                '为你的人生或当前项目，绘制一张3-5年的发展路径图',
-                '分析一个你欣赏的公司的商业模式，并写出其核心战略逻辑',
-                '在下次脑暴会中，尝试提出一个颠覆性的框架来重构问题'
+                '为你的人生或当前项目，绘制一张3-5年的发展路径图。',
+                '分析一个你欣赏的公司的商业模式，并写出其核心战略逻辑。',
+                '在下次脑暴会中，尝试提出一个颠覆性的框架来重构问题。'
             ],
             investment: [
-                '系统学习系统动力学、商业模式画布等战略性思考工具',
-                '广泛阅读跨学科的书籍，以激发更广泛的关联'
+                '系统学习系统动力学、商业模式画布等战略性思考工具。',
+                '广泛阅读跨学科的书籍，以激发更广泛的关联。'
             ],
-            longterm: '在行业内，就一个未来趋势发表你独特的框架性见解，成为公认的"思想领袖"'
+            longterm: '在行业内，就一个未来趋势发表你独特的框架性见解，成为公认的"思想领袖"。'
         }
     },
     'A_01': {
@@ -407,15 +407,15 @@ const CareerIdentityData = {
         },
         actionPlan: {
             immediate: [
-                '建立一个个人作品集网站，展示你的创作理念',
-                '每天坚持15分钟的创意练习，保持灵感流动',
-                '参加一个与你风格相近的艺术展览或创意市集'
+                '建立一个个人作品集网站，展示你的创作理念。',
+                '每天坚持15分钟的创意练习，保持灵感流动。',
+                '参加一个与你风格相近的艺术展览或创意市集。'
             ],
             investment: [
-                '系统学习一门新的艺术表现形式或数字创作工具',
-                '建立与艺术圈、设计圈的深度连接'
+                '系统学习一门新的艺术表现形式或数字创作工具。',
+                '建立与艺术圈、设计圈的深度连接。'
             ],
-            longterm: '形成独特的个人艺术语言，在特定领域建立不可替代的创作地位'
+            longterm: '形成独特的个人艺术语言，在特定领域建立不可替代的创作地位。'
         }
     },
     'A_02': {
@@ -432,15 +432,15 @@ const CareerIdentityData = {
         },
         actionPlan: {
             immediate: [
-                '开始记录生活中的感动瞬间，建立你的故事素材库',
-                '尝试用不同媒介（文字、视频、音频）讲述同一个故事',
-                '主动承担团队中的沟通协调角色，练习共情表达'
+                '开始记录生活中的感动瞬间，建立你的故事素材库。',
+                '尝试用不同媒介（文字、视频、音频）讲述同一个故事。',
+                '主动承担团队中的沟通协调角色，练习共情表达。'
             ],
             investment: [
-                '深入学习叙事心理学或传播学理论',
-                '参与剧本创作或故事工作坊'
+                '深入学习叙事心理学或传播学理论。',
+                '参与剧本创作或故事工作坊。'
             ],
-            longterm: '成为在特定领域有影响力的"故事大师"，用叙事改变认知'
+            longterm: '成为在特定领域有影响力的"故事大师"，用叙事改变认知。'
         }
     },
     'S_01': {
@@ -457,15 +457,15 @@ const CareerIdentityData = {
         },
         actionPlan: {
             immediate: [
-                '学习基础的倾听与共情技巧',
-                '在亲友圈中主动提供情感支持，积累实践经验',
-                '关注心理健康领域的专业资讯和发展动态'
+                '学习基础的倾听与共情技巧。',
+                '在亲友圈中主动提供情感支持，积累实践经验。',
+                '关注心理健康领域的专业资讯和发展动态。'
             ],
             investment: [
-                '考取心理咨询师或相关资质认证',
-                '参与志愿服务，积累多样化的助人经验'
+                '考取心理咨询师或相关资质认证。',
+                '参与志愿服务，积累多样化的助人经验。'
             ],
-            longterm: '建立个人专业品牌，成为特定人群信赖的支持专家'
+            longterm: '建立个人专业品牌，成为特定人群信赖的支持专家。'
         }
     },
     'S_02': {
@@ -482,15 +482,15 @@ const CareerIdentityData = {
         },
         actionPlan: {
             immediate: [
-                '选择一个你擅长的领域，准备一份入门指导材料',
-                '主动指导一位新人或晚辈，实践你的教导方法',
-                '收集成功案例，建立你的教学成果档案'
+                '选择一个你擅长的领域，准备一份入门指导材料。',
+                '主动指导一位新人或晚辈，实践你的教导方法。',
+                '收集成功案例，建立你的教学成果档案。'
             ],
             investment: [
-                '学习现代教育理论和教练技术',
-                '获得相关领域的教学或教练资质认证'
+                '学习现代教育理论和教练技术。',
+                '获得相关领域的教学或教练资质认证。'
             ],
-            longterm: '成为在特定领域有影响力的教育领袖，塑造下一代人才'
+            longterm: '成为在特定领域有影响力的教育领袖，塑造下一代人才。'
         }
     },
     'E_01': {
@@ -507,15 +507,15 @@ const CareerIdentityData = {
         },
         actionPlan: {
             immediate: [
-                '主动承担一个跨部门协作项目的协调工作',
-                '学习基本的项目管理工具和方法论',
-                '在团队中练习清晰的目标传达和任务分解'
+                '主动承担一个跨部门协作项目的协调工作。',
+                '学习基本的项目管理工具和方法论。',
+                '在团队中练习清晰的目标传达和任务分解。'
             ],
             investment: [
-                '系统学习领导力理论和组织行为学',
-                '参与高管培训或商业管理课程'
+                '系统学习领导力理论和组织行为学。',
+                '参与高管培训或商业管理课程。'
             ],
-            longterm: '成为能够驾驭复杂商业环境的战略型领导者'
+            longterm: '成为能够驾驭复杂商业环境的战略型领导者。'
         }
     },
     'E_02': {
@@ -532,15 +532,15 @@ const CareerIdentityData = {
         },
         actionPlan: {
             immediate: [
-                '整理现有的人脉资源，建立分类联系档案',
-                '主动组织一次小型的行业交流活动',
-                '练习在不同场合下的自我介绍和价值主张表达'
+                '整理现有的人脉资源，建立分类联系档案。',
+                '主动组织一次小型的行业交流活动。',
+                '练习在不同场合下的自我介绍和价值主张表达。'
             ],
             investment: [
-                '学习高级谈判技巧和影响力心理学',
-                '参与行业峰会，扩展高质量人脉圈'
+                '学习高级谈判技巧和影响力心理学。',
+                '参与行业峰会，扩展高质量人脉圈。'
             ],
-            longterm: '成为行业内有影响力的"连接枢纽"，通过人脉创造商业价值'
+            longterm: '成为行业内有影响力的"连接枢纽"，通过人脉创造商业价值。'
         }
     },
     'C_01': {
@@ -557,15 +557,15 @@ const CareerIdentityData = {
         },
         actionPlan: {
             immediate: [
-                '优化你当前的工作流程，制作标准化操作手册',
-                '学习使用至少一种效率工具或项目管理软件',
-                '主动承担一个流程改进的小项目'
+                '优化你当前的工作流程，制作标准化操作手册。',
+                '学习使用至少一种效率工具或项目管理软件。',
+                '主动承担一个流程改进的小项目。'
             ],
             investment: [
-                '学习精益管理或六西格玛等流程优化方法论',
-                '深入了解你所在行业的最佳实践和标准'
+                '学习精益管理或六西格玛等流程优化方法论。',
+                '深入了解你所在行业的最佳实践和标准。'
             ],
-            longterm: '成为行业内公认的流程优化专家，建立个人方法论体系'
+            longterm: '成为行业内公认的流程优化专家，建立个人方法论体系。'
         }
     },
     'C_02': {
@@ -582,15 +582,15 @@ const CareerIdentityData = {
         },
         actionPlan: {
             immediate: [
-                '梳理你负责领域的规章制度，找出可以优化的环节',
-                '建立应急预案，为常见问题准备解决方案',
-                '练习在压力下保持冷静和条理清晰'
+                '梳理你负责领域的规章制度，找出可以优化的环节。',
+                '建立应急预案，为常见问题准备解决方案。',
+                '练习在压力下保持冷静和条理清晰。'
             ],
             investment: [
-                '学习风险管理或组织治理相关知识',
-                '了解行业监管政策和合规要求'
+                '学习风险管理或组织治理相关知识。',
+                '了解行业监管政策和合规要求。'
             ],
-            longterm: '成为组织信赖的"定海神针"，在关键岗位上保障体系稳定运行'
+            longterm: '成为组织信赖的"定海神针"，在关键岗位上保障体系稳定运行。'
         }
     }
 };
@@ -2125,7 +2125,7 @@ ${fullReport.advice}
             
             return `
                 <section class="analysis-section">
-                    <h3>🎯 你的黄金组合</h3>
+                    <h3>你的黄金组合</h3>
                     <div class="analysis-content">
                         <p style="font-size: 15px; line-height: 1.8; color: #333; text-align: justify;">
                             ${data.goldenCombination || '基于你的职业测评结果，系统分析了你的优势组合。'}
@@ -2183,26 +2183,26 @@ ${fullReport.advice}
             
             return `
                 <section class="analysis-section">
-                    <h3>🗺️ 你的职业路径地图</h3>
+                    <h3>你的职业路径地图</h3>
                     <div class="career-path-content">
                         <div class="path-item" style="margin-bottom: 20px; padding: 15px; background: rgba(0, 184, 148, 0.05); border-radius: 8px;">
-                            <h4 style="color: #00B894; margin-bottom: 8px;">🚀 起步领域</h4>
+                            <h4 style="color: #00B894; margin-bottom: 8px;">起步领域</h4>
                             <p style="color: #333; margin: 0;">${path.start}</p>
                         </div>
                         <div class="path-item" style="margin-bottom: 20px; padding: 15px; background: rgba(0, 184, 148, 0.05); border-radius: 8px;">
-                            <h4 style="color: #00B894; margin-bottom: 8px;">📈 精通路径</h4>
+                            <h4 style="color: #00B894; margin-bottom: 8px;">精通路径</h4>
                             <p style="color: #333; margin: 0;">${path.master}</p>
                         </div>
                         <div class="path-item" style="margin-bottom: 20px; padding: 15px; background: rgba(0, 184, 148, 0.05); border-radius: 8px;">
-                            <h4 style="color: #00B894; margin-bottom: 8px;">🔄 跨界可能</h4>
+                            <h4 style="color: #00B894; margin-bottom: 8px;">跨界可能</h4>
                             <p style="color: #333; margin: 0;">${path.cross}</p>
                         </div>
                         <div class="path-item" style="margin-bottom: 20px; padding: 15px; background: rgba(0, 184, 148, 0.05); border-radius: 8px;">
-                            <h4 style="color: #00B894; margin-bottom: 8px;">💡 新兴风口</h4>
+                            <h4 style="color: #00B894; margin-bottom: 8px;">新兴风口</h4>
                             <p style="color: #333; margin: 0;">${path.trend}</p>
                         </div>
-                        <div class="values-tip" style="padding: 15px; background: linear-gradient(135deg, #e8f4fd, #f0f9ff); border-radius: 8px; border-left: 4px solid #00B894;">
-                            <h4 style="color: #00B894; margin-bottom: 8px;">🎯 基于你价值观的特别提示</h4>
+                        <div class="values-tip" style="padding: 15px; background: linear-gradient(135deg, #e8f4fd, #f0f9ff); border-radius: 8px;">
+                            <h4 style="color: #00B894; margin-bottom: 8px;">基于你价值观的特别提示</h4>
                             <p style="color: #333; margin: 0;">${path.valuesTip}</p>
                         </div>
                     </div>
@@ -2219,29 +2219,29 @@ ${fullReport.advice}
             
             return `
                 <div class="professional-advice">
-                    <div class="advice-title">🎯 行动建议</div>
+                    <div class="advice-title">行动建议</div>
                     <div class="action-plan-content">
                         <div class="action-category" style="margin-bottom: 20px; padding: 20px; background: rgba(255, 255, 255, 0.8); border-radius: 8px; border-left: 4px solid #00B894;">
                             <h4 style="color: #333; margin-bottom: 12px; font-size: 16px; font-weight: 600;">🚀 立即行动 (下周开始)</h4>
                             <ul class="advice-list" style="color: #333;">
-                                ${plan.immediate.map(action => `<li style="margin-bottom: 8px;">${action}</li>`).join('')}
+                                ${plan.immediate.map(action => `<li style="margin-bottom: 8px;font-size: 13px;">${action}</li>`).join('')}
                             </ul>
                         </div>
                         
                         <div class="action-category" style="margin-bottom: 20px; padding: 20px; background: rgba(255, 255, 255, 0.8); border-radius: 8px; border-left: 4px solid #00B894;">
                             <h4 style="color: #333; margin-bottom: 12px; font-size: 16px; font-weight: 600;">📈 持续投资 (未来半年)</h4>
                             <ul class="advice-list" style="color: #333;">
-                                ${plan.investment.map(action => `<li style="margin-bottom: 8px;">${action}</li>`).join('')}
+                                ${plan.investment.map(action => `<li style="margin-bottom: 8px;font-size: 13px;">${action}</li>`).join('')}
                             </ul>
                         </div>
                         
                         <div class="action-category" style="padding: 20px; background: rgba(255, 255, 255, 0.8); border-radius: 8px; border-left: 4px solid #00B894;">
                             <h4 style="color: #333; margin-bottom: 12px; font-size: 16px; font-weight: 600;">🎯 长远布局 (职业发展)</h4>
-                            <p style="color: #333; margin: 0; line-height: 1.6;">${plan.longterm}</p>
+                            <p style="color: #333; margin: 0; line-height: 1.6;font-size: 13px;">${plan.longterm}</p>
                         </div>
                     </div>
-                    <div style="margin-top: 20px; font-size: 12px; opacity: 0.8; text-align: center; color: #666;">
-                        本测评基于霍兰德职业兴趣理论和优势识别理论，结果仅供参考
+                    <div style="margin-top: 20px; font-size: 12px; opacity: 0.8; text-align: center; color: #ffffffff;">
+                        立即行动起来吧，为自己赢一个美好的职业未来。
                     </div>
                 </div>
             `;
