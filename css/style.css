@@ -2112,6 +2112,8 @@ body {
     
     .preference-item {
         padding: 12px;
+        flex-direction: row; /* 确保在480px下仍然是行布局 */
+        align-items: flex-start;
     }
     
     .preference-item-mobile {
@@ -2142,6 +2144,18 @@ body {
     .preference-item-mobile p {
         font-size: 13px;
     }
+
+    /* 新增：确保图标和标题在同一行 */
+    .pref-content h5 {
+        display: inline;
+        vertical-align: middle;
+        margin-bottom: 4px; /* 减少下边距 */
+    }
+    
+    .pref-content p {
+        font-size: 13px;
+        margin-top: 4px;
+    }
 }
 
 @media (max-width: 375px) {
@@ -2152,13 +2166,17 @@ body {
     }
     
     .preference-item {
-        flex-direction: column;
-        text-align: center;
-        gap: 8px;
+        flex-direction: row; /* 改为行布局，不要列布局 */
+        text-align: left; /* 改为左对齐 */
+        gap: 10px;
+        padding: 10px;
+        align-items: flex-start; /* 顶部对齐 */
     }
     
     .pref-icon {
-        align-self: center;
+        align-self: flex-start; /* 图标顶部对齐 */
+        margin-top: 2px;
+        flex-shrink: 0;
     }
     
     .preference-grid-mobile {
@@ -2167,5 +2185,16 @@ body {
     
     .preference-item-mobile {
         padding: 10px;
+    }
+
+    .pref-content h5 {
+        font-size: 14px;
+        display: inline;
+        vertical-align: middle;
+    }
+    
+    .pref-content p {
+        font-size: 12px;
+        line-height: 1.4;
     }
 }
