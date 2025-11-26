@@ -1259,10 +1259,10 @@ const ReportComponents = {
             
             // 统一的渐变色方案
             const getBarColor = (score) => {
-                if (score >= 80) return '#667eea';
-                if (score >= 60) return '#5a67d8';
-                if (score >= 40) return '#4c51bf';
-                return '#718096';
+                if (score >= 80) return '#00B894';
+                if (score >= 60) return '#00CEC9'; 
+                if (score >= 40) return '#55D8B1';
+                return '#96CEB4';
             };
             
             return `
@@ -1297,16 +1297,22 @@ const ReportComponents = {
                         ${sortedDimensions.map(dim => `
                             <div class="dimension-analysis-item">
                                 <div class="dimension-header">
-                                    <h4 class="dimension-title">${dim.name} (${Math.round(dim.score)}%)</h4> <!-- 确保整数 -->
+                                    <h4 class="dimension-title" style="color: #00B894;">${dim.name} (${Math.round(dim.score)}%)</h4>
                                 </div>
                                 <div class="dimension-content">
                                     <p><strong>含义：</strong>${dim.description}</p>
                                     <p><strong>你的表现：</strong>${dim.interpretation}</p>
                                     <div class="suggestions-box">
-                                        <strong>针对性建议：</strong>
+                                        <strong style="display: flex; align-items: center; color: #333; margin-bottom: 8px;">
+                                            <span style="color: #00B894; margin-right: 6px;">💡</span>
+                                            针对性建议：
+                                        </strong>
                                         <div class="suggestion-list">
                                             ${ReportComponents.getDimensionSuggestions(dim.code, dim.score).map(suggestion => 
-                                                `<div class="suggestion-item">${suggestion}</div>`
+                                                `<div class="suggestion-item" style="display: flex; align-items: flex-start; margin-bottom: 6px;">
+                                                    <span style="color: #00B894; margin-right: 8px; flex-shrink: 0;">•</span>
+                                                    <span>${suggestion}</span>
+                                                </div>`
                                             ).join('')}
                                         </div>
                                     </div>
@@ -2620,10 +2626,22 @@ if (!document.querySelector('#report-components-styles')) {
             gap: 20px;
         }
 
-        .dimension-analysis-item {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 15px;
+        .dimension-analysis-item:nth-child(odd) { 
+            background: #f8f9fa; 
+            border-radius: 8px; 
+            padding: 15px; 
+        }
+
+        .dimension-analysis-item:nth-child(even) { 
+            background: #f0f9f7; 
+            border-radius: 8px; 
+            padding: 15px; 
+        }
+
+        .dimension-analysis-item:nth-child(3n) { 
+            background: #f8f6ff; 
+            border-radius: 8px; 
+            padding: 15px; 
         }
 
         .dimension-header {
@@ -2672,7 +2690,7 @@ if (!document.querySelector('#report-components-styles')) {
             padding: 6px 0;
             color: #555;
             line-height: 1.5;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: none !important;
             font-size: 14px;
         }
 
