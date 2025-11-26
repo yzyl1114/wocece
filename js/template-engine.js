@@ -178,7 +178,7 @@ class TemplateEngine {
             '2': 'fun-basic', 
             '3': 'standard-basic',
             '4': 'standard-basic',
-            '5': 'standard-basic',
+            '5': 'career-compass',
             '6': 'scl90-professional',
             '7': 'animal-personality',
             '8': 'spiritual-needs' 
