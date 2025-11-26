@@ -2198,3 +2198,13 @@ body {
         line-height: 1.4;
     }
 }
+
+/* === 突出显示样式 === */
+.highlight-text {
+    color: var(--primary-color);
+    font-weight: bold;
+    background: rgba(0, 184, 148, 0.1);
+    padding: 2px 4px;
+    border-radius: 4px;
+    margin: 0 1px;
+}

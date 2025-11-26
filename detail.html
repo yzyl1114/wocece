@@ -82,6 +82,13 @@
     <script src="js/storage.js"></script>
     <script src="js/payment.js"></script>
     <script>
+        // 处理突出显示文本的函数
+        function processHighlightText(text) {
+            if (!text) return '';
+            
+            // 使用 **内容** 作为突出显示标记
+            return text.replace(/\*\*(.*?)\*\*/g, '<span class="highlight-text">$1</span>');
+        }
         class DetailManager {
             constructor() {
                 this.testId = null;
@@ -236,12 +243,15 @@
                 const container = document.getElementById('theoryContent');
                 const theory = this.testData.theory;
                 
+                // 🔧 修复：先处理换行，再处理高亮标记
+                const processedContent = processHighlightText(theory.content);
+                const paragraphs = processedContent.split('\n').filter(p => p.trim());
+                
                 let contentHTML = `
                     <div class="text-content">
-                        <p>${theory.content.replace(/\n/g, '</p><p>')}</p>
+                        ${paragraphs.map(p => `<p>${p}</p>`).join('')}
                     </div>
                 `;
-                
                 // 如果有图片，添加图片
                 if (theory.image) {
                     contentHTML += `
@@ -262,9 +272,9 @@
                 
                 let contentHTML = `
                     <div class="text-content">
-                        <p>${requirements.content}</p>
+                        <p>${processHighlightText(requirements.content)}</p>
                         <ul class="requirements-list">
-                            ${requirements.items.map(item => `<li>${item}</li>`).join('')}
+                            ${requirements.items.map(item => `<li>${processHighlightText(item)}</li>`).join('')}
                         </ul>
                     </div>
                 `;
@@ -296,7 +306,7 @@
                                         <span class="step-title">${step.title}</span>
                                         <span class="step-subtitle">${step.subtitle}</span>
                                     </div>
-                                    <div class="step-description">${step.description}</div>
+                                    <div class="step-description">${processHighlightText(step.description)}</div>
                                 </div>
                             `).join('')}
                         </div>
