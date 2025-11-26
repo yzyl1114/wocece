@@ -643,6 +643,9 @@
             max-height: 100vh;
             overflow: hidden;
             width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .container {
@@ -655,6 +658,7 @@
             width: 100%;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
             background: white;
+            max-height: 100vh;
         }
 
         /* 导航栏 */
@@ -1061,28 +1065,33 @@
 
         /* 移动端保持全宽 */
         @media (max-width: 768px) {
+            body {
+                display: block; /* 移动端恢复默认布局 */
+                justify-content: initial;
+                align-items: initial;
+            }
             .container {
                 max-width: 100%;
                 box-shadow: none;
+                height: 100vh;
             }
         }
 
-        /* 在大屏幕上确保居中 */
-        @media (min-width: 751px) {
+        /* 在大屏幕上确保居中并添加圆角效果 */
+        @media (min-width: 769px) {
             body {
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%);
-                padding: 20px 0; 
+                padding: 20px;
             }
             
             .container {
-                margin: 0 auto;
-                height: 90vh; /* 改为 90vh */
+                height: 90vh;
                 max-height: 90vh;
-                border-radius: 12px; /* 添加圆角 */
                 overflow: hidden;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             }
         }
 
