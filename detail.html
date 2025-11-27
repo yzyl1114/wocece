@@ -544,13 +544,10 @@
         body {
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%); /* 修改：更新背景渐变 */
+            background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
             color: var(--text-color);
-            max-width: 750px;
-            margin: 0 auto;
-            position: relative;
             min-height: 100vh;
         }
 
@@ -560,12 +557,12 @@
             align-items: center;
             padding: 20px 15px 15px;
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); 
-            backdrop-filter: blur(10px); /* 毛玻璃效果 */
-            -webkit-backdrop-filter: blur(10px); /* Safari 支持 */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border-bottom: none;
             min-height: 60px;
             position: relative;
-            z-index: 100; /* 确保在其他元素之上 */
+            z-index: 100;
         }
 
         .navbar .container {
@@ -585,7 +582,6 @@
             color: white;
         }
 
-        /* 为返回按钮添加更大的点击区域 */
         .logo::before {
             content: '';
             position: absolute;
@@ -595,10 +591,11 @@
             bottom: -10px;
             z-index: -1;
         }
+
         .test-cover {
             position: relative;
             margin: -15px -15px 20px -15px;
-            height: 250px; /* 增加高度 */
+            height: 250px;
             overflow: hidden;
         }
 
@@ -633,7 +630,7 @@
             display: flex;
             justify-content: space-around;
             text-align: center;
-            flex-direction: row; /* 确保水平排列 */
+            flex-direction: row;
         }
 
         .info-card {
@@ -644,7 +641,7 @@
         .info-number {
             font-size: 24px;
             font-weight: bold;
-            color: #00B894; /* 修改：更新颜色 */
+            color: #00B894;
             margin-bottom: 5px;
         }
 
@@ -674,7 +671,7 @@
         .report-example-section h3 {
             color: #333;
             margin-bottom: 15px;
-            border-left: 4px solid #00B894; /* 修改：更新颜色 */
+            border-left: 4px solid #00B894;
             padding-left: 10px;
             font-size: 18px;
         }
@@ -697,14 +694,14 @@
 
         .requirements-list li {
             padding: 8px 0;
-            border-bottom: none; /* 移除横线 */
+            border-bottom: none;
             position: relative;
             padding-left: 15px;
         }
 
         .requirements-list li:before {
             content: "•";
-            color: #00B894; /* 修改：更新颜色 */
+            color: #00B894;
             position: absolute;
             left: 0;
         }
@@ -735,7 +732,7 @@
             background: #f8f9fa;
             padding: 15px;
             border-radius: 8px;
-            border-left: none; /* 移除蓝色左边框 */
+            border-left: none;
         }
 
         .step-header {
@@ -746,7 +743,7 @@
 
         .step-title {
             font-weight: bold;
-            color: #00B894; /* 修改：更新颜色 */
+            color: #00B894;
             margin-right: 10px;
             font-size: 16px;
         }
@@ -784,10 +781,11 @@
             border-radius: 10px;
             text-align: center;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
         }
 
         .primary-btn {
-            background: linear-gradient(135deg, #00B894, #00CEC9); /* 修改：更新渐变 */
+            background: linear-gradient(135deg, #00B894, #00CEC9);
             color: white;
             border: none;
             padding: 15px 40px;
@@ -805,7 +803,7 @@
         }
 
         .redeem-link a {
-            color: #00B894; /* 修改：更新颜色 */
+            color: #00B894;
             text-decoration: none;
             font-size: 14px;
         }
@@ -835,43 +833,8 @@
             }
         }
 
-        /* 修复详情页桌面端布局问题 */
-        @media (min-width: 769px) {
-            body {
-                display: flex;
-                justify-content: center;
-                align-items: flex-start; /* 改为flex-start而不是center */
-                background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%);
-                padding: 20px;
-                max-width: none !important;
-                margin: 0 !important;
-                min-height: 100vh;
-                height: auto;
-                overflow-y: auto;
-            }
-            
-            .container {
-                max-width: 750px;
-                width: 100%;
-                min-height: auto;
-                height: auto;
-                max-height: none;
-                border-radius: 12px;
-                overflow: visible; /* 关键：改为visible */
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-                background: white;
-                margin: 0 auto;
-                position: relative;
-            }
-            
-            /* 确保内容区域可以正常滚动 */
-            .container > *:not(footer) {
-                position: relative;
-                z-index: 1;
-            }
-        }
-
-        /* 移动端保持正常 */
+        /* === 修复桌面端布局问题 === */
+        /* 移动端样式 - 全屏显示 */
         @media (max-width: 768px) {
             body {
                 display: block;
@@ -882,16 +845,86 @@
             
             .container {
                 max-width: 100%;
+                width: 100%;
                 height: auto;
                 min-height: 100vh;
                 border-radius: 0;
                 box-shadow: none;
                 overflow: visible;
                 background: white;
+                margin: 0 auto;
+                padding: 0;
+            }
+            
+            /* 确保内容正常显示 */
+            .test-cover,
+            .basic-info-section,
+            .test-description,
+            .theory-section,
+            .requirements-section,
+            .report-example-section,
+            .action-section {
+                opacity: 1 !important;
+                position: relative;
+                z-index: 2;
             }
         }
 
-        /* 确保所有内容区域正常显示 */
+        /* 桌面端样式 - 居中卡片效果 */
+        @media (min-width: 769px) {
+            body {
+                display: block; /* 重要：改为block而不是flex */
+                background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%);
+                padding: 20px;
+                min-height: 100vh;
+                height: auto;
+                overflow-y: auto;
+                margin: 0;
+            }
+            
+            .container {
+                max-width: 750px;
+                width: 100%;
+                min-height: auto;
+                height: auto;
+                border-radius: 12px;
+                overflow: visible; /* 重要：改为visible */
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                background: white;
+                margin: 0 auto;
+                position: relative;
+            }
+            
+            /* 导航栏圆角处理 */
+            .navbar {
+                border-radius: 12px 12px 0 0;
+            }
+            
+            /* 页脚圆角处理 */
+            .container > footer:last-child {
+                border-radius: 0 0 12px 12px;
+            }
+            
+            /* 确保所有内容正常显示 */
+            .test-cover,
+            .basic-info-section,
+            .test-description,
+            .theory-section,
+            .requirements-section,
+            .report-example-section,
+            .action-section {
+                opacity: 1 !important;
+                position: relative;
+                z-index: 2;
+            }
+            
+            /* 测试封面圆角处理 */
+            .test-cover {
+                border-radius: 12px 12px 0 0;
+            }
+        }
+
+        /* 确保内容加载动画正常工作 */
         .test-cover,
         .basic-info-section,
         .test-description,
@@ -899,10 +932,18 @@
         .requirements-section,
         .report-example-section,
         .action-section {
-            opacity: 1 !important; /* 强制显示 */
-            position: relative;
-            z-index: 2;
+            transition: opacity 0.3s ease;
         }
-    </style>
+
+        .content-loaded .test-cover,
+        .content-loaded .basic-info-section, 
+        .content-loaded .test-description,
+        .content-loaded .theory-section,
+        .content-loaded .requirements-section,
+        .content-loaded .report-example-section,
+        .content-loaded .action-section {
+            opacity: 1;
+        }
+    </style>    
 </body>
 </html>
