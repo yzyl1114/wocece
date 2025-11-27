@@ -636,14 +636,14 @@
 
     <style>
         body {
-            margin: 0;
+            margin: 0 !important;
             padding: 0;
             background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%);
             min-height: 100vh;
             max-height: 100vh;
             overflow: hidden;
-            width: 100%;
-            /* 确保在桌面端居中 */
+            width: 100% !important;
+            max-width: none !important; /* 新增：移除最大宽度限制 */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -1088,6 +1088,7 @@
                 align-items: center;
                 background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%);
                 padding: 20px;
+                max-width: none !important; /* 新增 */
             }
             
             .container {
