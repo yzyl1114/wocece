@@ -543,47 +543,56 @@
             }
         }
 
-        /* 桌面端居中样式 */
+        /* 修复发现页桌面端滚动问题 */
         @media (min-width: 769px) {
             body {
-                display: flex;
-                justify-content: center;
-                align-items: center;
+                display: block;
+                justify-content: initial;
+                align-items: initial;
                 background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%);
                 padding: 20px;
                 max-width: none !important;
                 margin: 0 !important;
+                min-height: 100vh;
+                height: auto;
+                overflow-y: auto;
             }
             
             .container {
                 max-width: 750px;
                 width: 100%;
-                height: 90vh;
-                max-height: 90vh;
+                min-height: auto;
+                height: auto;
+                max-height: none;
                 border-radius: 12px;
-                overflow: hidden;
+                overflow: visible;
                 box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
                 background: white;
+                margin: 0 auto;
             }
             
             .bottom-nav {
                 max-width: 750px;
                 border-radius: 0 0 12px 12px;
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: calc(750px - 40px);
             }
             
-            /* 壁纸网格在桌面端显示更多列 */
-            .wallpaper-grid {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 12px;
-                padding: 0 15px;
+            /* 确保壁纸区域可以滚动 */
+            .wallpaper-section {
+                margin: 15px 0 80px 0;
+                overflow-y: visible;
             }
         }
 
-        /* 移动端保持全宽 */
         @media (max-width: 768px) {
             body {
                 display: block;
                 padding: 0;
+                overflow-y: auto;
             }
             
             .container {
@@ -592,12 +601,7 @@
                 min-height: 100vh;
                 border-radius: 0;
                 box-shadow: none;
-            }
-            
-            .wallpaper-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 8px;
-                padding: 0 8px;
+                overflow: visible;
             }
         }
     </style>

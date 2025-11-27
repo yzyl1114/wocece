@@ -2210,41 +2210,50 @@ body {
 }
 
 /* === 桌面端统一居中样式 === */
-
-/* 首页桌面端居中样式 */
 @media (min-width: 769px) {
     body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        display: block; /* 改为block而不是flex */
+        justify-content: initial;
+        align-items: initial;
         background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%);
         padding: 20px;
         max-width: none !important;
         margin: 0 !important;
+        min-height: 100vh;
+        height: auto;
+        overflow-y: auto; /* 允许垂直滚动 */
     }
     
     .container {
         max-width: 750px;
         width: 100%;
-        height: 90vh;
-        max-height: 90vh;
+        min-height: auto;
+        height: auto;
+        max-height: none; /* 移除最大高度限制 */
         border-radius: 12px;
-        overflow: hidden;
+        overflow: visible; /* 改为visible而不是hidden */
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         background: white;
+        margin: 0 auto;
     }
     
     .bottom-nav {
         max-width: 750px;
         border-radius: 0 0 12px 12px;
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(750px - 40px); /* 减去左右padding */
     }
 }
 
-/* 首页移动端保持全宽 */
+/* 确保移动端正常 */
 @media (max-width: 768px) {
     body {
         display: block;
         padding: 0;
+        overflow-y: auto;
     }
     
     .container {
@@ -2253,5 +2262,6 @@ body {
         min-height: 100vh;
         border-radius: 0;
         box-shadow: none;
+        overflow: visible;
     }
 }
