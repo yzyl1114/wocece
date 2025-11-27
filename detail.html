@@ -9,12 +9,12 @@
 </head>
 <body>
     <nav class="navbar">
-        <div class="container">
+        <div class="nav-container">
             <div class="logo" id="backButton">← 返回</div>
         </div>
     </nav>
 
-    <div class="container">
+    <div class="page-container">
         <!-- 测试封面 -->
         <div class="test-cover">
             <img id="testCoverImage" src="" alt="测试封面" class="cover-image">
@@ -70,7 +70,7 @@
         </section>
 
         <!-- 页脚 -->
-        <footer style="text-align: center; padding: 20px; color: #666; font-size: 12px;">
+        <footer class="page-footer">
             *测试仅供娱乐*
         </footer>
     </div>
@@ -541,67 +541,67 @@
     </script>
 
     <style>
+        /* 重置样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             padding: 0;
             background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
-            color: var(--text-color);
+            color: #333;
             min-height: 100vh;
         }
 
+        /* 页面主容器 */
+        .page-container {
+            width: 100%;
+            min-height: 100vh;
+            background: white;
+        }
+
+        /* 导航栏 */
         .navbar {
             width: 100%;
             display: flex;
             align-items: center;
-            padding: 20px 15px 15px;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); 
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-bottom: none;
+            padding: 15px;
+            background: linear-gradient(135deg, #00B894, #00CEC9);
             min-height: 60px;
-            position: relative;
-            z-index: 100;
         }
 
-        .navbar .container {
+        .nav-container {
+            width: 100%;
+            max-width: 750px;
+            margin: 0 auto;
             display: flex;
             align-items: center;
-            padding: 20px 15px 15px;
         }
 
         .logo {
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
-            padding: 12px 20px 12px 0;
-            margin: -12px 0 -12px -20px;
-            position: relative;
-            z-index: 10;
             color: white;
+            padding: 8px 0;
         }
 
-        .logo::before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            left: -15px;
-            right: -15px;
-            bottom: -10px;
-            z-index: -1;
-        }
-
+        /* 测试封面 */
         .test-cover {
             position: relative;
-            margin: -15px -15px 20px -15px;
+            width: 100%;
             height: 250px;
             overflow: hidden;
         }
 
         .cover-image {
             width: 100%;
-            height: 250px;
+            height: 100%;
             object-fit: cover;
         }
 
@@ -615,22 +615,32 @@
             padding: 60px 20px 20px 20px;
             margin: 0;
             font-size: 24px;
+            font-weight: bold;
         }
 
-        /* 基本信息卡片样式 */
-        .basic-info-section {
-            background: white;
+        /* 内容区域通用样式 */
+        .basic-info-section,
+        .test-description,
+        .theory-section,
+        .requirements-section,
+        .report-example-section,
+        .action-section {
+            width: 100%;
+            max-width: 750px;
+            margin: 0 auto 15px auto;
             padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: white;
+        }
+
+        /* 基本信息卡片 */
+        .basic-info-section {
+            padding: 20px;
         }
 
         .basic-info-cards {
             display: flex;
             justify-content: space-around;
             text-align: center;
-            flex-direction: row;
         }
 
         .info-card {
@@ -655,15 +665,13 @@
             color: #666;
         }
 
-        /* 标准测试内容区域样式 */
+        /* 标准测试内容区域 */
         .theory-section,
         .requirements-section,
         .report-example-section {
-            background: white;
-            padding: 20px;
-            margin-bottom: 15px;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
         }
 
         .theory-section h3,
@@ -694,7 +702,6 @@
 
         .requirements-list li {
             padding: 8px 0;
-            border-bottom: none;
             position: relative;
             padding-left: 15px;
         }
@@ -704,10 +711,6 @@
             color: #00B894;
             position: absolute;
             left: 0;
-        }
-
-        .requirements-list li:last-child {
-            border-bottom: none;
         }
 
         .image-content {
@@ -721,7 +724,7 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
-        /* 报告步骤样式 */
+        /* 报告步骤 */
         .report-steps {
             display: flex;
             flex-direction: column;
@@ -732,7 +735,6 @@
             background: #f8f9fa;
             padding: 15px;
             border-radius: 8px;
-            border-left: none;
         }
 
         .step-header {
@@ -759,13 +761,11 @@
             font-size: 14px;
         }
 
-        /* 趣味测试描述样式 */
+        /* 趣味测试描述 */
         .test-description {
-            background: white;
-            padding: 20px;
-            margin-bottom: 20px;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
         }
 
         .description-content {
@@ -776,12 +776,10 @@
 
         /* 行动区域 */
         .action-section {
-            background: white;
-            padding: 30px 20px;
             border-radius: 10px;
-            text-align: center;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            text-align: center;
+            margin-bottom: 40px;
         }
 
         .primary-btn {
@@ -808,10 +806,78 @@
             font-size: 14px;
         }
 
+        /* 页脚 */
+        .page-footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 12px;
+            width: 100%;
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        /* === 桌面端样式 === */
+        @media (min-width: 769px) {
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%);
+                padding: 20px;
+                min-height: 100vh;
+            }
+
+            .page-container {
+                max-width: 750px;
+                width: 100%;
+                min-height: auto;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+            }
+
+            .navbar {
+                border-radius: 12px 12px 0 0;
+            }
+
+            .test-cover {
+                border-radius: 0;
+            }
+
+            .page-footer {
+                border-radius: 0 0 12px 12px;
+            }
+        }
+
+        /* === 移动端样式 === */
+        @media (max-width: 768px) {
+            body {
+                display: block;
+                padding: 0;
+                background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%);
+            }
+
+            .page-container {
+                max-width: 100%;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .basic-info-section,
+            .test-description,
+            .theory-section,
+            .requirements-section,
+            .report-example-section,
+            .action-section {
+                padding: 15px;
+                margin-bottom: 10px;
+            }
+        }
+
         /* 响应式调整 */
         @media (max-width: 480px) {
             .basic-info-cards {
-                flex-direction: row;
                 gap: 10px;
             }
             
@@ -831,100 +897,14 @@
             .step-title {
                 margin-bottom: 5px;
             }
-        }
-
-        /* === 修复桌面端布局问题 === */
-        /* 移动端样式 - 全屏显示 */
-        @media (max-width: 768px) {
-            body {
-                display: block;
-                padding: 0;
-                overflow-y: auto;
-                background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%);
-            }
             
-            .container {
-                max-width: 100%;
-                width: 100%;
-                height: auto;
-                min-height: 100vh;
-                border-radius: 0;
-                box-shadow: none;
-                overflow: visible;
-                background: white;
-                margin: 0 auto;
-                padding: 0;
-            }
-            
-            /* 确保内容正常显示 */
-            .test-cover,
-            .basic-info-section,
-            .test-description,
-            .theory-section,
-            .requirements-section,
-            .report-example-section,
-            .action-section {
-                opacity: 1 !important;
-                position: relative;
-                z-index: 2;
+            .primary-btn {
+                padding: 12px 30px;
+                font-size: 16px;
             }
         }
 
-        /* 桌面端样式 - 居中卡片效果 */
-        @media (min-width: 769px) {
-            body {
-                display: block; /* 重要：改为block而不是flex */
-                background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%);
-                padding: 20px;
-                min-height: 100vh;
-                height: auto;
-                overflow-y: auto;
-                margin: 0;
-            }
-            
-            .container {
-                max-width: 750px;
-                width: 100%;
-                min-height: auto;
-                height: auto;
-                border-radius: 12px;
-                overflow: visible; /* 重要：改为visible */
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-                background: white;
-                margin: 0 auto;
-                position: relative;
-            }
-            
-            /* 导航栏圆角处理 */
-            .navbar {
-                border-radius: 12px 12px 0 0;
-            }
-            
-            /* 页脚圆角处理 */
-            .container > footer:last-child {
-                border-radius: 0 0 12px 12px;
-            }
-            
-            /* 确保所有内容正常显示 */
-            .test-cover,
-            .basic-info-section,
-            .test-description,
-            .theory-section,
-            .requirements-section,
-            .report-example-section,
-            .action-section {
-                opacity: 1 !important;
-                position: relative;
-                z-index: 2;
-            }
-            
-            /* 测试封面圆角处理 */
-            .test-cover {
-                border-radius: 12px 12px 0 0;
-            }
-        }
-
-        /* 确保内容加载动画正常工作 */
+        /* 内容加载动画 */
         .test-cover,
         .basic-info-section,
         .test-description,
@@ -932,6 +912,7 @@
         .requirements-section,
         .report-example-section,
         .action-section {
+            opacity: 0;
             transition: opacity 0.3s ease;
         }
 
@@ -944,6 +925,6 @@
         .content-loaded .action-section {
             opacity: 1;
         }
-    </style>    
+    </style>
 </body>
 </html>
