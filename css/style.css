@@ -2208,3 +2208,50 @@ body {
     border-radius: 4px;
     margin: 0 1px;
 }
+
+/* === 桌面端统一居中样式 === */
+
+/* 首页桌面端居中样式 */
+@media (min-width: 769px) {
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%);
+        padding: 20px;
+        max-width: none !important;
+        margin: 0 !important;
+    }
+    
+    .container {
+        max-width: 750px;
+        width: 100%;
+        height: 90vh;
+        max-height: 90vh;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        background: white;
+    }
+    
+    .bottom-nav {
+        max-width: 750px;
+        border-radius: 0 0 12px 12px;
+    }
+}
+
+/* 首页移动端保持全宽 */
+@media (max-width: 768px) {
+    body {
+        display: block;
+        padding: 0;
+    }
+    
+    .container {
+        max-width: 100%;
+        height: auto;
+        min-height: 100vh;
+        border-radius: 0;
+        box-shadow: none;
+    }
+}
