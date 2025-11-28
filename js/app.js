@@ -81,7 +81,7 @@ class PsychTestApp {
                 description: '你的性格最适合居住在哪个城市？',
                 category: 'fun',
                 templateType: 'fun',
-                price: 0.01,
+                price: 0.9,
                 questions: 10,
                 image: 'images/test1.jpg'
             },
@@ -91,7 +91,7 @@ class PsychTestApp {
                 description: '解锁你的隐藏天赋，发现异世界命定身份！',
                 category: 'fun',
                 templateType: 'fun',
-                price: 0.01,
+                price: 0.9,
                 questions: 9,
                 image: 'images/test2.jpg'
             },
@@ -101,7 +101,7 @@ class PsychTestApp {
                 description: '你是独立猫猫型还是阳光树懒型？探索你的亲密关系模式',
                 category: 'fun',
                 templateType: 'fun',
-                price: 0.01,
+                price: 0.9,
                 questions: 10,
                 image: 'images/test3.jpg'
             },
@@ -111,7 +111,7 @@ class PsychTestApp {
                 description: '测一测你是《大明王朝1566》里的谁？',
                 category: 'fun',
                 templateType: 'fun',
-                price: 0.01,
+                price: 0.9,
                 questions: 12,
                 image: 'images/test4.jpg'
             },
@@ -121,7 +121,7 @@ class PsychTestApp {
                 description: '发现你的天赋和优势能力，为你导航职业未来',
                 category: 'standard',
                 templateType: 'standard',
-                price: 0.01,
+                price: 9.9,
                 questions: 48,
                 image: 'images/test5.jpg'
             },
@@ -131,17 +131,17 @@ class PsychTestApp {
                 description: '90题全面扫描你的心理健康状态，提供改善方案',
                 category: 'standard',
                 templateType: 'standard', // 新增字段
-                price: 0.01,
+                price: 9.9,
                 questions: 90,
                 image: 'images/test6.jpg'
             },
             {
-                id: '7',  // 动物塑测试
+                id: '7',
                 title: '动物人格测试',
                 description: '揭秘你的灵魂动物原型',
                 category: 'fun',
-                templateType: 'fun', // 新增字段
-                price: 0.01,
+                templateType: 'fun',
+                price: 0.1,
                 questions: 60,
                 image: 'images/test7.jpg'
             },
@@ -151,7 +151,7 @@ class PsychTestApp {
                 description: '你最核心的精神驱动力是什么？是权力金钱还是爱？',
                 category: 'fun',
                 templateType: 'fun',
-                price: 0.01,
+                price: 0.1,
                 questions: 60,
                 image: 'images/test8.jpg'
             }            
