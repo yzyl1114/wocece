@@ -82,13 +82,29 @@
                 this.wallpapers = [];
                 this.currentPage = 1;
                 this.isLoading = false;
+                this.wallpaperIndex = {}; // 记录每个星座已使用的序号
+                this.zodiacs = ['aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo', 
+                              'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces'];
                 this.init();
             }
 
             async init() {
+                // 初始化每个星座的序号记录
+                this.zodiacs.forEach(zodiac => {
+                    this.wallpaperIndex[zodiac] = 0; // 从0开始，每次+1
+                });
+                
                 await this.loadWallpapers();
                 this.renderWallpapers();
                 this.bindEvents();
+            }
+
+            getItemsPerPage() {
+                if (this.currentZodiac === 'all') {
+                    return 12;  // 全部标签：12张/页
+                } else {
+                    return 9;   // 单个星座：9张/页（正好完整显示）
+                }
             }
 
             async loadWallpapers(page = 1) {
@@ -96,25 +112,47 @@
                 
                 this.isLoading = true;
                 
-                // 使用本地images文件夹的壁纸
-                const zodiacs = ['aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo', 
-                            'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces'];
-                
-                // 生成本地壁纸数据
                 const newWallpapers = [];
-                const itemsPerPage = 12;
+                const itemsPerPage = this.getItemsPerPage();
                 
-                for (let i = 0; i < itemsPerPage; i++) {
-                    const zodiac = zodiacs[Math.floor(Math.random() * zodiacs.length)];
-                    const imageNum = Math.floor(Math.random() * 5) + 1; // 假设每个星座有5张图
-                    
-                    newWallpapers.push({
-                        id: `wallpaper_${page}_${i}`,
-                        url: `images/wallpapers/${zodiac}_${imageNum}.jpg`, // 大图路径
-                        thumbnail: `images/wallpapers/${zodiac}_${imageNum}_thumb.jpg`, // 缩略图路径
-                        zodiac: zodiac,
-                        name: `${this.getZodiacName(zodiac)}星座壁纸 ${i + 1}`
-                    });
+                if (this.currentZodiac === 'all') {
+                    // 全部标签：轮询显示所有星座
+                    for (let i = 0; i < itemsPerPage; i++) {
+                        // 轮询选择星座，确保每个星座都有机会显示
+                        const zodiacIndex = (i + (page - 1) * itemsPerPage) % this.zodiacs.length;
+                        const zodiac = this.zodiacs[zodiacIndex];
+                        
+                        // 获取当前星座的下一个序号
+                        let imageNum = this.wallpaperIndex[zodiac] + 1;
+                        
+                        // 如果序号超过最大值(9)，回到1重新开始
+                        if (imageNum > 9) {
+                            imageNum = 1;
+                        }
+                        
+                        this.wallpaperIndex[zodiac] = imageNum;
+                        
+                        newWallpapers.push({
+                            id: `wallpaper_${zodiac}_${imageNum}_${page}_${i}`,
+                            url: `images/wallpapers/${zodiac}_${imageNum}.jpg`,
+                            thumbnail: `images/wallpapers/${zodiac}_${imageNum}_thumb.jpg`,
+                            zodiac: zodiac,
+                            name: `${this.getZodiacName(zodiac)}星座壁纸 ${imageNum}`
+                        });
+                    }
+                } else {
+                    // 单个星座标签：顺序显示该星座的所有图片
+                    for (let i = 0; i < itemsPerPage; i++) {
+                        let imageNum = ((i + (page - 1) * itemsPerPage) % 9) + 1;
+                        
+                        newWallpapers.push({
+                            id: `wallpaper_${this.currentZodiac}_${imageNum}_${page}_${i}`,
+                            url: `images/wallpapers/${this.currentZodiac}_${imageNum}.jpg`,
+                            thumbnail: `images/wallpapers/${this.currentZodiac}_${imageNum}_thumb.jpg`,
+                            zodiac: this.currentZodiac,
+                            name: `${this.getZodiacName(this.currentZodiac)}星座壁纸 ${imageNum}`
+                        });
+                    }
                 }
 
                 if (page === 1) {
@@ -150,6 +188,9 @@
                         </div>
                     </div>
                 `).join('');
+
+                // 更新加载更多按钮状态
+                this.updateLoadMoreButton();
             }
 
             bindEvents() {
@@ -200,7 +241,7 @@
                 });
             }
 
-            handleZodiacChange(zodiac) {
+            async handleZodiacChange(zodiac) {
                 // 更新激活状态
                 document.querySelectorAll('.zodiac-tabs .tab').forEach(tab => {
                     tab.classList.remove('active');
@@ -208,6 +249,8 @@
                 event.currentTarget.classList.add('active');
 
                 this.currentZodiac = zodiac;
+                this.currentPage = 1;
+                await this.loadWallpapers(1);
                 this.renderWallpapers();
             }
 
@@ -275,6 +318,16 @@
                 loadBtn.disabled = false;
             }
 
+            updateLoadMoreButton() {
+                const loadBtn = document.getElementById('loadMoreBtn');
+                if (this.currentZodiac !== 'all' && this.currentPage >= 1) {
+                    // 单个星座标签，第一页后就可以提示"重新循环"
+                    loadBtn.textContent = '重新循环显示';
+                } else {
+                    loadBtn.textContent = '加载更多';
+                }
+            }
+
             trackDownload() {
                 // 发送下载统计
                 fetch('/api/track-download', {
@@ -308,7 +361,7 @@
         body {
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%); /* 修改：更新背景渐变 */
+            background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
             color: var(--text-color);
@@ -351,12 +404,12 @@
             gap: 8px;
             padding: 0 15px;
             overflow-x: auto;
-            scrollbar-width: none; /* 隐藏滚动条 */
-            -ms-overflow-style: none; /* IE和Edge */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
 
         .zodiac-tabs::-webkit-scrollbar {
-            display: none; /* Chrome, Safari, Opera */
+            display: none;
         }
 
         .zodiac-tabs .tab {
@@ -371,7 +424,7 @@
         }
 
         .zodiac-tabs .tab.active {
-            background: linear-gradient(135deg, #00B894, #00CEC9); /* 修改：更新渐变 */
+            background: linear-gradient(135deg, #00B894, #00CEC9);
             color: white;
             border-color: #00B894;
         }
@@ -442,7 +495,7 @@
         }
 
         .load-more-btn {
-            background: linear-gradient(135deg, #00B894, #00CEC9); /* 修改：更新渐变 */
+            background: linear-gradient(135deg, #00B894, #00CEC9);
             color: white;
             border: none;
             padding: 12px 30px;
@@ -491,7 +544,7 @@
         .download-btn {
             position: fixed;
             bottom: 30px;
-            background: linear-gradient(135deg, #00B894, #00CEC9); /* 修改：更新渐变 */
+            background: linear-gradient(135deg, #00B894, #00CEC9);
             color: white;
             padding: 12px 40px;
             border: none;
