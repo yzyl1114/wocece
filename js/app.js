@@ -141,7 +141,7 @@ class PsychTestApp {
                 description: '揭秘你的灵魂动物原型',
                 category: 'fun',
                 templateType: 'fun',
-                price: 0.1,
+                price: 0.5,
                 questions: 60,
                 image: 'images/test7.jpg'
             },
@@ -151,7 +151,7 @@ class PsychTestApp {
                 description: '你最核心的精神驱动力是什么？是权力金钱还是爱？',
                 category: 'fun',
                 templateType: 'fun',
-                price: 0.1,
+                price: 0.5,
                 questions: 60,
                 image: 'images/test8.jpg'
             }            
