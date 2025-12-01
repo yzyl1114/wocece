@@ -52,7 +52,7 @@ RwIDAQAB
 
 // ==================== API签名配置 ====================
 // API请求签名密钥（请定期更换）
-define('API_SECRET_KEY', 'wocece_api_secret_20240115_' . md5('我测测心理测试平台'));
+define('API_SECRET_KEY', 'wocece_test_key_202512_993c4c8393d29d64b5784f00ceb97df2');
 
 // API响应签名密钥
 define('API_RESPONSE_SECRET', 'wocece_response_secret_' . date('Ym'));

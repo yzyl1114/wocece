@@ -75,9 +75,15 @@
 
             async loadTestData() {
                 try {
-                    const response = await fetch('data/tests.json');
-                    const data = await response.json();
-                    this.testData = data.tests[this.testId];
+                    const response = await fetch('/api/get-tests.php?id=' + this.testId);
+                    const result = await response.json();
+                    
+                    if (result.code === 0 && result.data.length > 0) {
+                        // API返回的是数组，直接取第一个
+                        this.testData = result.data[0];
+                    } else {
+                        throw new Error('测试数据不存在: ' + (result.msg || 'API返回空数据'));
+                    }
                     
                     if (!this.testData) {
                         throw new Error('测试数据不存在');

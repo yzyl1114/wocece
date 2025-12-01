@@ -1,0 +1,8 @@
+# 禁止访问数据文件
+<FilesMatch "\.(json|enc|hidden|backup)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# 禁止目录列表
+Options -Indexes

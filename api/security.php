@@ -119,10 +119,15 @@ function checkRateLimit($key, $limit = 10, $period = 60) {
  * @param array $allowedDomains 允许的域名列表
  * @return bool
  */
+/**
+ * 验证请求来源域名（修改版：允许空Referer）
+ * @param array $allowedDomains 允许的域名列表
+ * @return bool
+ */
 function validateReferer($allowedDomains = []) {
     if (empty($allowedDomains)) {
         $allowedDomains = [
-            'your-domain.com',
+            'wocece.com',
             'localhost',
             '127.0.0.1'
         ];
@@ -131,6 +136,16 @@ function validateReferer($allowedDomains = []) {
     $referer = $_SERVER['HTTP_REFERER'] ?? '';
     $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
     
+    // 允许空Referer（前端直接访问或某些特殊情况）
+    if (empty($referer) && empty($origin)) {
+        // 记录日志但不拒绝
+        logSecurityEvent('empty_referer_allowed', [
+            'ip' => getClientIp(),
+            'path' => $_SERVER['REQUEST_URI'] ?? ''
+        ]);
+        return true;
+    }
+    
     foreach ($allowedDomains as $domain) {
         if (strpos($referer, $domain) !== false || strpos($origin, $domain) !== false) {
             return true;
@@ -138,9 +153,7 @@ function validateReferer($allowedDomains = []) {
     }
     
     return false;
-}
-
-/**
+}/**
  * 获取客户端IP
  * @return string
  */
