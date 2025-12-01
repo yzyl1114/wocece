@@ -140,11 +140,11 @@
                     const response = await fetch('/api/get-tests.php?id=' + this.testId);
                     const result = await response.json();
                     
-                    if (result.code === 0 && result.data.length > 0) {
-                        // API返回的是数组，直接取第一个
-                        this.testData = result.data[0];
+                    if (result.code === 0) {
+                        // result.data 直接就是测试对象
+                        this.testData = result.data;
                     } else {
-                        throw new Error('测试数据不存在: ' + (result.msg || 'API返回空数据'));
+                        throw new Error('测试数据不存在: ' + result.msg);
                     }
                     
                     if (!this.testData) {

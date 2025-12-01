@@ -40,8 +40,7 @@ try {
         throw new Exception('数据结构错误，找不到tests');
     }
     
-    $rawTests = $decryptedData['data']['tests'];
-    $allTests = array_values($rawTests); // 转换为索引数组
+    $allTests = $decryptedData['data']['tests']; // 🔥 保持为对象，不转数组
     
     // 5. 处理请求
     $testId = isset($_GET['id']) ? $_GET['id'] : '';
@@ -52,15 +51,10 @@ try {
     $resultData = [];
     
     if (!empty($testId)) {
-        // 查找单个测试
-        foreach ($allTests as $test) {
-            if (isset($test['id']) && $test['id'] == $testId) {
-                $resultData = $test;
-                break;
-            }
-        }
-        
-        if (empty($resultData)) {
+        // 🔥 直接通过键名访问对象
+        if (isset($allTests[$testId])) {
+            $resultData = $allTests[$testId];
+        } else {
             throw new Exception('测试不存在: ' . $testId);
         }
         
@@ -73,20 +67,8 @@ try {
         }
         
     } else {
-        // 返回所有测试（简略信息）
-        foreach ($allTests as $test) {
-            $resultData[] = [
-                'id' => $test['id'] ?? '',
-                'title' => $test['title'] ?? '',
-                'description' => $test['description'] ?? '',
-                'category' => $test['category'] ?? '',
-                'price' => $test['price'] ?? 0,
-                'questions_count' => isset($test['questions']) ? count($test['questions']) : 0,
-                'cover_image' => $test['image'] ?? '',
-                'duration' => $test['duration'] ?? 0,
-                'difficulty' => $test['difficulty'] ?? '中等'
-            ];
-        }
+        // 🔥 返回原始结构 {"tests": {...}}
+        $resultData = ['tests' => $allTests];
     }
     
     // 6. 构建响应

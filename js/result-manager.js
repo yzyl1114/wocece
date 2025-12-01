@@ -23,15 +23,14 @@ class ResultManager {
 
     async loadTestConfig() {
         try {
-            // 修改这一行：从 tests.json → app.js
             const response = await fetch('/api/get-tests.php?id=' + this.testId);
             const result = await response.json();
             
-            if (result.code === 0 && result.data.length > 0) {
-                // API返回的是数组，直接取第一个
-                this.testConfig = result.data[0];
+            if (result.code === 0) {
+                // result.data 直接就是测试对象（不再是 data.tests[this.testId]）
+                this.testConfig = result.data;
             } else {
-                console.error('加载测试配置失败:', result.msg || '数据为空');
+                console.error('加载测试配置失败:', result.msg);
             }
         } catch (error) {
             console.error('加载测试配置失败:', error);
