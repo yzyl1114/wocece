@@ -1,0 +1,334 @@
+class PsychTestApp {
+    constructor() {
+        this.currentTest = null;
+        this.currentAnswers = [];
+        this.tests = [];
+        this.init();
+    }
+
+    init() {
+        this.bindEvents();
+        this.loadTestData();
+        this.renderTestLists();
+        this.initNavigation();
+    }
+
+    bindEvents() {
+        // 搜索功能
+        document.getElementById('searchBtn')?.addEventListener('click', () => this.handleSearch());
+        document.getElementById('searchInput')?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') this.handleSearch();
+        });
+
+        // 分类标签
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', (e) => this.handleTabClick(e));
+        });
+
+        // +++ 新增：分享功能 +++
+        document.getElementById('shareIcon')?.addEventListener('click', () => {
+            this.handleShare();
+        });      
+    }
+
+    handleShare() {
+        // 获取当前首页的URL
+        const shareUrl = window.location.href;
+        
+        // 方案一：使用现代的 Clipboard API (推荐)
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(shareUrl)
+                .then(() => {
+                    this.showToast('分享链接已复制，快去分享给好友吧！');
+                })
+                .catch(err => {
+                    console.error('复制失败:', err);
+                    this.showToast('复制失败，请手动复制链接');
+                });
+        } 
+        // 方案二：兼容旧浏览器的备用方案
+        else {
+            // 创建临时文本域
+            const textArea = document.createElement('textarea');
+            textArea.value = shareUrl;
+            textArea.style.position = 'fixed'; // 避免滚动到页面底部
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    this.showToast('分享链接已复制，快去分享给好友吧！');
+                } else {
+                    this.showToast('复制失败，请手动复制链接');
+                }
+            } catch (err) {
+                console.error('复制失败:', err);
+                this.showToast('复制失败，请手动复制链接');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+    }
+
+    loadTestData() {
+        // 测试数据
+        this.tests = [
+            {
+                id: '1',
+                title: '你的精神老家',
+                description: '你的性格最适合居住在哪个城市？',
+                category: 'fun',
+                templateType: 'fun',
+                price: 0.9,
+                questions: 10,
+                image: 'images/test1.jpg'
+            },
+            {
+                id: '2',
+                title: '你在异世界的职业', 
+                description: '解锁你的隐藏天赋，发现异世界命定身份！',
+                category: 'fun',
+                templateType: 'fun',
+                price: 0.9,
+                questions: 9,
+                image: 'images/test2.jpg'
+            },
+            {
+                id: '3',
+                title: '你是什么型恋人',
+                description: '你是独立猫猫型还是阳光树懒型？探索你的亲密关系模式',
+                category: 'fun',
+                templateType: 'fun',
+                price: 0.9,
+                questions: 10,
+                image: 'images/test3.jpg'
+            },
+            {
+                id: '4',
+                title: '大明王朝职场生存人格',
+                description: '测一测你是《大明王朝1566》里的谁？',
+                category: 'fun',
+                templateType: 'fun',
+                price: 0.9,
+                questions: 12,
+                image: 'images/test4.jpg'
+            },
+            {
+                id: '5',
+                title: '职业优势识别器（专业版）',
+                description: '发现你的天赋和优势能力，为你导航职业未来',
+                category: 'standard',
+                templateType: 'standard',
+                price: 9.9,
+                questions: 48,
+                image: 'images/test5.jpg'
+            },
+            {
+                id: '6',  // SCL-90测试
+                title: 'SCL-90心理健康测试（专业版）',
+                description: '90题全面扫描你的心理健康状态，提供改善方案',
+                category: 'standard',
+                templateType: 'standard', // 新增字段
+                price: 9.9,
+                questions: 90,
+                image: 'images/test6.jpg'
+            },
+            {
+                id: '7',
+                title: '动物人格测试',
+                description: '揭秘你的灵魂动物原型',
+                category: 'fun',
+                templateType: 'fun',
+                price: 0.5,
+                questions: 60,
+                image: 'images/test7.jpg'
+            },
+            {
+                id: '8',
+                title: '精神需求测试',
+                description: '你最核心的精神驱动力是什么？是权力金钱还是爱？',
+                category: 'fun',
+                templateType: 'fun',
+                price: 0.5,
+                questions: 60,
+                image: 'images/test8.jpg'
+            }            
+        ];
+    }
+
+    renderTestLists() {
+        this.renderFeaturedTests();
+        this.renderTestList();
+    }
+
+    renderFeaturedTests() {
+        const featuredContainer = document.getElementById('featuredTests');
+        if (featuredContainer) {
+            // 指定2个测试作为特色测试
+            const featuredIds = ['4', '5'];
+            const featuredTests = this.tests.filter(test => featuredIds.includes(test.id));
+            
+            featuredContainer.innerHTML = featuredTests.map(test => `
+                <div class="test-card" data-test-id="${test.id}">
+                    <div class="test-image" style="background-image: url('${test.image}'); background-size: cover; background-position: center;"></div>
+                    <div class="test-content">
+                        <div class="test-title">${test.title}</div>
+                        <button class="test-btn" onclick="app.navigateToTest('${test.id}')">前往 →</button>
+                    </div>
+                </div>
+            `).join('');
+
+            // 绑定卡片点击事件
+            featuredContainer.querySelectorAll('.test-card').forEach(card => {
+                card.addEventListener('click', (e) => {
+                    if (!e.target.classList.contains('test-btn')) {
+                        const testId = card.dataset.testId;
+                        this.navigateToTest(testId);
+                    }
+                });
+            });
+        }
+    }
+
+    renderTestList() {
+        const testListContainer = document.getElementById('testList');
+        if (testListContainer) {
+            testListContainer.innerHTML = this.tests.map(test => `
+                <div class="test-list-item" data-test-id="${test.id}" data-category="${test.category}">
+                    <div class="test-thumb" style="background-image: url('${test.image}'); background-size: cover; background-position: center;"></div>
+                    <div class="test-info">
+                        <div class="test-title">${test.title}</div>
+                        <div class="test-desc">${test.description}</div>
+                    </div>
+                    <button class="small-btn" onclick="app.navigateToTest('${test.id}')">前往</button>
+                </div>
+            `).join('');
+
+            // 绑定列表项点击事件
+            testListContainer.querySelectorAll('.test-list-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    if (!e.target.classList.contains('small-btn')) {
+                        const testId = item.dataset.testId;
+                        this.navigateToTest(testId);
+                    }
+                });
+            });
+        }
+    }
+
+    /**
+     * 检查是否已完成测试
+     */
+    hasCompletedTest(testId) {
+        // 检查是否有测试结果
+        const results = this.getAllTestResults();
+        return results.some(result => result.testId === testId);
+    }
+
+    /**
+     * 获取所有测试结果
+     */
+    getAllTestResults() {
+        const results = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.startsWith('test_result_')) {
+                try {
+                    const result = JSON.parse(localStorage.getItem(key));
+                    if (result && result.data) {
+                        results.push({
+                            testId: result.data.testId || 'unknown',
+                            timestamp: result.timestamp,
+                            resultId: key.replace('test_result_', '')
+                        });
+                    }
+                } catch (e) {
+                    console.error('解析测试结果失败:', e);
+                }
+            }
+        }
+        return results;
+    }
+
+    // 跳转到测试详情
+    navigateToTest(testId) {
+        window.location.href = `detail.html?id=${testId}`;
+    }
+
+    handleSearch() {
+        const searchInput = document.getElementById('searchInput');
+        const keyword = searchInput.value.trim();
+        
+        if (keyword) {
+            this.filterTests(keyword);
+            this.showToast(`搜索: ${keyword}`);
+        }
+    }
+
+    handleTabClick(event) {
+        const tab = event.currentTarget;
+        const category = tab.dataset.category;
+        
+        // 更新激活状态
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        // 过滤测试列表
+        this.filterTestsByCategory(category);
+    }
+
+    filterTestsByCategory(category) {
+        const testItems = document.querySelectorAll('.test-list-item');
+        
+        testItems.forEach(item => {
+            const testCategory = item.dataset.category;
+            if (category === 'all' || testCategory === category) {
+                item.style.display = 'flex';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    filterTests(keyword) {
+        const testItems = document.querySelectorAll('.test-list-item');
+        const lowerKeyword = keyword.toLowerCase();
+        
+        testItems.forEach(item => {
+            const title = item.querySelector('.test-title').textContent.toLowerCase();
+            const desc = item.querySelector('.test-desc').textContent.toLowerCase();
+            
+            if (title.includes(lowerKeyword) || desc.includes(lowerKeyword)) {
+                item.style.display = 'flex';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    navigateTo(url) {
+        window.location.href = url;
+    }
+
+    showToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'toast show';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.remove();
+        }, 2000);
+    }
+
+    initNavigation() {
+        // 底部导航事件已在HTML中直接绑定
+    }
+}
+
+// 初始化应用
+document.addEventListener('DOMContentLoaded', () => {
+    window.app = new PsychTestApp();
+});
