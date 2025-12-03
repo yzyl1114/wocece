@@ -1,0 +1,17 @@
+{
+  "name": "wocece",
+  "version": "1.0.0",
+  "description": "心理测试H5项目",
+  "scripts": {
+    "obfuscate": "node obfuscate.js",
+    "obfuscate:light": "node obfuscate-light.js",
+    "clean": "node clean-dist.js",
+    "build": "npm run obfuscate"
+  },
+  "devDependencies": {
+    "javascript-obfuscator": "^4.0.0"
+  },
+  "keywords": ["psychology", "test", "h5"],
+  "author": "Your Name",
+  "license": "MIT"
+}
