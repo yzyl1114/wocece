@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>我测测 - 趣味心理测试</title>
+
+    <!-- 1. CSP安全策略（基础版） -->
+    <meta http-equiv="Content-Security-Policy" 
+        content="default-src 'self' https://wocece.com https://yzyl1114.github.io;
+                script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.bootcdn.net;
+                style-src 'self' 'unsafe-inline';
+                img-src 'self' data: https: blob:;
+                font-src 'self' data: https:;
+                connect-src 'self' *; 
+                frame-ancestors 'self' wocece.com yzyl1114.github.io;">
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 头部横幅 -->
+        <header class="header-banner">
+            <div class="header-content">
+                <h1 class="header-title">我测测</h1>
+                <p class="header-subtitle">发现有趣实用的测评</p>
+            </div>
+            <div class="header-icon share-icon" id="shareIcon">
+                <img src="images/share-icon.png" alt="分享" onerror="this.style.display='none'">
+            </div>
+    
+            <div class="header-icon feedback-icon" onclick="app.navigateTo('feedback.html')">
+                 <img src="images/feedback-icon.png" alt="反馈" onerror="this.style.display='none'">
+            </div>
+        </header>
+
+        <!-- 搜索区域 -->
+        <section class="search-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" class="search-input" placeholder="Q. 请输入测评名称">
+                <button id="searchBtn" class="search-btn">搜索</button>
+            </div>
+        </section>
+
+        <!-- 趣味精选 -->
+        <section class="featured-section">
+            <h2 class="section-title">趣味精选</h2>
+            <div class="featured-tests" id="featuredTests">
+                <!-- 动态生成 -->
+            </div>
+        </section>
+
+        <!-- 更多好玩 -->
+        <section class="more-tests-section">
+            <h2 class="section-title">更多好玩</h2>
+            
+            <!-- 分类标签 - 放在更多好玩标题下方 -->
+            <div class="tabs-section">
+                <div class="tabs">
+                    <div class="tab active" data-category="all">全部</div>
+                    <div class="tab" data-category="fun">趣味</div>
+                    <div class="tab" data-category="standard">专业</div>
+                </div>
+            </div>
+
+            <div class="test-list" id="testList">
+                <!-- 动态生成 -->
+            </div>
+        </section>
+
+        <!-- 页脚 -->
+        <footer class="global-footer">
+            京ICP备2024094021号-3
+        </footer>
+    </div>
+
+    <!-- 底部导航 -->
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="app.navigateTo('index.html')">
+            <div class="nav-icon">🏠</div>
+            <div>首页</div>
+        </div>
+        <div class="nav-item" onclick="app.navigateTo('discover.html')">
+            <div class="nav-icon">🔍</div>
+            <div>发现</div>
+        </div>
+    </nav>
+
+      <script src="js-dist/core.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>测试详情 - 我测测</title>
+
+    <meta http-equiv="Content-Security-Policy" 
+          content="default-src 'self' https://wocece.com https://yzyl1114.github.io;
+                   script-src 'self' 'unsafe-inline' 'unsafe-eval';
+                   style-src 'self' 'unsafe-inline';
+                   img-src 'self' data: https:;
+                   connect-src 'self' https://wocece.com https://yzyl1114.github.io;
+                   frame-ancestors 'self' wocece.com yzyl1114.github.io;">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <div class="page-container">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo" id="backButton">← 返回</div>
+            </div>
+        </nav>
+        
+        <!-- 测试封面 -->
+        <div class="test-cover">
+            <img id="testCoverImage" src="" alt="测试封面" class="cover-image">
+            <h1 id="testTitle" class="test-title-main"></h1>
+        </div>    
+
+        <!-- 基本信息卡片 - 标准测试特有 -->
+        <section class="basic-info-section standard-only" id="basicInfoSection" style="display: none;">
+            <div class="basic-info-cards" id="basicInfoCards">
+                <!-- 动态生成：题目数量、测试时长、报告类型 -->
+            </div>
+        </section>
+
+        <!-- 测试描述 - 趣味测试使用 -->
+        <section class="test-description fun-only" id="funDescriptionSection" style="display: none;">
+            <div class="description-content">
+                <p id="testDescription"></p>
+            </div>
+        </section>
+
+        <!-- 理论依据 - 标准测试使用 -->
+        <section class="theory-section standard-only" id="theorySection" style="display: none;">
+            <h3>理论依据</h3>
+            <div class="theory-content" id="theoryContent">
+                <!-- 内容和图片 -->
+            </div>
+        </section>
+
+        <!-- 测试要求 - 标准测试使用 -->
+        <section class="requirements-section standard-only" id="requirementsSection" style="display: none;">
+            <h3>测试要求</h3>
+            <div class="requirements-content" id="requirementsContent">
+                <!-- 内容和图片 -->
+            </div>
+        </section>
+
+        <!-- 报告示例 - 标准测试使用 -->
+        <section class="report-example-section standard-only" id="reportExampleSection" style="display: none;">
+            <h3>报告内容</h3>
+            <div class="report-example-content" id="reportExampleContent">
+                <!-- 内容和图片 -->
+            </div>
+        </section>
+
+        <!-- 立即测试按钮 -->
+        <section class="action-section">
+            <button id="startTestBtn" class="primary-btn">
+                ¥<span id="testPrice">1</span> 解锁测试
+            </button>
+            <div class="redeem-link">
+                <a href="#" id="redeemLink">已有兑换码/优惠码？点击这里</a>
+            </div>
+        </section>
+
+        <!-- 页脚 -->
+        <footer class="page-footer">
+            *测试仅供娱乐*
+        </footer>
+    </div>
+
+    <!-- Toast提示 -->
+    <div class="toast"></div>
+
+    <script>
+        // 处理突出显示文本的函数
+        function processHighlightText(text) {
+            if (!text) return '';
+            
+            // 使用 **内容** 作为突出显示标记
+            return text.replace(/\*\*(.*?)\*\*/g, '<span class="highlight-text">$1</span>');
+        }
+        class DetailManager {
+            constructor() {
+                this.testId = null;
+                this.testData = null;
+                this.templateType = 'fun'; // 默认趣味模板
+                this.init();
+            }
+
+            async init() {
+                this.testId = new URLSearchParams(window.location.search).get('id');
+                await this.loadTestData();
+                this.determineTemplateType();
+                this.renderTestDetail();
+                this.bindEvents();
+                this.checkPaymentReturn(); // 检查是否从支付返回
+                this.checkRedeemSuccess(); // 新增：检查兑换成功状态
+            }
+
+            // 新增：检查兑换成功状态
+            checkRedeemSuccess() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const redeemSuccess = urlParams.get('redeem_success');
+                
+                if (redeemSuccess === 'true') {
+                    this.showToast('兑换成功！已解锁测试');
+                    
+                    // 标记为已兑换（但不标记为已完成）
+                    // 注意：这里只保存兑换记录，不保存支付记录
+                    const redeemRecords = JSON.parse(localStorage.getItem('redeem_records') || '{}');
+                    redeemRecords[this.testId] = {
+                        redeemed: true,
+                        timestamp: Date.now()
+                    };
+                    localStorage.setItem('redeem_records', JSON.stringify(redeemRecords));
+                    
+                    // 清除URL参数，避免重复提示
+                    const newUrl = window.location.pathname + '?id=' + this.testId;
+                    window.history.replaceState({}, '', newUrl);
+                    
+                    // 更新按钮状态
+                    this.updateButtonState();
+                }
+            }
+
+            async loadTestData() {
+                try {
+                    this.testId = new URLSearchParams(window.location.search).get('id');
+                    
+                    const response = await fetch('/api/get-tests.php?id=' + this.testId);
+                    const result = await response.json();
+                    
+                    if (result.code === 0) {
+                        // result.data 直接就是测试对象
+                        this.testData = result.data;
+                    } else {
+                        throw new Error('测试数据不存在: ' + result.msg);
+                    }
+                    
+                    if (!this.testData) {
+                        throw new Error('测试数据不存在');
+                    }
+                    
+                } catch (error) {
+                    console.error('加载测试数据失败:', error);
+                    // 使用默认数据
+                    this.testData = {
+                        id: this.testId,
+                        title: '心理测试',
+                        description: '这是一个基于心理学原理的测试...',
+                        templateType: 'fun',
+                        price: 1,
+                        image: 'images/test-detail.jpg'
+                    };
+                }
+            }
+
+            determineTemplateType() {
+                this.templateType = this.testData.templateType || 'fun';
+            }
+
+            renderTestDetail() {
+                // 基础信息
+                document.getElementById('testCoverImage').src = this.testData.image;
+                document.getElementById('testTitle').textContent = this.testData.title;
+                document.getElementById('testPrice').textContent = this.testData.price;
+                
+                // 根据模板类型显示不同内容
+                if (this.templateType === 'standard') {
+                    this.renderStandardTemplate();
+                } else {
+                    this.renderFunTemplate();
+                }
+                
+                // 更新页面标题
+                document.title = `${this.testData.title} - 我测测`;
+
+                // 更新按钮状态
+                this.updateButtonState();
+
+                setTimeout(() => {
+                    document.body.classList.add('content-loaded');
+                }, 100);
+            }
+
+            renderStandardTemplate() {
+                // 隐藏趣味测试部分，显示标准测试部分
+                document.querySelectorAll('.fun-only').forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.standard-only').forEach(el => el.style.display = 'block');
+
+                // 渲染基本信息卡片
+                this.renderBasicInfoCards();
+                
+                // 渲染理论依据
+                this.renderTheorySection();
+                
+                // 渲染测试要求  
+                this.renderRequirementsSection();
+                
+                // 渲染报告示例
+                this.renderReportExampleSection();
+            }
+
+            renderFunTemplate() {
+                // 隐藏标准测试部分，显示趣味测试部分
+                document.querySelectorAll('.standard-only').forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.fun-only').forEach(el => el.style.display = 'block');
+                
+                // 渲染描述
+                document.getElementById('testDescription').textContent = this.testData.description;
+            }
+
+            renderBasicInfoCards() {
+                if (!this.testData.basicInfo) return;
+                
+                const container = document.getElementById('basicInfoCards');
+                const info = this.testData.basicInfo;
+                
+                container.innerHTML = `
+                    <div class="info-card">
+                        <div class="info-number">${info.questions}</div>
+                        <div class="info-label">道题</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-number">${info.duration}</div>
+                        <div class="info-label">分钟</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-icon">📊</div>
+                        <div class="info-label">${info.reportType}</div>
+                    </div>
+                `;
+            }
+
+            renderTheorySection() {
+                if (!this.testData.theory) return;
+                
+                const container = document.getElementById('theoryContent');
+                const theory = this.testData.theory;
+                
+                // 🔧 修复：先处理换行，再处理高亮标记
+                const processedContent = processHighlightText(theory.content);
+                const paragraphs = processedContent.split('\n').filter(p => p.trim());
+                
+                let contentHTML = `
+                    <div class="text-content">
+                        ${paragraphs.map(p => `<p>${p}</p>`).join('')}
+                    </div>
+                `;
+                // 如果有图片，添加图片
+                if (theory.image) {
+                    contentHTML += `
+                        <div class="image-content">
+                            <img src="${theory.image}" alt="理论依据示意图" class="content-image">
+                        </div>
+                    `;
+                }
+                
+                container.innerHTML = contentHTML;
+            }
+
+            renderRequirementsSection() {
+                if (!this.testData.requirements) return;
+                
+                const container = document.getElementById('requirementsContent');
+                const requirements = this.testData.requirements;
+                
+                let contentHTML = `
+                    <div class="text-content">
+                        <p>${processHighlightText(requirements.content)}</p>
+                        <ul class="requirements-list">
+                            ${requirements.items.map(item => `<li>${processHighlightText(item)}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+                
+                // 如果有图片，添加图片
+                if (requirements.image) {
+                    contentHTML += `
+                        <div class="image-content">
+                            <img src="${requirements.image}" alt="测试要求示意图" class="content-image">
+                        </div>
+                    `;
+                }
+                
+                container.innerHTML = contentHTML;
+            }
+
+            renderReportExampleSection() {
+                if (!this.testData.reportExample) return;
+                
+                const container = document.getElementById('reportExampleContent');
+                const example = this.testData.reportExample;
+                
+                let contentHTML = `
+                    <div class="text-content">
+                        <div class="report-steps">
+                            ${example.steps.map(step => `
+                                <div class="report-step">
+                                    <div class="step-header">
+                                        <span class="step-title">${step.title}</span>
+                                        <span class="step-subtitle">${step.subtitle}</span>
+                                    </div>
+                                    <div class="step-description">${processHighlightText(step.description)}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                
+                // 如果有图片，添加图片
+                if (example.image) {
+                    contentHTML += `
+                        <div class="image-content">
+                            <img src="${example.image}" alt="报告示例示意图" class="content-image">
+                        </div>
+                    `;
+                }
+                
+                container.innerHTML = contentHTML;
+            }
+
+            bindEvents() {
+                // 修复：明确的返回按钮事件绑定
+                const backButton = document.getElementById('backButton');
+                if (backButton) {
+                    backButton.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        console.log('详情页返回按钮点击，跳转到首页');
+                        window.location.href = 'index.html';
+                    });
+                }
+                
+                // 立即测试按钮
+                document.getElementById('startTestBtn').addEventListener('click', () => {
+                    this.handleStartTest();
+                });
+
+                // 兑换码链接
+                document.getElementById('redeemLink').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.goToRedeem();
+                });
+            }
+
+            // 检查支付返回状态
+            checkPaymentReturn() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const paymentSuccess = urlParams.get('payment_success');
+                const paymentTestId = urlParams.get('testId');
+                
+                // 如果是从支付成功页面返回，并且测试ID匹配
+                if (paymentSuccess === 'true' && paymentTestId === this.testId) {
+                    this.showToast('支付成功！已解锁测试');
+                    
+                    // 标记为已支付
+                    storageManager.savePaymentRecord(this.testId);
+                    
+                    // 清除URL参数，避免重复提示
+                    const newUrl = window.location.pathname + '?id=' + this.testId;
+                    window.history.replaceState({}, '', newUrl);
+                }
+            }
+
+            // 更新按钮状态
+            updateButtonState() {
+                const startBtn = document.getElementById('startTestBtn');
+                const priceSpan = document.getElementById('testPrice');
+                
+                // 检查是否已支付/已兑换且未完成
+                const hasPaid = storageManager.hasPaidForTest(this.testId);
+                const hasRedeemed = this.hasRedeemedForTest(this.testId);
+                const hasCompleted = this.hasCompletedTest(this.testId);
+                
+                console.log('按钮状态检查:', {
+                    hasPaid, 
+                    hasRedeemed, 
+                    hasCompleted
+                });
+                
+                if ((hasPaid || hasRedeemed) && !hasCompleted) {
+                    // 已支付/兑换但未完成，显示立即测试
+                    startBtn.innerHTML = `立即测试`;
+                    if (priceSpan) priceSpan.style.display = 'none';
+                } else {
+                    // 未支付/兑换 或 已完成，显示解锁测试
+                    startBtn.innerHTML = `¥<span id="testPrice">${this.testData.price}</span> 解锁测试`;
+                    if (priceSpan) priceSpan.style.display = 'inline';
+                }
+            }
+
+            // 新增方法：检查是否已完成测试
+            hasCompletedTest(testId) {
+                // 检查是否有测试结果
+                const results = this.getAllTestResults();
+                return results.some(result => result.testId === testId);
+            }
+
+            // 新增方法：获取所有测试结果
+            getAllTestResults() {
+                const results = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key && key.startsWith('test_result_')) {
+                        try {
+                            const result = JSON.parse(localStorage.getItem(key));
+                            if (result && result.data) {
+                                results.push({
+                                    testId: result.data.testId || 'unknown',
+                                    timestamp: result.timestamp,
+                                    resultId: key.replace('test_result_', '')
+                                });
+                            }
+                        } catch (e) {
+                            console.error('解析测试结果失败:', e);
+                        }
+                    }
+                }
+                return results;
+            }            
+
+            handleStartTest() {
+                // 检查是否已完成测试
+                const hasCompleted = this.hasCompletedTest(this.testId);
+                
+                if (hasCompleted) {
+                    console.log('测试已完成，需要重新解锁:', this.testId);
+                    this.showToast('已完成测试，需要重新解锁');
+                    
+                    // 关键修复：清除状态后立即触发支付流程
+                    storageManager.clearCompletionStatus(this.testId);
+                    storageManager.clearPaymentRecord(this.testId);
+                    this.clearRedeemRecord(this.testId);
+                    
+                    // 重新检查状态
+                    this.updateButtonState();
+                    
+                    // 新增：直接启动支付流程
+                    setTimeout(() => {
+                        if (window.paymentManager) {
+                            window.paymentManager.initializePayment(this.testId, this.testData.price);
+                        } else {
+                            // 备用方案：跳转到测试页面
+                            window.location.href = `testing.html?id=${this.testId}`;
+                        }
+                    }, 1500); // 给用户1.5秒看到提示
+                    
+                    return;
+                }
+                
+                // 正常流程：检查是否已支付、已兑换或有进度
+                const hasPaid = storageManager.hasPaidForTest(this.testId);
+                const hasRedeemed = this.hasRedeemedForTest(this.testId);
+                const hasProgress = storageManager.getTestProgress(this.testId);
+                
+                console.log('开始测试检查:', {
+                    testId: this.testId,
+                    hasPaid,
+                    hasRedeemed, 
+                    hasProgress,
+                    hasCompleted
+                });
+                
+                if (this.testData.price === 0 || hasPaid || hasRedeemed || hasProgress) {
+                    window.location.href = `testing.html?id=${this.testId}`;
+                } else {
+                    // 需要支付
+                    if (window.paymentManager) {
+                        window.paymentManager.initializePayment(this.testId, this.testData.price);
+                    } else {
+                        this.showToast('正在准备支付...');
+                        setTimeout(() => {
+                            window.location.href = `testing.html?id=${this.testId}`;
+                        }, 1000);
+                    }
+                }
+            }
+
+            hasRedeemedForTest(testId) {
+                const redeemRecords = JSON.parse(localStorage.getItem('redeem_records') || '{}');
+                const record = redeemRecords[testId];
+                
+                if (record && record.redeemed) {
+                    // 检查兑换码是否在有效期内（可选）
+                    const usedAt = new Date(record.usedAt);
+                    const now = new Date();
+                    const hoursDiff = (now - usedAt) / (1000 * 60 * 60);
+                    
+                    // 如果兑换超过7天视为过期
+                    if (hoursDiff > 168) {
+                        console.log('兑换记录已过期，需要重新兑换:', testId);
+                        delete redeemRecords[testId]; // 清除过期记录
+                        localStorage.setItem('redeem_records', JSON.stringify(redeemRecords));
+                        return false;
+                    }
+                    
+                    // 如果已兑换但已完成测试，则视为未兑换
+                    if (this.hasCompletedTest(testId)) {
+                        console.log('已兑换但已完成测试，需要重新兑换:', testId);
+                        return false;
+                    }
+                    return true;
+                }
+                return false;
+            }
+
+            // 新增：清除兑换记录的方法
+            clearRedeemRecord(testId) {
+                const redeemRecords = JSON.parse(localStorage.getItem('redeem_records') || '{}');
+                if (redeemRecords[testId]) {
+                    delete redeemRecords[testId];
+                    localStorage.setItem('redeem_records', JSON.stringify(redeemRecords));
+                    console.log('兑换记录已清除:', testId);
+                }
+            }            
+
+            goToRedeem() {
+                window.location.href = `redeem.html?testId=${this.testId}`;
+            }
+
+            showToast(message) {
+                const toast = document.querySelector('.toast');
+                toast.textContent = message;
+                toast.classList.add('show');
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2000);
+            }
+        }
+
+        // 初始化详情页
+        document.addEventListener('DOMContentLoaded', () => {
+            window.detailManager = new DetailManager();
+        });
+    </script>
+
+    <style>
+        /* 重置样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        /* 页面主容器 */
+        .page-container {
+            width: 100%;
+            min-height: 100vh;
+            background: white;
+        }
+
+        /* 导航栏 */
+        .navbar {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #00B894, #00CEC9);
+            min-height: 60px;
+        }
+
+        .nav-container {
+            width: 100%;
+            max-width: 750px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            color: white;
+            padding: 8px 0;
+        }
+
+        /* 测试封面 */
+        .test-cover {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .cover-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .test-title-main {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            color: white;
+            padding: 60px 20px 20px 20px;
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* 内容区域通用样式 */
+        .basic-info-section,
+        .test-description,
+        .theory-section,
+        .requirements-section,
+        .report-example-section,
+        .action-section {
+            width: 100%;
+            max-width: 750px;
+            margin: 0 auto 15px auto;
+            padding: 20px;
+            background: white;
+        }
+
+        /* 基本信息卡片 */
+        .basic-info-section {
+            padding: 20px;
+        }
+
+        .basic-info-cards {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+
+        .info-card {
+            flex: 1;
+            padding: 15px 5px;
+        }
+
+        .info-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00B894;
+            margin-bottom: 5px;
+        }
+
+        .info-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .info-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* 标准测试内容区域 */
+        .theory-section,
+        .requirements-section,
+        .report-example-section {
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .theory-section h3,
+        .requirements-section h3,
+        .report-example-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            border-left: 4px solid #00B894;
+            padding-left: 10px;
+            font-size: 18px;
+        }
+
+        .text-content {
+            line-height: 1.8;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .text-content p {
+            margin-bottom: 10px;
+        }
+
+        .requirements-list {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+
+        .requirements-list li {
+            padding: 8px 0;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .requirements-list li:before {
+            content: "•";
+            color: #00B894;
+            position: absolute;
+            left: 0;
+        }
+
+        .image-content {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .content-image {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* 报告步骤 */
+        .report-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .report-step {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 8px;
+        }
+
+        .step-title {
+            font-weight: bold;
+            color: #00B894;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .step-subtitle {
+            font-weight: bold;
+            color: #333;
+            font-size: 15px;
+        }
+
+        .step-description {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* 趣味测试描述 */
+        .test-description {
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .description-content {
+            line-height: 1.8;
+            color: #666;
+            white-space: pre-line;
+        }
+
+        /* 行动区域 */
+        .action-section {
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, #00B894, #00CEC9);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            max-width: 280px;
+            margin-bottom: 15px;
+        }
+
+        .redeem-link {
+            margin-top: 10px;
+        }
+
+        .redeem-link a {
+            color: #00B894;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        /* 页脚 */
+        .page-footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 12px;
+            width: 100%;
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        /* === 桌面端样式 === */
+        @media (min-width: 769px) {
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%);
+                padding: 20px;
+                min-height: 100vh;
+            }
+
+            .page-container {
+                max-width: 750px;
+                width: 100%;
+                min-height: auto;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+            }
+
+            .navbar {
+                border-radius: 12px 12px 0 0;
+            }
+
+            .test-cover {
+                border-radius: 0;
+            }
+
+            .page-footer {
+                border-radius: 0 0 12px 12px;
+            }
+        }
+
+        /* === 移动端样式 === */
+        @media (max-width: 768px) {
+            body {
+                display: block;
+                padding: 0;
+                background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%);
+            }
+
+            .page-container {
+                max-width: 100%;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .basic-info-section,
+            .test-description,
+            .theory-section,
+            .requirements-section,
+            .report-example-section,
+            .action-section {
+                padding: 15px;
+                margin-bottom: 10px;
+            }
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 480px) {
+            .basic-info-cards {
+                gap: 10px;
+            }
+            
+            .info-card {
+                padding: 10px;
+            }
+            
+            .report-steps {
+                gap: 10px;
+            }
+            
+            .step-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .step-title {
+                margin-bottom: 5px;
+            }
+            
+            .primary-btn {
+                padding: 12px 30px;
+                font-size: 16px;
+            }
+        }
+
+        /* 内容加载动画 */
+        .test-cover,
+        .basic-info-section,
+        .test-description,
+        .theory-section,
+        .requirements-section,
+        .report-example-section,
+        .action-section {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .content-loaded .test-cover,
+        .content-loaded .basic-info-section, 
+        .content-loaded .test-description,
+        .content-loaded .theory-section,
+        .content-loaded .requirements-section,
+        .content-loaded .report-example-section,
+        .content-loaded .action-section {
+            opacity: 1;
+        }
+    </style>
+  <script src="js-dist/core.bundle.min.js"></script>
+</body>
+</html>

@@ -1,3 +1,4 @@
+// 修复: 确保ResultManager全局可用
 class ResultManager {
     constructor() {
         this.testId = null;
@@ -918,4 +919,12 @@ class ResultManager {
             });
         });
     }
+}
+
+// 全局导出
+if (typeof window !== 'undefined') {
+  window.ResultManager = ResultManager;
+}
+if (typeof global !== 'undefined') {
+  global.ResultManager = ResultManager;
 }

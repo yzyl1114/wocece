@@ -9,9 +9,13 @@
     "build": "npm run obfuscate"
   },
   "devDependencies": {
-    "javascript-obfuscator": "^4.0.0"
+    "javascript-obfuscator": "^4.2.0"
   },
-  "keywords": ["psychology", "test", "h5"],
+  "keywords": [
+    "psychology",
+    "test",
+    "h5"
+  ],
   "author": "Your Name",
   "license": "MIT"
 }

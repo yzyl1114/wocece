@@ -1,3 +1,4 @@
+// 修复: 确保CalculationManager全局可用
 class CalculationManager {
     constructor() {
         // 可以在这里初始化一些配置
@@ -1366,3 +1367,11 @@ class CalculationManager {
 }
 // 全局计算实例
 window.calculationManager = new CalculationManager();
+
+// 全局导出
+if (typeof window !== 'undefined') {
+  window.CalculationManager = CalculationManager;
+}
+if (typeof global !== 'undefined') {
+  global.CalculationManager = CalculationManager;
+}

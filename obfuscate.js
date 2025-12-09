@@ -26,7 +26,7 @@ const TARGET_FILES = [
 ];
 
 // 读取混淆配置
-const OBFUSCATOR_CONFIG = require(PATHS.configFile);
+const OBFUSCATOR_CONFIG = require('./obfuscator.simple.js');
 
 // 确保输出目录存在
 if (!fs.existsSync(PATHS.outputDir)) {

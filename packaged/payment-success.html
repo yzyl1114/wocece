@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>支付成功 - 我测测</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .success-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60vh;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #00B894; /* 修改：更新颜色 */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 40px;
+            color: white;
+        }
+        
+        .success-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .success-message {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-direction: column;
+            width: 100%;
+            max-width: 280px;
+        }
+        
+        .primary-btn {
+            background: linear-gradient(135deg, #00B894, #00CEC9); /* 修改：更新渐变 */
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .secondary-btn {
+            background: #f5f5f5;
+            color: #666;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 顶部导航 -->
+        <nav class="navbar">
+            <div class="logo" onclick="goBack()">← 返回</div>
+        </nav>
+
+        <!-- 支付成功内容 -->
+        <section class="success-container">
+            <div class="success-icon">✓</div>
+            <h1 class="success-title">支付成功！</h1>
+            <p class="success-message">您已成功解锁测试内容<br>现在可以开始测试了</p>
+            
+            <div class="action-buttons">
+                <button id="startTestBtn" class="primary-btn">开始测试</button>
+                <button onclick="goHome()" class="secondary-btn">返回首页</button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // 页面加载时处理
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            let testId = urlParams.get('testId');
+            const success = urlParams.get('success');
+            const tradeStatus = urlParams.get('trade_status');
+            const outTradeNo = urlParams.get('out_trade_no');
+            
+            console.log('支付成功页面加载，参数:', { testId, success, tradeStatus, outTradeNo });
+            
+            // 如果testId为null，尝试从out_trade_no中提取
+            if (!testId && outTradeNo) {
+                // 从 TEST_6_user_... 中提取数字6
+                const match = outTradeNo.match(/TEST_(\d+)_/);
+                if (match && match[1]) {
+                    testId = match[1];
+                    console.log('从out_trade_no中提取到testId:', testId);
+                }
+            }
+
+            // 扩展支付成功状态检测
+            const isPaymentSuccess = 
+                success === 'true' || 
+                tradeStatus === 'TRADE_SUCCESS' ||
+                tradeStatus === 'TRADE_FINISHED' ||
+                (outTradeNo && outTradeNo.startsWith('TEST_'));
+
+            if (testId && isPaymentSuccess) {
+                // 支付成功 - 确保保存支付记录
+                console.log('检测到支付成功，测试ID:', testId);
+                
+                // 显示成功界面
+                document.querySelector('.success-title').textContent = '支付成功！';
+                document.querySelector('.success-message').innerHTML = '您已成功解锁测试内容<br>现在可以开始测试了';
+                
+                // 保存支付记录 - 添加详细日志和错误处理
+                try {
+                    if (window.storageManager) {
+                        console.log('找到storageManager，开始保存支付记录...');
+                        storageManager.savePaymentRecord(testId);
+                        console.log('支付记录保存完成');
+                        
+                        // 验证是否保存成功
+                        const isPaid = storageManager.hasPaidForTest(testId);
+                        console.log('支付状态验证:', isPaid ? '已支付' : '未支付');
+                        
+                        if (!isPaid) {
+                            console.error('支付记录保存失败！');
+                            // 备用方案：直接操作localStorage
+                            const paidTests = JSON.parse(localStorage.getItem('paid_tests') || '[]');
+                            if (!paidTests.includes(testId)) {
+                                paidTests.push(testId);
+                                localStorage.setItem('paid_tests', JSON.stringify(paidTests));
+                                console.log('使用备用方案保存支付记录');
+                            }
+                        }
+                    } else {
+                        console.error('storageManager未找到！');
+                        // 直接操作localStorage
+                        const paidTests = JSON.parse(localStorage.getItem('paid_tests') || '[]');
+                        if (!paidTests.includes(testId)) {
+                            paidTests.push(testId);
+                            localStorage.setItem('paid_tests', JSON.stringify(paidTests));
+                            console.log('直接使用localStorage保存支付记录');
+                        }
+                    }
+                } catch (error) {
+                    console.error('保存支付记录时出错:', error);
+                }
+                
+                // 设置开始测试按钮
+                const startTestBtn = document.getElementById('startTestBtn');
+                startTestBtn.onclick = function() {
+                        console.log('支付成功，跳转回详情页:', `detail.html?id=${testId}&payment_success=true`);
+                        window.location.href = `detail.html?id=${testId}&payment_success=true`;
+                    }; 
+            } 
+            // 支付失败处理
+            else if (tradeStatus === 'TRADE_CLOSED' || tradeStatus === 'TRADE_FAILED') {
+                // 显示失败界面
+                document.querySelector('.success-icon').style.background = '#ff4d4f';
+                document.querySelector('.success-icon').textContent = '✕';
+                document.querySelector('.success-title').textContent = '支付失败';
+                document.querySelector('.success-message').innerHTML = '支付未完成或已取消<br>请重新尝试支付';
+                document.getElementById('startTestBtn').textContent = '重新支付';
+                document.getElementById('startTestBtn').onclick = function() {
+                    window.location.href = `detail.html?id=${testId}`;
+                };
+            }
+            // 支付中或其他状态
+            else {
+                document.querySelector('.success-title').textContent = '支付处理中';
+                document.querySelector('.success-message').innerHTML = '支付正在处理中<br>请稍后查看支付状态';
+                document.getElementById('startTestBtn').onclick = function() {
+                    if (testId) {
+                        window.location.href = `detail.html?id=${testId}`;
+                    } else {
+                        window.location.href = 'index.html';
+                    }
+                };
+            }
+            
+            // 清除支付会话
+            sessionStorage.removeItem('current_payment');
+        });
+
+        function goBack() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const testId = urlParams.get('testId');
+            if (testId) {
+                window.location.href = `detail.html?id=${testId}`;
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+    </script>
+  <script src="js-dist/core.bundle.min.js"></script>
+</body>
+</html>

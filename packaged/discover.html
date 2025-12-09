@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>发现壁纸 - 我测测</title>
+
+    <!-- 1. CSP安全策略（基础版） -->
+    <meta http-equiv="Content-Security-Policy" 
+          content="default-src 'self' https://wocece.com https://yzyl1114.github.io;
+                   script-src 'self' 'unsafe-inline' 'unsafe-eval';
+                   style-src 'self' 'unsafe-inline';
+                   img-src 'self' data: https:;
+                   connect-src 'self' https://wocece.com https://yzyl1114.github.io;
+                   frame-ancestors 'self' wocece.com yzyl1114.github.io;">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 顶部导航 -->
+        <nav class="navbar">
+            <div class="nav-title" style="position: static; transform: none;">星座壁纸</div>
+        </nav>
+
+        <!-- 星座分类标签 -->
+        <section class="zodiac-tabs-section">
+            <div class="tabs zodiac-tabs" id="zodiacTabs">
+                <div class="tab active" data-zodiac="all">全部</div>
+                <div class="tab" data-zodiac="aries">白羊</div>
+                <div class="tab" data-zodiac="taurus">金牛</div>
+                <div class="tab" data-zodiac="gemini">双子</div>
+                <div class="tab" data-zodiac="cancer">巨蟹</div>
+                <div class="tab" data-zodiac="leo">狮子</div>
+                <div class="tab" data-zodiac="virgo">处女</div>
+                <div class="tab" data-zodiac="libra">天秤</div>
+                <div class="tab" data-zodiac="scorpio">天蝎</div>
+                <div class="tab" data-zodiac="sagittarius">射手</div>
+                <div class="tab" data-zodiac="capricorn">摩羯</div>
+                <div class="tab" data-zodiac="aquarius">水瓶</div>
+                <div class="tab" data-zodiac="pisces">双鱼</div>
+            </div>
+        </section>
+
+        <!-- 壁纸网格 -->
+        <section class="wallpaper-section">
+            <div class="wallpaper-grid" id="wallpaperGrid">
+                <!-- 动态生成壁纸 -->
+            </div>
+        </section>
+
+        <!-- 加载更多 -->
+        <section class="load-more-section">
+            <button id="loadMoreBtn" class="load-more-btn">加载更多</button>
+        </section>
+
+        <!-- 页脚 -->
+        <footer class="global-footer">
+            京ICP备2024094021号-3
+        </footer>
+    </div>
+    
+    <!-- 全屏预览 -->
+    <div class="preview-overlay" id="previewOverlay">
+        <img class="preview-image" id="previewImage" src="" alt="壁纸预览">
+        <button class="download-btn" id="downloadBtn">下载壁纸</button>
+        <button class="close-btn" id="closePreview">×</button>
+    </div>
+
+    <!-- 底部导航 -->
+    <div class="bottom-nav">
+        <div class="nav-item" onclick="app.navigateTo('index.html')">
+            <div class="nav-icon">🏠</div>
+            <div>首页</div>
+        </div>
+        <div class="nav-item active" onclick="app.navigateTo('discover.html')">
+            <div class="nav-icon">🔍</div>
+            <div>发现</div>
+        </div>
+    </div>
+
+    <!-- Toast提示 -->
+    <div class="toast"></div>
+
+    <script>
+        class DiscoverManager {
+            constructor() {
+                this.currentZodiac = 'all';
+                this.wallpapers = [];
+                this.currentPage = 1;
+                this.isLoading = false;
+                this.wallpaperIndex = {}; // 记录每个星座已使用的序号
+                this.zodiacs = ['aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo', 
+                              'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces'];
+                this.init();
+            }
+
+            async init() {
+                // 初始化每个星座的序号记录
+                this.zodiacs.forEach(zodiac => {
+                    this.wallpaperIndex[zodiac] = 0; // 从0开始，每次+1
+                });
+                
+                await this.loadWallpapers();
+                this.renderWallpapers();
+                this.bindEvents();
+            }
+
+            getItemsPerPage() {
+                if (this.currentZodiac === 'all') {
+                    return 12;  // 全部标签：12张/页
+                } else {
+                    return 9;   // 单个星座：9张/页（正好完整显示）
+                }
+            }
+
+            async loadWallpapers(page = 1) {
+                if (this.isLoading) return;
+                
+                this.isLoading = true;
+                
+                const newWallpapers = [];
+                const itemsPerPage = this.getItemsPerPage();
+                
+                if (this.currentZodiac === 'all') {
+                    // 全部标签：轮询显示所有星座
+                    for (let i = 0; i < itemsPerPage; i++) {
+                        // 轮询选择星座，确保每个星座都有机会显示
+                        const zodiacIndex = (i + (page - 1) * itemsPerPage) % this.zodiacs.length;
+                        const zodiac = this.zodiacs[zodiacIndex];
+                        
+                        // 获取当前星座的下一个序号
+                        let imageNum = this.wallpaperIndex[zodiac] + 1;
+                        
+                        // 如果序号超过最大值(9)，回到1重新开始
+                        if (imageNum > 9) {
+                            imageNum = 1;
+                        }
+                        
+                        this.wallpaperIndex[zodiac] = imageNum;
+                        
+                        newWallpapers.push({
+                            id: `wallpaper_${zodiac}_${imageNum}_${page}_${i}`,
+                            url: `images/wallpapers/${zodiac}_${imageNum}.jpg`,
+                            thumbnail: `images/wallpapers/${zodiac}_${imageNum}_thumb.jpg`,
+                            zodiac: zodiac,
+                            name: `${this.getZodiacName(zodiac)}星座壁纸 ${imageNum}`
+                        });
+                    }
+                } else {
+                    // 单个星座标签：顺序显示该星座的所有图片
+                    for (let i = 0; i < itemsPerPage; i++) {
+                        let imageNum = ((i + (page - 1) * itemsPerPage) % 9) + 1;
+                        
+                        newWallpapers.push({
+                            id: `wallpaper_${this.currentZodiac}_${imageNum}_${page}_${i}`,
+                            url: `images/wallpapers/${this.currentZodiac}_${imageNum}.jpg`,
+                            thumbnail: `images/wallpapers/${this.currentZodiac}_${imageNum}_thumb.jpg`,
+                            zodiac: this.currentZodiac,
+                            name: `${this.getZodiacName(this.currentZodiac)}星座壁纸 ${imageNum}`
+                        });
+                    }
+                }
+
+                if (page === 1) {
+                    this.wallpapers = newWallpapers;
+                } else {
+                    this.wallpapers = [...this.wallpapers, ...newWallpapers];
+                }
+
+                this.currentPage = page;
+                this.isLoading = false;
+            }
+
+            getZodiacName(zodiac) {
+                const names = {
+                    'aries': '白羊', 'taurus': '金牛', 'gemini': '双子', 'cancer': '巨蟹',
+                    'leo': '狮子', 'virgo': '处女', 'libra': '天秤', 'scorpio': '天蝎',
+                    'sagittarius': '射手', 'capricorn': '摩羯', 'aquarius': '水瓶', 'pisces': '双鱼'
+                };
+                return names[zodiac] || zodiac;
+            }
+
+            renderWallpapers() {
+                const container = document.getElementById('wallpaperGrid');
+                const filteredWallpapers = this.currentZodiac === 'all' 
+                    ? this.wallpapers 
+                    : this.wallpapers.filter(wp => wp.zodiac === this.currentZodiac);
+
+                container.innerHTML = filteredWallpapers.map(wp => `
+                    <div class="wallpaper-item" data-wallpaper-id="${wp.id}">
+                        <img src="${wp.thumbnail}" alt="${wp.name}" class="wallpaper-img" data-full-url="${wp.url}">
+                        <div class="wallpaper-overlay">
+                            <div class="zodiac-tag">${this.getZodiacName(wp.zodiac)}</div>
+                        </div>
+                    </div>
+                `).join('');
+
+                // 更新加载更多按钮状态
+                this.updateLoadMoreButton();
+            }
+
+            bindEvents() {
+                // 星座标签点击事件
+                document.querySelectorAll('.zodiac-tabs .tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        const zodiac = e.currentTarget.dataset.zodiac;
+                        this.handleZodiacChange(zodiac);
+                    });
+                });
+
+                // 壁纸点击事件
+                document.getElementById('wallpaperGrid').addEventListener('click', (e) => {
+                    const wallpaperItem = e.target.closest('.wallpaper-item');
+                    if (wallpaperItem) {
+                        const img = wallpaperItem.querySelector('.wallpaper-img');
+                        this.showPreview(img.dataset.fullUrl);
+                    }
+                });
+
+                // 加载更多
+                document.getElementById('loadMoreBtn').addEventListener('click', () => {
+                    this.loadMore();
+                });
+
+                // 预览关闭事件
+                document.getElementById('closePreview').addEventListener('click', () => {
+                    this.hidePreview();
+                });
+
+                // 下载按钮事件
+                document.getElementById('downloadBtn').addEventListener('click', () => {
+                    this.downloadWallpaper();
+                });
+
+                // ESC键关闭预览
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        this.hidePreview();
+                    }
+                });
+
+                // 点击遮罩层关闭
+                document.getElementById('previewOverlay').addEventListener('click', (e) => {
+                    if (e.target === e.currentTarget) {
+                        this.hidePreview();
+                    }
+                });
+            }
+
+            async handleZodiacChange(zodiac) {
+                // 更新激活状态
+                document.querySelectorAll('.zodiac-tabs .tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                event.currentTarget.classList.add('active');
+
+                this.currentZodiac = zodiac;
+                this.currentPage = 1;
+                await this.loadWallpapers(1);
+                this.renderWallpapers();
+            }
+
+            showPreview(imageUrl) {
+                const overlay = document.getElementById('previewOverlay');
+                const previewImage = document.getElementById('previewImage');
+                
+                previewImage.src = imageUrl;
+                overlay.classList.add('show');
+                
+                // 禁用背景滚动
+                document.body.style.overflow = 'hidden';
+            }
+
+            hidePreview() {
+                const overlay = document.getElementById('previewOverlay');
+                overlay.classList.remove('show');
+                
+                // 恢复背景滚动
+                document.body.style.overflow = '';
+            }
+
+            async downloadWallpaper() {
+                const imageUrl = document.getElementById('previewImage').src;
+                
+                try {
+                    this.showToast('开始下载...');
+                    
+                    // 创建下载链接
+                    const response = await fetch(imageUrl);
+                    const blob = await response.blob();
+                    const url = URL.createObjectURL(blob);
+                    
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `星座壁纸_${Date.now()}.jpg`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    this.showToast('下载成功！');
+                    
+                    // 跟踪下载事件
+                    this.trackDownload();
+                    
+                } catch (error) {
+                    console.error('下载失败:', error);
+                    this.showToast('下载失败，请重试');
+                    
+                    // 备用方案：在新窗口打开图片
+                    window.open(imageUrl, '_blank');
+                }
+            }
+
+            async loadMore() {
+                const loadBtn = document.getElementById('loadMoreBtn');
+                loadBtn.textContent = '加载中...';
+                loadBtn.disabled = true;
+
+                await this.loadWallpapers(this.currentPage + 1);
+                this.renderWallpapers();
+
+                loadBtn.textContent = '加载更多';
+                loadBtn.disabled = false;
+            }
+
+            updateLoadMoreButton() {
+                const loadBtn = document.getElementById('loadMoreBtn');
+                if (this.currentZodiac !== 'all' && this.currentPage >= 1) {
+                    // 单个星座标签，第一页后就可以提示"重新循环"
+                    loadBtn.textContent = '重新循环显示';
+                } else {
+                    loadBtn.textContent = '加载更多';
+                }
+            }
+
+            trackDownload() {
+                // 发送下载统计
+                fetch('/api/track-download', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        type: 'wallpaper',
+                        zodiac: this.currentZodiac,
+                        userId: storageManager.getUserInfo().userId,
+                        timestamp: Date.now()
+                    })
+                }).catch(console.error);
+            }
+
+            showToast(message) {
+                if (window.app && window.app.showToast) {
+                    window.app.showToast(message);
+                }
+            }
+        }
+
+        // 初始化发现页面
+        document.addEventListener('DOMContentLoaded', () => {
+            window.discoverManager = new DiscoverManager();
+        });
+    </script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            max-width: 750px;
+            margin: 0 auto;
+            position: relative;
+            min-height: 100vh;
+        }
+        
+        /* 导航栏样式调整 */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .zodiac-tabs-section {
+            background: white;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .zodiac-tabs {
+            display: flex;
+            gap: 8px;
+            padding: 0 15px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .zodiac-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .zodiac-tabs .tab {
+            flex-shrink: 0;
+            padding: 8px 16px;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .zodiac-tabs .tab.active {
+            background: linear-gradient(135deg, #00B894, #00CEC9);
+            color: white;
+            border-color: #00B894;
+        }
+
+        .wallpaper-section {
+            margin: 15px 0 80px 0;
+        }
+
+        .wallpaper-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            padding: 0 8px;
+        }
+
+        .wallpaper-item {
+            position: relative;
+            aspect-ratio: 9/16;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .wallpaper-item:hover {
+            transform: scale(1.05);
+        }
+
+        .wallpaper-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .wallpaper-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.3));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-start;
+            padding: 8px;
+        }
+
+        .wallpaper-item:hover .wallpaper-overlay {
+            opacity: 1;
+        }
+
+        .zodiac-tag {
+            background: rgba(255,255,255,0.9);
+            color: #333;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .load-more-section {
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 60px;
+        }
+
+        .load-more-btn {
+            background: linear-gradient(135deg, #00B894, #00CEC9);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .load-more-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .load-more-btn:hover:not(:disabled) {
+            opacity: 0.9;
+        }
+
+        /* 预览样式优化 */
+        .preview-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 4000;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .preview-overlay.show {
+            display: flex;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .download-btn {
+            position: fixed;
+            bottom: 30px;
+            background: linear-gradient(135deg, #00B894, #00CEC9);
+            color: white;
+            padding: 12px 40px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .close-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 480px) {
+            .zodiac-tabs {
+                gap: 6px;
+            }
+            
+            .zodiac-tabs .tab {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+            
+            .wallpaper-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 6px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .wallpaper-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+            }
+        }
+
+        /* 修复发现页桌面端滚动问题 */
+        @media (min-width: 769px) {
+            body {
+                display: block;
+                justify-content: initial;
+                align-items: initial;
+                background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%);
+                padding: 20px;
+                max-width: none !important;
+                margin: 0 !important;
+                min-height: 100vh;
+                height: auto;
+                overflow-y: auto;
+            }
+            
+            .container {
+                max-width: 750px;
+                width: 100%;
+                min-height: auto;
+                height: auto;
+                max-height: none;
+                border-radius: 12px;
+                overflow: visible;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                background: white;
+                margin: 0 auto;
+            }
+            
+            .bottom-nav {
+                max-width: 750px;
+                border-radius: 0 0 12px 12px;
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: calc(750px - 40px);
+            }
+            
+            /* 确保壁纸区域可以滚动 */
+            .wallpaper-section {
+                margin: 15px 0 80px 0;
+                overflow-y: visible;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                display: block;
+                padding: 0;
+                overflow-y: auto;
+            }
+            
+            .container {
+                max-width: 100%;
+                height: auto;
+                min-height: 100vh;
+                border-radius: 0;
+                box-shadow: none;
+                overflow: visible;
+            }
+        }
+    </style>
+  <script src="js-dist/core.bundle.min.js"></script>
+</body>
+</html>

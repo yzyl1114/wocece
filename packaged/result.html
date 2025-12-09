@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>测试结果 - 我测测</title>
+
+    <!-- 1. CSP安全策略（基础版） -->
+    <meta http-equiv="Content-Security-Policy" 
+        content="default-src 'self' https://wocece.com https://yzyl1114.github.io;
+                script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.bootcdn.net;
+                style-src 'self' 'unsafe-inline';
+                img-src 'self' data: https: blob:;
+                font-src 'self' data: https:;
+                connect-src 'self' *; 
+                frame-ancestors 'self' wocece.com yzyl1114.github.io;">
+                   
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/report-styles.css">
+    <script src="https://cdn.bootcdn.net/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- 结果头部 - 由模板动态渲染 -->
+        <section class="result-header" id="resultHeader">
+            <!-- 动态渲染 -->
+        </section>
+
+        <!-- 趣味测试报告容器 -->
+        <section class="analysis-section fun-analysis" id="funAnalysis" style="display: none;">
+            <!-- 由模板引擎动态渲染组件 -->
+        </section>
+
+        <!-- 标准测试报告容器 -->
+        <section class="dimensions-section standard-analysis" id="standardAnalysis" style="display: none;">
+            <!-- 由模板引擎动态渲染组件 -->
+        </section>
+
+        <!-- 行动按钮区域 -->
+        <section class="result-actions" id="resultActions">
+            <!-- 动态渲染 -->
+        </section>
+
+        <!-- 更多推荐 -->
+        <section class="recommendations">
+            <h3>更多推荐</h3>
+            <div class="test-list" id="recommendationList">
+                <!-- 动态生成 -->
+            </div>
+        </section>
+
+        <!-- 页脚 -->
+        <footer style="text-align: center; padding: 20px; color: #666; font-size: 12px;">
+            *测试仅供娱乐*
+        </footer>
+    </div>
+
+    <!-- Toast提示 -->
+    <div class="toast"></div>
+
+    <!-- 现有JS文件 -->
+    <script src="js-dist/core.bundle.min.js"></script>
+    
+    <!-- 新增的报告系统JS文件 -->
+    <script src="js-dist/chart-renderer.min.js"></script>
+    <script src="js-dist/template-engine.min.js"></script>
+    <script src="js-dist/report-components.min.js"></script>
+    <script src="js-dist/result-manager.min.js"></script>
+
+    <script>
+        // 修复初始化问题
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 DOM加载完成，开始初始化');
+            
+            // 检查必要对象是否加载
+            if (typeof ResultManager === 'undefined') {
+                console.error('❌ ResultManager未定义，等待加载...');
+                setTimeout(() => {
+                    if (typeof ResultManager !== 'undefined') {
+                        initializeApp();
+                    } else {
+                        console.error('❌ ResultManager仍然未定义，检查JS文件加载');
+                        showErrorPage('JS文件加载失败，请检查网络连接');
+                    }
+                }, 500);
+                return;
+            }
+            
+            initializeApp();
+        });
+
+        function initializeApp() {
+            console.log('🔧 开始初始化应用');
+            
+            try {
+                window.resultManager = new ResultManager();
+                
+                // 立即设置testId（避免异步问题）
+                const urlParams = new URLSearchParams(window.location.search);
+                window.resultManager.testId = urlParams.get('id');
+                
+                console.log('🔧 调用init方法...');
+                window.resultManager.init().catch(error => {
+                    console.error('❌ init方法失败:', error);
+                    showErrorPage('数据加载失败: ' + error.message);
+                });
+                
+            } catch (error) {
+                console.error('❌ 初始化失败:', error);
+                showErrorPage('应用初始化失败: ' + error.message);
+            }
+        }
+
+        function showErrorPage(message) {
+            const container = document.querySelector('.container');
+            if (container) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 50px 20px;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">😕</div>
+                        <h3 style="color: #333; margin-bottom: 15px;">页面加载失败</h3>
+                        <p style="color: #666; margin-bottom: 25px;">${message || '请刷新页面或重新进行测试'}</p>
+                        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                            <button onclick="location.reload()" 
+                                    style="background: linear-gradient(135deg, #00B894, #00CEC9); color: white; border: none; 
+                                        padding: 12px 24px; border-radius: 6px; cursor: pointer;">
+                                刷新页面
+                            </button>
+                            <button onclick="location.href='index.html'"
+                                    style="background: #f8f9fa; color: #00B894; border: 2px solid #00B894; 
+                                        padding: 12px 24px; border-radius: 6px; cursor: pointer;">
+                                返回首页
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // 添加一个全局的重试方法，便于调试
+        window.retryInit = function() {
+            console.log('🔄 手动重试初始化');
+            if (window.resultManager && typeof window.resultManager.init === 'function') {
+                window.resultManager.init().catch(error => {
+                    console.error('重试失败:', error);
+                });
+            } else {
+                initializeApp();
+            }
+        };
+    </script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%); /* 修改：更新背景渐变 */
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            max-width: 750px;
+            margin: 0 auto;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* 结果头部样式 */
+        .result-header {
+            background: linear-gradient(135deg, #00B894, #00CEC9); /* 修改：更新渐变 */
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+            margin: -15px -15px 20px -15px;
+        }
+
+        .result-title {
+            font-size: 16px;
+            margin-bottom: 15px;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .score-number {
+            font-size: 56px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+
+        .score-label {
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 500;
+            color: white !important;
+            opacity: 0.9;
+        }
+
+        .result-label {
+            font-size: 16px;
+            margin-bottom: 12px;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .result-text {
+            font-size: 32px;
+            font-weight: bold;
+            line-height: 1.2;
+        }
+
+        /* 分析区域基础样式 */
+        .analysis-section, .dimensions-section {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .analysis-section h3, .dimensions-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            border-left: 4px solid #00B894; /* 修改：更新颜色 */
+            padding-left: 10px;
+        }
+
+        .analysis-content {
+            line-height: 1.8;
+            color: #666;
+            text-align: left;
+            text-indent: 0 !important; /* 移除首行缩进 */
+        }
+
+        /* 维度项目基础样式 */
+        .dimension-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .dimension-item.high-score {
+            background: #fff5f5;
+        }
+
+        .dimension-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .dimension-name {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .dimension-score {
+            color: #00B894; /* 修改：更新颜色 */
+            font-weight: bold;
+        }
+
+        .dimension-score.high-text {
+            color: #ff4757;
+        }
+
+        .dimension-bar {
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .dimension-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #00B894, #00CEC9); /* 修改：更新渐变 */
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+
+        .dimension-analysis {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* 总结区域 */
+        .summary-section {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .summary-section h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .summary-content {
+            color: #666;
+            line-height: 1.8;
+        }
+        
+        /* 隐藏保存按钮 */
+        #saveResultBtn,
+        .action-btn.secondary[onclick*="saveResultAsImage"] {
+            display: none !important;
+        }
+        
+        .result-actions {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(135deg, #00B894, #00CEC9); /* 修改：更新渐变 */
+            color: white;
+        }
+
+        .action-btn.secondary {
+            background: white;
+            color: #00B894; /* 修改：更新颜色 */
+            border: 2px solid #00B894; /* 修改：更新颜色 */
+        }
+
+        /* 如果只有一个按钮，让它居中显示 */
+        .result-actions:has(button:only-child) {
+            justify-content: center;
+        }
+
+        /* 推荐区域 */
+        .recommendations {
+            margin: 10px; /* 减少上边距 */
+        }
+
+        .recommendations h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+            border-left: 4px solid #00B894; /* 修改：更新颜色 */
+            padding-left: 10px;
+        }
+
+        .recommendations .test-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .recommendations .test-list-item {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            gap: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+        }
+
+        .recommendations .test-list-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .recommendations .test-thumb {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); /* 备用背景 */
+        }
+
+        .recommendations .test-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .recommendations .test-info {
+            flex: 1;
+        }
+
+        .recommendations .test-title {
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: #333;
+        }
+
+        .recommendations .test-desc {
+            font-size: 11px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .recommendations .small-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .recommendations .small-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 184, 148, 0.3);
+        }
+
+        /* 专业评估样式 */
+        .professional-assessment {
+            line-height: 1.6;
+        }
+
+        .assessment-level {
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .assessment-level.严重 {
+            background: #fff5f5;
+            color: #ff4757;
+            border: 1px solid #ff4757;
+        }
+
+        .assessment-level.明显 {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .assessment-level.关注 {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .assessment-level.正常 {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .high-factors {
+            background: #fff5f5;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+            border-left: 3px solid #ff4757;
+        }
+
+        .professional-note {
+            font-size: 12px;
+            color: #666;
+            margin-top: 15px;
+            font-style: italic;
+        }
+
+        /* === 新增的必要CSS样式 === */
+        
+        /* 评分详情样式 */
+        .score-details {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .score-label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .score-value {
+            font-weight: bold;
+            color: #333;
+            font-size: 16px;
+        }
+
+        /* 临床指标样式 */
+        .professional-indicators {
+            margin: 20px 0;
+        }
+
+        .indicator-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .indicator-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 2px solid #e8f4fd;
+        }
+
+        .indicator-item.abnormal {
+            border-color: #ff4757;
+            background: #fff5f5;
+        }
+
+        .indicator-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .indicator-item.abnormal .indicator-value {
+            color: #ff4757;
+        }
+
+        .indicator-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 3px;
+        }
+
+        .indicator-reference {
+            font-size: 10px;
+            color: #999;
+        }
+
+        /* 临床表格样式 */
+        .clinical-table {
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .clinical-table table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .clinical-table th,
+        .clinical-table td {
+            padding: 12px 8px;
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 12px;
+        }
+
+        .clinical-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .clinical-table tr.abnormal {
+            background: #fff5f5;
+        }
+
+        .clinical-table tr.normal {
+            background: #f8f9fa;
+        }
+
+        /* 风险评估样式 */
+        .risk-assessment {
+            margin: 20px 0;
+        }
+
+        .risk-level {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .risk-level.high {
+            background: #fff5f5;
+            border: 2px solid #ff4757;
+        }
+
+        .risk-level.medium {
+            background: #fff3cd;
+            border: 2px solid #ffa502;
+        }
+
+        .risk-level.low {
+            background: #d1ecf1;
+            border: 2px solid #17a2b8;
+        }
+
+        .risk-level.normal {
+            background: #d4edda;
+            border: 2px solid #28a745;
+        }
+
+        .risk-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .risk-desc {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .abnormal-factors {
+            margin-top: 15px;
+        }
+
+        .factor-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .factor-tag {
+            padding: 6px 12px;
+            background: #ff4757;
+            color: white;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* 指标解读样式 */
+        .factor-interpretation-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .factor-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .factor-item.high-factor {
+            background: #fff5f5;
+        }
+
+        .factor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .factor-name {
+            font-weight: bold;
+            color: #333;
+            font-size: 16px;
+            flex: 1;
+        }
+
+        .factor-score {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 16px;
+        }
+
+        .factor-item.high-factor .factor-score {
+            color: #ff4757;
+        }
+
+        .factor-assessment {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .factor-assessment.normal {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .factor-assessment.high {
+            background: #fff5f5;
+            color: #ff4757;
+        }
+
+        .factor-interpretation {
+            color: #666;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        /* 专业建议样式 */
+        .professional-advice {
+            background: linear-gradient(135deg, #00B894, #00CEC9); /* 修改：更新渐变 */
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .advice-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .advice-title:before {
+            content: "💡";
+            margin-right: 8px;
+        }
+
+        .advice-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .advice-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .advice-list li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #ffd32a;
+        }
+
+        .advice-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* 专业总结样式 */
+        .professional-summary-content {
+            line-height: 1.6;
+            color: #666;
+        }
+
+        .summary-point {
+            margin: 12px 0;
+            padding: 0;
+            background: none;
+            border: none;
+        }
+
+        .summary-point strong {
+            color: #333;
+        }
+
+        .suggestion {
+            background: #e8f4fd;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            border-left: 4px solid #667eea;
+            font-weight: 500;
+        }
+
+        .factor-suggestion {
+            background: #fff3cd;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            border-left: 4px solid #ffa502;
+            font-weight: 500;
+        }
+
+        /* 雷达图容器 */
+        .radar-chart-container {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* 维度列表样式 */
+        .dimensions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .dimensions-list .dimension-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .dimensions-list .dimension-name {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .dimensions-list .dimension-score {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        /* 分数显示样式 */
+        .score-display {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .score-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00B894, #00CEC9); /* 修改：更新渐变 */
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+            margin: 0 auto 10px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        /* 备用渲染样式 */
+        .fallback-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .fallback-content h3 {
+            color: #333;
+            margin-bottom: 15px;
+            border-left: 4px solid #00B894; /* 修改：更新颜色 */
+            padding-left: 10px;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 480px) {
+            .indicator-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .clinical-table th,
+            .clinical-table td {
+                padding: 8px 4px;
+                font-size: 11px;
+            }
+            
+            .factor-tags {
+                gap: 5px;
+            }
+            
+            .factor-tag {
+                font-size: 10px;
+                padding: 4px 8px;
+            }
+            
+            .score-number {
+                font-size: 48px;
+            }
+            
+            .result-text {
+                font-size: 28px;
+            }
+            
+            .result-actions {
+                flex-direction: column;
+            }
+            
+            .score-circle {
+                width: 80px;
+                height: 80px;
+                font-size: 24px;
+            }
+        }
+
+        /* 动画效果 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .analysis-section, .dimensions-section {
+            animation: fadeInUp 0.5s ease;
+        }
+
+        /* 打印优化 */
+        @media print {
+            .result-actions {
+                display: none;
+            }
+            
+            .recommendations {
+                display: none;
+            }
+            
+            .analysis-section, .dimensions-section {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</body>
+</html>

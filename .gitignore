@@ -1,3 +1,7 @@
 *.gz
 api/pay.php
 data/redeem-codes.json
+data/redeem-codes.json
+data/redeem-codes.json
+data/redeem-codes.json
+deploy.sh

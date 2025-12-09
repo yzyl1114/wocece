@@ -1,3 +1,4 @@
+// 修复: 确保TemplateEngine全局可用
 // template-engine.js - 修复模板选择逻辑
 class TemplateEngine {
     static TEMPLATES = {
@@ -194,4 +195,12 @@ class TemplateEngine {
         const component = ReportComponents[componentName];
         return component ? component.render(resultData, testConfig) : '';
     }
+}
+
+// 全局导出
+if (typeof window !== 'undefined') {
+  window.TemplateEngine = TemplateEngine;
+}
+if (typeof global !== 'undefined') {
+  global.TemplateEngine = TemplateEngine;
 }

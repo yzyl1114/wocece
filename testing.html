@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>测试中 - 我测测</title>
     <link rel="stylesheet" href="css/style.css">
+
+    <!-- 1. CSP安全策略（基础版） -->
+    <meta http-equiv="Content-Security-Policy" 
+        content="default-src 'self' https://wocece.com https://yzyl1114.github.io;
+                script-src 'self' 'unsafe-inline' 'unsafe-eval';
+                style-src 'self' 'unsafe-inline';
+                img-src 'self' data: https:;
+                font-src 'self' data: https:;
+                connect-src 'self' https://wocece.com https://yzyl1114.github.io;
+                frame-ancestors 'self' wocece.com yzyl1114.github.io;">
+
+    
     <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
@@ -50,6 +62,7 @@
         </section>
     </div>
 
+    <script src="js/domain-guard.js"></script>
     <script src="js/storage.js"></script>
     <script src="js-dist/calculation.min.js"></script>
     <script>

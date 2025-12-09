@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>测试中 - 我测测</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- 1. CSP安全策略（基础版） -->
+    <meta http-equiv="Content-Security-Policy" 
+        content="default-src 'self' https://wocece.com https://yzyl1114.github.io;
+                script-src 'self' 'unsafe-inline' 'unsafe-eval';
+                style-src 'self' 'unsafe-inline';
+                img-src 'self' data: https:;
+                font-src 'self' data: https:;
+                connect-src 'self' https://wocece.com https://yzyl1114.github.io;
+                frame-ancestors 'self' wocece.com yzyl1114.github.io;">
+
+    
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 导航栏 -->
+        <nav class="navbar">
+            <div class="nav-back" id="backButton">← 返回</div>
+            <div class="nav-title" id="testTitle">测试标题</div>
+            <div class="nav-placeholder"></div>
+        </nav>
+
+        <!-- 进度条区域 -->
+        <section class="progress-section">
+            <div class="progress-bar-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <span class="progress-text" id="progressText">1/10</span>
+            </div>
+        </section>
+
+        <!-- 题目区域 -->
+        <section class="question-section">
+            <div class="question-card">
+                <div class="question-text" id="questionText"></div>
+                <div class="question-image" id="questionImage"></div>
+            </div>
+        </section>
+
+        <!-- 选项区域 -->
+        <section class="options-section">
+            <div class="options-container">  <!-- 新增这层包装 -->
+                <div class="options" id="optionsContainer">
+                    <!-- 动态生成选项 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 导航按钮 -->
+        <section class="navigation-buttons">
+            <button id="prevBtn" class="nav-btn prev-btn" disabled>上一题</button>
+            <button id="nextBtn" class="nav-btn next-btn">下一题</button>
+        </section>
+    </div>
+
+    <script src="js-dist/core.bundle.min.js"></script>
+    <script>
+        class TestingManager {
+            constructor() {
+                this.testId = null;
+                this.testData = null;
+                this.currentQuestionIndex = 0;
+                this.answers = [];
+                this.init();
+            }
+
+            async init() {
+                this.testId = new URLSearchParams(window.location.search).get('id');
+                await this.loadTestData();
+                this.loadProgress();
+                this.renderTestHeader();
+                this.renderQuestion();
+                this.bindEvents();
+                this.updateNavigationButtons();
+                this.updateProgress();
+            }
+
+            async loadTestData() {
+                try {
+                    const response = await fetch('/api/get-tests.php?id=' + this.testId);
+                    const result = await response.json();
+                    
+                    if (result.code === 0) {
+                        // result.data 直接就是测试对象
+                        this.testData = result.data;
+                    } else {
+                        throw new Error('测试数据不存在: ' + result.msg);
+                    }
+                    
+                    if (!this.testData) {
+                        throw new Error('测试数据不存在');
+                    }
+                    
+                    if (!this.testData.questions || this.testData.questions.length === 0) {
+                        throw new Error('测试题目数据为空');
+                    }
+                    
+                } catch (error) {
+                    console.error('加载测试数据失败:', error);
+                    this.testData = {
+                        id: this.testId,
+                        title: '心理测试',
+                        questions: this.getDefaultQuestions()
+                    };
+                }
+            }
+
+            renderTestHeader() {
+                if (!this.testData) return;
+                
+                const testTitle = document.getElementById('testTitle');
+                testTitle.textContent = this.testData.title;
+            }
+
+            getDefaultQuestions() {
+                return [
+                    {
+                        id: 1,
+                        text: '当你遇到困难时，你通常会？',
+                        image: null,
+                        options: [
+                            { id: 'A', text: '独自思考解决方案' },
+                            { id: 'B', text: '寻求朋友帮助' },
+                            { id: 'C', text: '暂时逃避问题' },
+                            { id: 'D', text: '立即采取行动' }
+                        ]
+                    },
+                    {
+                        id: 2,
+                        text: '在社交场合中，你更倾向于？',
+                        image: null,
+                        options: [
+                            { id: 'A', text: '主动与人交流' },
+                            { id: 'B', text: '等待别人来找你' },
+                            { id: 'C', text: '观察周围环境' },
+                            { id: 'D', text: '尽快离开' }
+                        ]
+                    },
+                    {
+                        id: 3,
+                        text: '面对新的挑战，你的第一反应是？',
+                        image: null,
+                        options: [
+                            { id: 'A', text: '兴奋和期待' },
+                            { id: 'B', text: '谨慎评估风险' },
+                            { id: 'C', text: '感到焦虑不安' },
+                            { id: 'D', text: '寻找他人意见' }
+                        ]
+                    }
+                ];
+            }
+
+            renderQuestion() {
+                if (!this.testData || !this.testData.questions[this.currentQuestionIndex]) {
+                    console.error('题目数据不存在:', this.currentQuestionIndex);
+                    return;
+                }
+
+                const question = this.testData.questions[this.currentQuestionIndex];
+                
+                this.updateProgress();
+
+                document.getElementById('questionText').textContent = question.text;
+
+                const imageContainer = document.getElementById('questionImage');
+                if (question.image) {
+                    imageContainer.innerHTML = `<img src="${question.image}" alt="题目图片" style="max-width: 100%; border-radius: 8px;">`;
+                    imageContainer.style.display = 'block';
+                } else {
+                    imageContainer.style.display = 'none';
+                }
+
+                this.renderOptionsByType(question);
+                this.updateNavigationButtons();
+            }
+
+            renderOptionsByType(question) {
+                const optionsContainer = document.getElementById('optionsContainer');
+                
+                switch(question.type) {
+                    case 'sort':
+                        this.renderSortOptions(question, optionsContainer);
+                        break;
+                    case 'multiple':
+                        this.renderMultipleOptions(question, optionsContainer);
+                        break;
+                    default:
+                        this.renderDefaultOptions(question, optionsContainer);
+                }
+            }
+
+            renderSortOptions(question, container) {
+                const currentAnswer = this.answers[this.currentQuestionIndex] || [];
+                let html = `<div class="sortable-list" id="sortableList">`;
+                
+                const itemsToRender = currentAnswer.length > 0 
+                    ? currentAnswer.map(id => question.options.find(opt => opt.id === id)).filter(Boolean)
+                    : [...question.options];
+                    
+                itemsToRender.forEach((option, index) => {
+                    if (!option) return;
+                    html += `
+                        <div class="sort-item" data-option-id="${option.id}">
+                            <span class="sort-handle">☰</span>
+                            <span class="option-text">${option.text}</span>
+                            <span class="sort-position">${index + 1}</span>
+                        </div>
+                    `;
+                });
+                
+                html += `</div>`;
+                container.innerHTML = html;
+                
+                this.initSortable();
+            }
+
+            renderMultipleOptions(question, container) {
+                const currentAnswer = this.answers[this.currentQuestionIndex] || [];
+                const optionCount = question.options.length;
+                const optionClass = optionCount > 4 ? 'option compact' : 'option';
+                
+                container.innerHTML = question.options.map(option => {
+                    const isSelected = currentAnswer.includes(option.id);
+                    return `
+                        <div class="${optionClass} multiple-option ${isSelected ? 'selected' : ''}" 
+                            data-option-id="${option.id}">
+                            <span class="option-checkbox">${isSelected ? '✓' : ''}</span>
+                            <span class="option-text">${option.text}</span>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            renderDefaultOptions(question, container) {
+                const currentAnswer = this.answers[this.currentQuestionIndex];
+                const optionCount = question.options.length;
+                // 根据选项数量调整样式类
+                const optionClass = optionCount > 4 ? 'option compact' : 'option';
+                
+                container.innerHTML = question.options.map(option => {
+                    const isSelected = currentAnswer === option.id;
+                    return `
+                        <div class="option ${isSelected ? 'selected' : ''}" data-option-id="${option.id}">
+                            <span class="option-label">${option.id}</span>
+                            <span class="option-text">${option.text}</span>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            /**
+             * 初始化拖拽排序 - 完全重写的版本
+             */
+            initSortable() {
+                const sortableList = document.getElementById('sortableList');
+                if (!sortableList) return;
+
+                let draggedItem = null;
+                let dragStartIndex = 0;
+
+                // 创建拖拽项克隆
+                const createDragImage = (item) => {
+                    const dragImage = item.cloneNode(true);
+                    dragImage.style.width = item.offsetWidth + 'px';
+                    dragImage.style.opacity = '0.8';
+                    dragImage.style.transform = 'rotate(5deg)';
+                    dragImage.style.zIndex = '10000';
+                    dragImage.style.position = 'fixed';
+                    dragImage.style.pointerEvents = 'none';
+                    return dragImage;
+                };
+
+                // 拖拽开始
+                const handleDragStart = (e) => {
+                    draggedItem = e.target.closest('.sort-item');
+                    if (!draggedItem) return;
+
+                    dragStartIndex = Array.from(sortableList.children).indexOf(draggedItem);
+                    
+                    // 设置拖拽效果
+                    if (e.dataTransfer) {
+                        e.dataTransfer.effectAllowed = 'move';
+                    }
+                    
+                    draggedItem.classList.add('dragging');
+                    
+                    // 添加半透明效果给其他项
+                    Array.from(sortableList.children).forEach(item => {
+                        if (item !== draggedItem) {
+                            item.style.opacity = '0.6';
+                        }
+                    });
+                };
+
+                // 拖拽结束
+                const handleDragEnd = (e) => {
+                    if (!draggedItem) return;
+                    
+                    draggedItem.classList.remove('dragging');
+                    
+                    // 恢复其他项的透明度
+                    Array.from(sortableList.children).forEach(item => {
+                        item.style.opacity = '1';
+                    });
+                    
+                    // 保存排序结果
+                    this.saveSortAnswer();
+                    draggedItem = null;
+                };
+
+                // 拖拽经过
+                const handleDragOver = (e) => {
+                    e.preventDefault();
+                    if (!draggedItem) return;
+
+                    const afterElement = this.getDragAfterElement(sortableList, e.clientY);
+                    if (afterElement) {
+                        sortableList.insertBefore(draggedItem, afterElement);
+                    } else {
+                        sortableList.appendChild(draggedItem);
+                    }
+                };
+
+                // 触摸设备支持
+                let touchStartY = 0;
+                let touchCurrentY = 0;
+
+                const handleTouchStart = (e) => {
+                    const item = e.target.closest('.sort-item');
+                    if (!item) return;
+
+                    draggedItem = item;
+                    touchStartY = e.touches[0].clientY;
+                    dragStartIndex = Array.from(sortableList.children).indexOf(draggedItem);
+                    
+                    draggedItem.classList.add('dragging');
+                    
+                    Array.from(sortableList.children).forEach(item => {
+                        if (item !== draggedItem) {
+                            item.style.opacity = '0.6';
+                        }
+                    });
+                };
+
+                const handleTouchMove = (e) => {
+                    if (!draggedItem) return;
+                    
+                    e.preventDefault();
+                    touchCurrentY = e.touches[0].clientY;
+                    
+                    const afterElement = this.getDragAfterElement(sortableList, touchCurrentY);
+                    if (afterElement && afterElement !== draggedItem.nextSibling) {
+                        sortableList.insertBefore(draggedItem, afterElement);
+                    }
+                };
+
+                const handleTouchEnd = (e) => {
+                    if (!draggedItem) return;
+                    
+                    draggedItem.classList.remove('dragging');
+                    
+                    Array.from(sortableList.children).forEach(item => {
+                        item.style.opacity = '1';
+                    });
+                    
+                    this.saveSortAnswer();
+                    draggedItem = null;
+                };
+
+                // 绑定事件
+                sortableList.addEventListener('dragstart', handleDragStart);
+                sortableList.addEventListener('dragend', handleDragEnd);
+                sortableList.addEventListener('dragover', handleDragOver);
+                
+                // 触摸事件
+                sortableList.addEventListener('touchstart', handleTouchStart, { passive: false });
+                sortableList.addEventListener('touchmove', handleTouchMove, { passive: false });
+                sortableList.addEventListener('touchend', handleTouchEnd);
+                
+                // 防止文本选择
+                sortableList.addEventListener('selectstart', (e) => {
+                    if (draggedItem) {
+                        e.preventDefault();
+                    }
+                });
+            }
+
+            getDragAfterElement(container, y) {
+                const draggableElements = [...container.querySelectorAll('.sort-item:not(.dragging)')];
+                
+                return draggableElements.reduce((closest, child) => {
+                    const box = child.getBoundingClientRect();
+                    const offset = y - box.top - box.height / 2;
+                    
+                    if (offset < 0 && offset > closest.offset) {
+                        return { offset: offset, element: child };
+                    } else {
+                        return closest;
+                    }
+                }, { offset: Number.NEGATIVE_INFINITY }).element;
+            }
+
+            saveSortAnswer() {
+                const sortItems = document.querySelectorAll('.sort-item');
+                const sortedIds = Array.from(sortItems).map(item => item.dataset.optionId);
+
+                console.log('拖拽排序结果:', sortedIds);
+                
+                this.answers[this.currentQuestionIndex] = sortedIds;
+                this.updateNavigationButtons();
+                
+                // 更新位置数字
+                sortItems.forEach((item, index) => {
+                    const positionSpan = item.querySelector('.sort-position');
+                    if (positionSpan) {
+                        positionSpan.textContent = index + 1;
+                    }
+                });
+            }
+
+            bindEvents() {
+                const backButton = document.getElementById('backButton');
+                if (backButton) {
+                    backButton.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        this.handleBackButton();
+                    });
+                }               
+                
+                document.getElementById('optionsContainer').addEventListener('click', (e) => {
+                    const option = e.target.closest('.option');
+                    if (option) {
+                        this.selectOption(option.dataset.optionId);
+                    }
+                });
+
+                document.getElementById('prevBtn').addEventListener('click', () => {
+                    this.previousQuestion();
+                });
+
+                document.getElementById('nextBtn').addEventListener('click', () => {
+                    this.nextQuestion();
+                });
+
+                window.addEventListener('beforeunload', (e) => {
+                    if (this.currentQuestionIndex > 0 && 
+                        this.currentQuestionIndex < this.testData.questions.length - 1) {
+                        e.preventDefault();
+                        e.returnValue = '测试进度将会丢失，确定要离开吗？';
+                    }
+                });
+            }
+
+            selectOption(optionId) {
+                const question = this.testData.questions[this.currentQuestionIndex];
+                
+                switch(question.type) {
+                    case 'multiple':
+                        const currentAnswer = this.answers[this.currentQuestionIndex] || [];
+                        if (currentAnswer.includes(optionId)) {
+                            this.answers[this.currentQuestionIndex] = currentAnswer.filter(id => id !== optionId);
+                        } else {
+                            this.answers[this.currentQuestionIndex] = [...currentAnswer, optionId];
+                        }
+                        break;
+                    case 'sort':
+                        return;
+                    default:
+                        this.answers[this.currentQuestionIndex] = optionId;
+                }
+                
+                this.renderQuestion();
+                this.updateNavigationButtons();
+            }
+
+            previousQuestion() {
+                if (this.currentQuestionIndex > 0) {
+                    this.currentQuestionIndex--;
+                    this.renderQuestion();
+                    this.updateNavigationButtons();
+                }
+            }
+
+            nextQuestion() {
+                if (this.currentQuestionIndex < this.testData.questions.length - 1) {
+                    if (this.answers[this.currentQuestionIndex]) {
+                        this.currentQuestionIndex++;
+                        this.renderQuestion();
+                        this.updateNavigationButtons();
+                    } else {
+                        this.showToast('请先选择答案');
+                    }
+                } else {
+                    if (this.answers[this.currentQuestionIndex]) {
+                        this.completeTest();
+                    } else {
+                        this.showToast('请先选择答案');
+                    }
+                }
+            }
+
+            handleBackButton() {
+                if (confirm('退出后将不会保存测试进度，确定要退出吗？')) {
+                    storageManager.clearTestProgress(this.testId);
+                    window.location.href = `detail.html?id=${this.testId}`;
+                }
+            }
+
+            completeTest() {
+                console.log('🔍 调试信息:', {
+                    testId: this.testId,
+                    answers: this.answers,
+                    testData: this.testData,
+                    hasDimensions: !!this.testData?.dimensions
+                });
+
+                try {
+                    const result = calculationManager.calculateResult(
+                        this.testId, 
+                        this.answers, 
+                        this.testData
+                    );
+                    
+                    result.testId = this.testId;
+                    
+                    storageManager.clearPaymentRecord(this.testId);
+                    
+                    const redeemRecords = JSON.parse(localStorage.getItem('redeem_records') || '{}');
+                    if (redeemRecords[this.testId]) {
+                        delete redeemRecords[this.testId];
+                        localStorage.setItem('redeem_records', JSON.stringify(redeemRecords));
+                    }
+                    
+                    storageManager.clearTestProgress(this.testId);
+                    storageManager.saveTestCompletion(this.testId);
+                    
+                    const resultId = 'result_' + this.testId + '_' + Date.now();
+                    storageManager.saveTestResult(resultId, result);
+                    
+                    setTimeout(() => {
+                        window.location.href = `result.html?id=${this.testId}&resultId=${resultId}`;
+                    }, 100);
+                    
+                } catch (error) {
+                    console.error('❌ 完成测试时出错:', error);
+                    this.showToast('测试结果生成失败，请重试');
+                }
+            }
+
+            updateNavigationButtons() {
+                const prevBtn = document.getElementById('prevBtn');
+                const nextBtn = document.getElementById('nextBtn');
+                const question = this.testData.questions[this.currentQuestionIndex];
+                
+                prevBtn.disabled = this.currentQuestionIndex === 0;
+                
+                if (this.currentQuestionIndex === this.testData.questions.length - 1) {
+                    nextBtn.textContent = '完成测试';
+                } else {
+                    nextBtn.textContent = '下一题';
+                }
+                
+                let hasAnswer = false;
+                const currentAnswer = this.answers[this.currentQuestionIndex];
+                
+                switch(question.type) {
+                    case 'sort':
+                        hasAnswer = Array.isArray(currentAnswer) && currentAnswer.length > 0;
+                        break;
+                    case 'multiple':
+                        hasAnswer = Array.isArray(currentAnswer) && currentAnswer.length > 0;
+                        break;
+                    default:
+                        hasAnswer = !!currentAnswer;
+                }
+                
+                nextBtn.disabled = !hasAnswer;
+            }
+
+            updateProgress() {
+                if (!this.testData || !this.testData.questions) return;
+                
+                const totalQuestions = this.testData.questions.length;
+                const currentQuestion = this.currentQuestionIndex + 1;
+                const progressPercent = (currentQuestion / totalQuestions) * 100;
+                
+                // 更新进度条
+                const progressFill = document.getElementById('progressFill');
+                if (progressFill) {
+                    progressFill.style.width = `${progressPercent}%`;
+                }
+                
+                // 更新进度文字
+                const progressText = document.getElementById('progressText');
+                if (progressText) {
+                    progressText.textContent = `${currentQuestion}/${totalQuestions}`;
+                }
+                
+                // 更新导航栏标题（如果DOM结构已修改）
+                const navTitle = document.getElementById('navTitle'); // 注意ID要匹配
+                if (navTitle && this.testData.title) {
+                    navTitle.textContent = this.testData.title;
+                }
+            }            
+
+            saveProgress() {
+                console.log('进度保存已禁用');
+                return;
+            }
+
+            loadProgress() {
+                storageManager.clearTestProgress(this.testId);
+                this.currentQuestionIndex = 0;
+                this.answers = [];
+                console.log('测试进度已重置，从第一题开始');
+            }
+
+            showToast(message) {
+                const toast = document.createElement('div');
+                toast.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: rgba(0,0,0,0.8);
+                    color: white;
+                    padding: 12px 20px;
+                    border-radius: 6px;
+                    z-index: 2000;
+                `;
+                toast.textContent = message;
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.remove();
+                }, 2000);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            window.testingManager = new TestingManager();
+        });
+    </script>
+
+    <style>
+        body {
+            margin: 0 !important;
+            padding: 0;
+            background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%);
+            min-height: 100vh;
+            max-height: 100vh;
+            overflow: hidden;
+            width: 100% !important;
+            max-width: none !important; /* 新增：移除最大宽度限制 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            margin: 0 auto;
+            max-width: 750px;
+            width: 100%;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            background: white;
+            max-height: 100vh;
+        }
+
+        /* 导航栏 */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); 
+            border-bottom: 1px solid #e1e1e1;
+            height: 60px;
+            min-height: 60px;
+            flex-shrink: 0;
+        }
+
+        .nav-back {
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            color: white;
+            flex-shrink: 0;
+            padding: 8px 0;
+        }
+
+        .nav-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            text-align: center;
+            flex: 1;
+            margin: 0 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .nav-placeholder {
+            width: 60px; /* 与返回按钮宽度平衡 */
+            flex-shrink: 0;
+        }
+
+        /* 进度条区域 */
+        .progress-section {
+            padding: 15px;
+            background: white;
+            border-bottom: 1px solid #f0f0f0;
+            flex-shrink: 0;
+        }
+
+        .progress-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 6px;
+            background: #f0f0f0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #00B894, #00CEC9);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+            width: 10%; /* 初始值 */
+        }
+
+        .progress-text {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+            min-width: 40px;
+            flex-shrink: 0;
+        }
+
+        /* 题目区域 */
+        .question-section {
+            padding: 25px 15px 15px;;
+            flex-shrink: 0;
+        }
+
+        .question-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            min-height: 80px;
+        }
+
+        .question-text {
+            font-size: 20px;
+            font-weight: 600;
+            line-height: 1.5;
+            color: #333;
+            text-align: left;
+            margin: 0;
+            padding: 0 10px;
+        }
+
+        .question-image {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .question-image img {
+            max-width: 100%;
+            max-height: 120px;
+            border-radius: 8px;
+        }
+
+        /* 选项区域 */
+        .options-section {
+            flex: 1;
+            padding: 20px 15px 0;;
+            overflow: hidden;
+        }
+
+        .options-container {
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-bottom: 10px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: white;
+            border: 2px solid #f0f0f0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 56px;
+        }
+
+        .option.compact {
+            min-height: 45px;
+            padding: 10px 14px;
+        }
+
+        .option:hover {
+            border-color: #00B894; /* 修改：更新颜色 */
+        }
+
+        .option.selected {
+            border-color: #00B894; /* 修改：更新颜色 */
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .option-label {
+            background: #00B894; /* 修改：更新颜色 */
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-weight: bold;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .option.compact .option-label {
+            width: 24px;
+            height: 24px;
+            font-size: 12px;
+        }
+
+        .option.selected .option-label {
+            background: #00CEC9; /* 修改：更新颜色 */
+        }
+
+        .option-text {
+            flex: 1;
+            font-size: 15px;
+            color: #333;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .option.compact .option-text {
+            font-size: 14px;
+        }
+
+        /* 多选选项 */
+        .multiple-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .option-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: white;
+            background: #f0f0f0;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .multiple-option.selected .option-checkbox {
+            background: #00B894; /* 修改：更新颜色 */
+            border-color: #00B894;
+        }
+
+        /* 排序题样式 */
+        .sortable-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sort-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: white;
+            border: 2px solid #e8f4fd;
+            border-radius: 10px;
+            cursor: grab;
+            transition: all 0.3s ease;
+            gap: 12px;
+            user-select: none;
+            min-height: 56px;
+        }
+
+        .sort-item.dragging {
+            opacity: 0.9;
+            transform: rotate(2deg);
+            box-shadow: 0 4px 12px rgba(0, 184, 148, 0.2); /* 修改：更新颜色 */
+            z-index: 1000;
+            border-color: #00B894; /* 修改：更新颜色 */
+        }
+
+        .sort-handle {
+            color: #00B894; /* 修改：更新颜色 */
+            font-size: 16px;
+            cursor: grab;
+            padding: 6px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 20px;
+            background: #f0f4ff;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .sort-item:active .sort-handle {
+            cursor: grabbing;
+            background: #00B894; /* 修改：更新颜色 */
+            color: white;
+        }
+
+        .sort-item .option-text {
+            flex: 1;
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .sort-position {
+            color: #00B894; /* 修改：更新颜色 */
+            font-size: 14px;
+            font-weight: bold;
+            background: #f0f4ff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            min-width: 24px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        /* 导航按钮 */
+        .navigation-buttons {
+            display: flex;
+            gap: 10px;
+            padding: 15px;
+            background: #f5f6fa;
+            border-top: 1px solid #e1e1e1;
+            height: 70px;
+            min-height: 70px;
+            flex-shrink: 0;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .prev-btn {
+            background: white;
+            color: #00B894; /* 修改：更新颜色 */
+            border: 2px solid #00B894; /* 修改：更新颜色 */
+        }
+
+        .prev-btn:hover:not(:disabled) {
+            background: #00B894; /* 修改：更新颜色 */
+            color: white;
+        }
+
+        .prev-btn:disabled {
+            background: #f5f5f5;
+            color: #ccc;
+            border-color: #e0e0e0;
+            cursor: not-allowed;
+        }
+
+        .next-btn {
+            background: linear-gradient(135deg, #00B894, #00CEC9); /* 修改：更新渐变 */
+            color: white;
+        }
+
+        .next-btn:hover:not(:disabled) {
+            opacity: 0.9;
+        }
+
+        .next-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 480px) {
+            .question-text {
+                font-size: 16px;
+            }
+            
+            .option-text {
+                font-size: 14px;
+            }
+            
+            .option.compact .option-text {
+                font-size: 13px;
+            }
+            
+            .nav-btn {
+                padding: 12px;
+                font-size: 15px;
+            }
+            
+            .header-content h2 {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-height: 667px) {
+            /* 小屏手机进一步压缩间距 */
+            .test-header {
+                height: 70px;
+                min-height: 70px;
+                padding: 10px 15px;
+            }
+            
+            .header-image {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .question-section {
+                padding: 12px 15px;
+            }
+            
+            .question-card {
+                padding: 16px;
+                min-height: 70px;
+            }
+            
+            .option {
+                min-height: 50px;
+                padding: 10px 14px;
+            }
+            
+            .option.compact {
+                min-height: 40px;
+                padding: 8px 12px;
+            }
+        }
+
+        /* 移动端保持全宽 */
+        @media (max-width: 768px) {
+            body {
+                display: block; /* 移动端恢复默认布局 */
+                justify-content: initial;
+                align-items: initial;
+                padding: 0; /* 确保移动端没有内边距 */
+            }
+            .container {
+                max-width: 100%;
+                box-shadow: none;
+                height: 100vh;
+                border-radius: 0; /* 移动端移除圆角 */
+            }
+        }
+
+        /* 在大屏幕上确保居中并添加圆角效果 */
+        @media (min-width: 769px) {
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%);
+                padding: 20px;
+                max-width: none !important; /* 新增 */
+            }
+            
+            .container {
+                height: 90vh;
+                max-height: 90vh;
+                border-radius: 12px; /* 添加圆角 */
+                overflow: hidden;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            }
+        }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-card, .option {
+            animation: fadeIn 0.3s ease;
+        }        
+    </style>
+</body>
+</html>

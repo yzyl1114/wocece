@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>我测测 - 趣味心理测试</title>
+
+    <!-- 1. CSP安全策略（基础版） -->
+    <meta http-equiv="Content-Security-Policy" 
+        content="default-src 'self' https://wocece.com https://yzyl1114.github.io;
+                script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.bootcdn.net;
+                style-src 'self' 'unsafe-inline';
+                img-src 'self' data: https: blob:;
+                font-src 'self' data: https:;
+                connect-src 'self' *; 
+                frame-ancestors 'self' wocece.com yzyl1114.github.io;">
+
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -59,7 +70,7 @@
 
         <!-- 页脚 -->
         <footer class="global-footer">
-            京ICP备2024094021号-3
+            京ICP备2024094021号-3 | 京公网安备11010502058376号
         </footer>
     </div>
 
@@ -75,6 +86,7 @@
         </div>
     </nav>
 
+    <script src="js/domain-guard.js"></script>
     <script src="js/app.js"></script>
     <script src="js/storage.js"></script>
 </body>
