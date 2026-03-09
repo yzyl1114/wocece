@@ -208,15 +208,27 @@ body {
 }
 
 .test-btn {
-    width: 100%;
-    padding: 6px;
-    background: #729866;
+    width: 70px;           /* 固定宽度，更像椭圆 */
+    padding: 6px 0;        /* 调整内边距 */
+    background: #729866;   /* 绿色背景 */
     color: white;
     border: none;
-    border-radius: 4px;
-    font-size: 12px;
+    border-radius: 30px;   /* 大圆角形成椭圆 */
+    font-size: 13px;       /* 稍微增大字体 */
+    font-weight: 500;      /* 中等字重 */
     cursor: pointer;
     transition: all 0.3s ease;
+    display: inline-block;  /* 改为行内块级元素 */
+    text-align: center;
+    margin: 0 auto;        /* 居中显示 */
+    letter-spacing: 0.5px; /* 轻微字间距 */
+    box-shadow: 0 2px 6px rgba(114, 152, 102, 0.3); /* 添加轻微阴影 */
+}
+
+.test-btn:hover {
+    background: #5f8263;   /* 悬停时稍微加深 */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(114, 152, 102, 0.4);
 }
 
 /* 测试列表项新样式 */
@@ -262,6 +274,27 @@ body {
     font-size: 13px;
     color: #7F6346;
     line-height: 1.4;
+}
+
+/* 小按钮 - 用于测试列表项 */
+.small-btn {
+    background: #729866;    /* 绿色背景 */
+    color: white;
+    border: none;
+    padding: 6px 18px;      /* 调整内边距 */
+    border-radius: 30px;     /* 椭圆形状 */
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(114, 152, 102, 0.3);
+}
+
+.small-btn:hover {
+    background: #5f8263;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(114, 152, 102, 0.4);
 }
 
 /* 底部导航 */
