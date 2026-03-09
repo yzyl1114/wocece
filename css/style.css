@@ -176,6 +176,15 @@ body {
     margin-bottom: 20px;
 }
 
+.featured-tests .test-card .test-btn {
+    display: none;
+}
+
+/* 可选：调整卡片内边距，使内容更美观 */
+.featured-tests .test-card .test-content {
+    padding-bottom: 15px;  /* 增加底部内边距，因为没有按钮了 */
+}
+
 .test-card {
     background: #F9F6E8;
     border-radius: 10px;
