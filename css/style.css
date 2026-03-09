@@ -230,7 +230,7 @@ body {
 .test-list-item {
     display: flex;
     align-items: center;
-    background: white;
+    background: #F9F4E9;
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -264,52 +264,6 @@ body {
     line-height: 1.4;
 }
 
-/* 测试进度样式 */
-.test-progress {
-    font-size: 12px;
-    color: var(--primary-color);
-    margin-top: 5px;
-    font-weight: bold;
-}
-
-.test-completed {
-    font-size: 12px;
-    color: var(--primary-color);
-    margin-top: 5px;
-    font-weight: bold;
-}
-
-/* 已完成测试的按钮样式 */
-.completed-btn {
-    background: linear-gradient(135deg, #52c41a, #389e0d) !important;
-}
-
-/* 测试列表项悬停效果 */
-.test-list-item:hover .test-progress {
-    color: #fff;
-}
-
-.test-list-item:hover .test-completed {
-    color: #fff;
-}
-
-.small-btn {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); /* 修改：添加渐变 */
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 15px;
-    font-size: 12px;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.3s ease;
-}
-
-.small-btn:hover {
-    transform: translateY(-1px); /* 修改：优化悬停效果 */
-    box-shadow: 0 2px 8px rgba(0, 184, 148, 0.3);
-}
-
 /* 底部导航 */
 .bottom-nav {
     position: fixed;
@@ -330,16 +284,11 @@ body {
     flex-direction: column;
     align-items: center;
     font-size: 12px;
-    color: #666;
+    color: #7F6346;
     cursor: pointer;
     transition: all 0.3s ease;
     padding: 5px 10px;
     border-radius: 10px;
-}
-
-.nav-item.active {
-    color: var(--primary-color); /* 修改：蓝色 → 清新绿 */
-    background: rgba(0, 184, 148, 0.1); /* 修改：更新透明度颜色 */
 }
 
 .nav-icon {
