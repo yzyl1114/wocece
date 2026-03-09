@@ -143,23 +143,66 @@ body {
     margin: 20px 0 25px 0;
     overflow-x: auto;
     padding-bottom: 0 5px;
+    justify-content: flex-start;
 }
 
 .tab {
-    padding: 8px 48px;
-    background: #E7D7BD;
-    color: #7F6346;
-    border: 1px solid var(--border-color);
+    padding: 10px 48px;  /* 稍微增加上下内边距，更舒适 */
+    border: 2px solid transparent;
     border-radius: 40px;
     cursor: pointer;
     white-space: nowrap;
-    font-size: 14px;
+    font-size: 15px;  /* 稍微增大字体 */
+    font-weight: 500;
+    transition: all 0.3s ease;
+    color: white;
 }
 
-.tab.active {
+/* 为每个标签设置不同的背景色 */
+.tab[data-category="all"] {
+    background: #87A385;
+}
+
+.tab[data-category="fun"] {
     background: #D4BA89;
-    color: #7F6346;
-    border-color: var(--primary-color);
+}
+
+.tab[data-category="standard"] {
+    background: #E7D7BD;
+    color: #7F6346;  /* 专业标签文字颜色深一些，因为背景较浅 */
+}
+
+/* 选中效果 - 同色系深色边框 */
+.tab.active {
+    border: 2px solid;
+    transform: scale(1.02);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.tab[data-category="all"].active {
+    border-color: #5D7A5B;  /* #87A385 的深色版本 */
+}
+
+.tab[data-category="fun"].active {
+    border-color: #B89E6F;  /* #D4BA89 的深色版本 */
+}
+
+.tab[data-category="standard"].active {
+    border-color: #C9B49A;  /* #E7D7BD 的深色版本 */
+}
+
+/* 悬停效果 */
+.tab:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+/* 移动端适配 */
+@media (max-width: 480px) {
+    .tab {
+        padding: 8px 32px;  /* 移动端稍小一点 */
+        font-size: 14px;
+    }
 }
 
 /* 测试卡片 */
