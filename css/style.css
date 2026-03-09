@@ -20,6 +20,7 @@ body {
     margin: 0 auto;
     position: relative;
     min-height: 100vh;
+    padding-bottom: 60px;  /* 新增：为底部导航留出固定空间，值等于导航栏高度 */
 }
 
 /* 响应式容器 */
@@ -355,6 +356,7 @@ body {
     border-top: 1px solid var(--border-color);
     max-width: 750px;
     margin: 0 auto;
+    z-index: 1000;
 }
 
 .nav-item {
@@ -781,12 +783,23 @@ body {
 /* 全局页脚 */
 .global-footer {
     text-align: center;
-    padding: 20px 20px 30px;
+    padding: 20px;
     color: #7F6346;
     font-size: 12px;
     line-height: 1.6;
-    margin-bottom: 70px;  /* 新增：增加底部外边距，让页脚离导航栏更远 */
-    border-top: 1px solid rgba(127, 99, 70, 0.1);  /* 可选：添加浅色上边框，增加层次感 */
+    padding-bottom: 80px;  /* 保持这个值，为底部导航留出空间 */
+    margin-bottom: 0;      /* 移除之前添加的 margin-bottom */
+    border-top: 1px solid rgba(127, 99, 70, 0.15);
+}
+
+/* 容器底部留白调整 */
+.container {
+    width: 100%;
+    padding: 0 15px;
+    margin: 0 auto;
+    min-height: 100vh;  /* 确保容器至少占满整个视口高度 */
+    position: relative;
+    padding-bottom: 0;  /* 移除可能的内边距 */
 }
 
 /* 移动端适配 - 在文件末尾的媒体查询中添加 */
