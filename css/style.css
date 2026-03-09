@@ -142,9 +142,10 @@ body {
     display: flex;
     gap: 15px;
     margin: 20px 0 25px 0;
-    overflow-x: auto;
-    padding-bottom: 0 5px;
+    overflow-x: visible;
+    padding: 0;           /* 修改：移除左右内边距 */
     justify-content: flex-start;
+    flex-wrap: wrap;      /* 新增：允许换行，避免需要横向滚动 */
 }
 
 .tab {
