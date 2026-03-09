@@ -353,7 +353,6 @@ body {
     display: flex;
     justify-content: space-around;
     padding: 10px 0;
-    border-top: 1px solid var(--border-color);
     max-width: 750px;
     margin: 0 auto;
     z-index: 1000;
@@ -789,7 +788,6 @@ body {
     line-height: 1.6;
     padding-bottom: 80px;  /* 保持这个值，为底部导航留出空间 */
     margin-bottom: 0;      /* 移除之前添加的 margin-bottom */
-    border-top: 1px solid rgba(127, 99, 70, 0.15);
 }
 
 /* 容器底部留白调整 */
