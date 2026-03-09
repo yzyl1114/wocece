@@ -147,7 +147,7 @@ body {
 }
 
 .tab {
-    padding: 10px 48px;  /* 稍微增加上下内边距，更舒适 */
+    padding: 8px 80px;  /* 稍微增加上下内边距，更舒适 */
     border: 2px solid transparent;
     border-radius: 40px;
     cursor: pointer;
