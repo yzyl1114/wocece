@@ -246,6 +246,7 @@ body {
 
 .test-content {
     padding: 10px;
+    background: transparent;
 }
 
 .test-title {
