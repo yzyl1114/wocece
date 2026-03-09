@@ -781,11 +781,28 @@ body {
 /* 全局页脚 */
 .global-footer {
     text-align: center;
-    padding: 20px;
-    color: #666;
+    padding: 20px 20px 30px;
+    color: #7F6346;
     font-size: 12px;
     line-height: 1.6;
-    padding-bottom: 80px; /* 新增：为底部导航留出空间 */
+    margin-bottom: 70px;  /* 新增：增加底部外边距，让页脚离导航栏更远 */
+    border-top: 1px solid rgba(127, 99, 70, 0.1);  /* 可选：添加浅色上边框，增加层次感 */
+}
+
+/* 移动端适配 - 在文件末尾的媒体查询中添加 */
+@media (max-width: 480px) {
+    .global-footer {
+        padding: 20px 15px 25px;  /* 移动端稍微减小底部内边距 */
+        margin-bottom: 65px;  /* 移动端稍微减小外边距 */
+        font-size: 11px;  /* 移动端字体稍微小一点 */
+    }
+}
+
+@media (max-width: 375px) {
+    .global-footer {
+        padding: 15px 10px 20px;
+        margin-bottom: 60px;
+    }
 }
 
 /* SCL-90 专用样式 - 专业心理健康测试 */
