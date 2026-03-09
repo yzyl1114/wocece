@@ -146,7 +146,7 @@ body {
 }
 
 .tab {
-    padding: 12px 32px;
+    padding: 8px 48px;
     background: #E7D7BD;
     color: #7F6346;
     border: 1px solid var(--border-color);
