@@ -6,7 +6,7 @@
 }
 
 :root {
-    --bg-color: #F1EBDB;   
+    --bg-color: #F0EAD9;   
     --text-color: #7F6346;
     --border-color:#E7D7BD;
 }
@@ -230,7 +230,7 @@ body {
 .test-list-item {
     display: flex;
     align-items: center;
-    background: #F9F4E9;
+    background: #F9F5E9;
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
