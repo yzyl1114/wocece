@@ -557,8 +557,8 @@ body {
 }
 
 .feedback-header {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); /* 修改：更新渐变 */
-    color: white;
+    background: #F9F5E9;
+    color: #7F6346;
     padding: 25px 20px;
     text-align: center;
 }
@@ -639,7 +639,7 @@ body {
 .submit-btn {
     width: 100%;
     padding: 15px;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); /* 修改：更新渐变 */
+    background: #729866;
     color: white;
     border: none;
     border-radius: 8px;
