@@ -124,19 +124,6 @@ body {
     outline: none;
 }
 
-.search-btn {
-    padding: 12px 20px;
-    background: #729866;
-    color: white;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    white-space: nowrap;
-    font-size: 14px;
-    transition: all 0.3s ease;
-}
-
-
 /* 分类标签 */
 .tabs {
     display: flex;
@@ -639,8 +626,8 @@ body {
 .submit-btn {
     width: 100%;
     padding: 15px;
-    background: #729866;
-    color: white;
+    background: #D4BA89;
+    color: #7F6346;
     border: none;
     border-radius: 8px;
     font-size: 16px;
