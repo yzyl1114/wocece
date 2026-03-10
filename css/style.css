@@ -149,7 +149,7 @@ body {
 
 /* 为每个标签设置不同的背景色 */
 .tab[data-category="all"] {
-    background: #87A385;
+    background: #729866;
 }
 
 .tab[data-category="fun"] {
@@ -483,7 +483,7 @@ body {
 .download-btn {
     position: fixed;
     bottom: 30px;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); /* 修改：更新渐变 */
+    background: #729866;
     color: white;
     padding: 12px 30px;
     border: none;
