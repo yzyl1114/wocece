@@ -402,12 +402,13 @@
         }
 
         .zodiac-tabs-section {
-            background: white;
-            padding: 15px 0;
+            background: transparent;
+            padding: 0;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: none;
+            margin: 10px 0; 
         }
 
         .zodiac-tabs {
@@ -426,12 +427,16 @@
         .zodiac-tabs .tab {
             flex-shrink: 0;
             padding: 8px 16px;
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
+            background: #E7D7BD;
+            color: #7F6346;
+            border: 1px solid #E7D7BD;
             border-radius: 20px;
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 14px;
+            line-height: 1;
+            height: auto;
+            min-height: 0; 
         }
 
         .zodiac-tabs .tab.active {
