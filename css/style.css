@@ -20,7 +20,7 @@ body {
     margin: 0 auto;
     position: relative;
     min-height: 100vh;
-    padding-bottom: 60px;  /* 新增：为底部导航留出固定空间，值等于导航栏高度 */
+    padding-bottom: 60px;
 }
 
 /* 响应式容器 */
@@ -782,7 +782,7 @@ body {
     color: #7F6346;
     font-size: 12px;
     line-height: 1.6;
-    padding-bottom: 60px;
+    padding-bottom: 45px;
     margin-bottom: 0;
 }
 
