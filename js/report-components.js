@@ -637,7 +637,7 @@ const ReportComponents = {
     'animal-header': {
         render: (data, config) => {
             const animalData = AnimalDisplayData[data.animal] || {};
-            const headerColor = '#00B894';
+            const headerColor = '#729866';
             
             return `
                 <section class="result-header" style="background: linear-gradient(135deg, ${headerColor}, #AEAEB2); padding: 25px 15px; height: 180px;">
@@ -1238,7 +1238,7 @@ const ReportComponents = {
     'spiritual-header': {
         render: (data, config) => {
             const topDim = data.topDimensions[0];
-            const headerColor = '#00B894';
+            const headerColor = '#729866';
             
             return `
                 <section class="result-header" style="background: linear-gradient(135deg, ${headerColor}, #16A085); padding: 25px 15px; height: 160px;">
@@ -1259,7 +1259,7 @@ const ReportComponents = {
             
             // 统一的渐变色方案
             const getBarColor = (score) => {
-                if (score >= 80) return '#00B894';
+                if (score >= 80) return '#729866';
                 if (score >= 60) return '#00CEC9'; 
                 if (score >= 40) return '#55D8B1';
                 return '#96CEB4';
@@ -1297,20 +1297,20 @@ const ReportComponents = {
                         ${sortedDimensions.map(dim => `
                             <div class="dimension-analysis-item">
                                 <div class="dimension-header">
-                                    <h4 class="dimension-title" style="color: #00B894;">${dim.name} (${Math.round(dim.score)}%)</h4>
+                                    <h4 class="dimension-title" style="color: #729866;">${dim.name} (${Math.round(dim.score)}%)</h4>
                                 </div>
                                 <div class="dimension-content">
                                     <p><strong>含义：</strong>${dim.description}</p>
                                     <p><strong>你的表现：</strong>${dim.interpretation}</p>
                                     <div class="suggestions-box">
                                         <strong style="display: flex; align-items: center; color: #333; margin-bottom: 8px;">
-                                            <span style="color: #00B894; margin-right: 6px;">💡</span>
+                                            <span style="color: #729866; margin-right: 6px;">💡</span>
                                             针对性建议：
                                         </strong>
                                         <div class="suggestion-list">
                                             ${ReportComponents.getDimensionSuggestions(dim.code, dim.score).map(suggestion => 
                                                 `<div class="suggestion-item" style="display: flex; align-items: flex-start; margin-bottom: 6px;">
-                                                    <span style="color: #00B894; margin-right: 8px; flex-shrink: 0;">•</span>
+                                                    <span style="color: #729866; margin-right: 8px; flex-shrink: 0;">•</span>
                                                     <span>${suggestion}</span>
                                                 </div>`
                                             ).join('')}
@@ -1520,7 +1520,7 @@ const ReportComponents = {
             const temperamentName = CoreTemperamentMap[data.coreCode] || '探索者';
             
             return `
-                <section class="result-header" style="background: linear-gradient(135deg, #00B894, #00CEC9);">
+                <section class="result-header" style="background: #729866;">
                     <div class="result-content">
                         <div class="result-label">你的心灵宜居城市</div>
                         <div class="result-text">${cityData.city}</div>
@@ -1580,7 +1580,7 @@ const ReportComponents = {
     // 异世界职业测评专用组件 - 优化版
     'holland-header': {
         render: (data, config) => {
-            const headerColor = '#00B894';
+            const headerColor = '#729866';
          
             // 获取对应的slogan
             const slogans = {
@@ -1642,7 +1642,7 @@ const ReportComponents = {
                     <h3>🎯 核心特质</h3>
                     <div class="traits-container" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px;">
                         ${traits.map(trait => `
-                            <span class="trait-tag" style="display: inline-block; padding: 6px 12px; background: rgba(0, 184, 148, 0.1); color: #00B894; border-radius: 15px; font-size: 13px; font-weight: 500;">
+                            <span class="trait-tag" style="display: inline-block; padding: 6px 12px; background: rgba(0, 184, 148, 0.1); color: #729866; border-radius: 15px; font-size: 13px; font-weight: 500;">
                                 ${trait}
                             </span>
                         `).join('')}
@@ -1713,7 +1713,7 @@ const ReportComponents = {
     'holland-dimensions': {
         render: (data, config) => {
             const dimensionConfigs = {
-                'A': { name: '动手实践', desc: '善于将想法变为现实', color: '#00B894' },
+                'A': { name: '动手实践', desc: '善于将想法变为现实', color: '#729866' },
                 'B': { name: '理论研究', desc: '追求真理和知识', color: '#667eea' },
                 'C': { name: '艺术创作', desc: '富有创造力和想象力', color: '#ff6b6b' },
                 'D': { name: '领导管理', desc: '具备领导才能和战略眼光', color: '#f1c40f' },
@@ -1741,7 +1741,7 @@ const ReportComponents = {
                             <div class="bar-info">
                                 <span class="bar-label">
                                     ${dim.name}
-                                    ${isDominant ? '<span style="color: #00B894; margin-left: 4px;">★</span>' : ''}
+                                    ${isDominant ? '<span style="color: #729866; margin-left: 4px;">★</span>' : ''}
                                 </span>
                                 <span class="bar-score">${score}票</span>
                             </div>
@@ -1805,7 +1805,7 @@ const ReportComponents = {
     'relationship-comfort': {
         render: (data, config) => {
             const typeConfig = {
-                'B': { emoji: '🐨', name: '阳光树懒型', color: '#00B894' },
+                'B': { emoji: '🐨', name: '阳光树懒型', color: '#729866' },
                 'A': { emoji: '🐨', name: '暖心考拉型', color: '#FF6B6B' },
                 'C': { emoji: '🐱', name: '独立猫猫型', color: '#45B7D1' },
                 'D': { emoji: '🦔', name: '机警海螺型', color: '#96CEB4' }
@@ -1905,7 +1905,7 @@ const ReportComponents = {
     // 大明王朝头部组件
     'ming-header': {
         render: (data, config) => {
-            const headerColor = '#00B894'; 
+            const headerColor = '#729866'; 
             
             return `
                 <section class="result-header" style="background: linear-gradient(135deg, ${headerColor}, #A0522D); padding: 25px 15px; height: 160px;">
@@ -1963,7 +1963,7 @@ const ReportComponents = {
                     <h3>角色深度解读</h3>
                     <div class="analysis-content">
                         <div style="margin-bottom: 20px;">
-                            <h4 style="color: #00B894; margin-bottom: 8px;">💪 你的职场优势</h4>
+                            <h4 style="color: #729866; margin-bottom: 8px;">💪 你的职场优势</h4>
                             <p style="font-size: 15px; line-height: 1.7; color: #333; text-align: left;">
 ${fullReport.advantages}
                             </p>
@@ -2012,7 +2012,7 @@ ${fullReport.advice}
             // 获取等级对应的颜色
             const getLevelColor = (value, max) => {
                 const percentage = (value / max) * 100;
-                if (percentage >= 80) return '#00B894'; // 高 - 主题绿色
+                if (percentage >= 80) return '#729866'; // 高 - 主题绿色
                 if (percentage >= 60) return '#00CEC9'; // 中高 - 主题青蓝色
                 if (percentage >= 40) return '#FFD93D'; // 中等 - 黄色
                 if (percentage >= 20) return '#FF9F43'; // 中低 - 橙色
@@ -2076,7 +2076,7 @@ ${fullReport.advice}
     // 职业测评头部组件
     'career-header': {
         render: (data, config) => {
-            const headerColor = '#00B894';
+            const headerColor = '#729866';
             
             return `
                 <section class="result-header" style="background: linear-gradient(135deg, ${headerColor}, #00CEC9); padding: 25px 15px; height: 160px;">
@@ -2098,7 +2098,7 @@ ${fullReport.advice}
             return `
                 <section class="analysis-section">
                     <div class="slogan-content" style="text-align: center; padding: 20px 0;">
-                        <div class="slogan-text" style="font-size: 18px; font-weight: 300; color: #00B894; line-height: 1.6; font-style: italic;">
+                        <div class="slogan-text" style="font-size: 18px; font-weight: 300; color: #729866; line-height: 1.6; font-style: italic;">
                             "${identity.slogan}"
                         </div>
                         <div class="identity-desc" style="margin-top: 15px; font-size: 15px; line-height: 1.7; color: #666; text-align: justify;">
@@ -2150,7 +2150,7 @@ ${fullReport.advice}
                         </p>
                         
                         <div style="margin-top: 25px;">
-                            <h4 style="color: #00B894; margin-bottom: 15px; font-size: 16px;">📊 霍兰德代码分析</h4>
+                            <h4 style="color: #729866; margin-bottom: 15px; font-size: 16px;">📊 霍兰德代码分析</h4>
                             <div class="chart-container" style="text-align: center; margin: 15px 0; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                                 <canvas id="hollandRadarChart" width="280" height="280"></canvas>
                                 <div class="chart-fallback" id="hollandFallback" style="display: none; padding: 20px; color: #666;">
@@ -2163,7 +2163,7 @@ ${fullReport.advice}
                         </div>
                         
                         <div style="margin-top: 30px;">
-                            <h4 style="color: #00B894; margin-bottom: 15px; font-size: 16px;">💪 优势矩阵分析</h4>
+                            <h4 style="color: #729866; margin-bottom: 15px; font-size: 16px;">💪 优势矩阵分析</h4>
                             <div class="chart-container" style="text-align: center; margin: 15px 0; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                                 <canvas id="strengthsMatrixChart" width="320" height="280"></canvas>
                                 <div class="chart-fallback" id="matrixFallback" style="display: none; padding: 20px; color: #666;">
@@ -2176,7 +2176,7 @@ ${fullReport.advice}
                         </div>
                         
                         <div style="margin-top: 30px;">
-                            <h4 style="color: #00B894; margin-bottom: 15px; font-size: 16px;">❤️ 核心价值观</h4>
+                            <h4 style="color: #729866; margin-bottom: 15px; font-size: 16px;">❤️ 核心价值观</h4>
                             <div class="chart-container" style="text-align: center; margin: 15px 0; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                                 <canvas id="valuesCloudChart" width="280" height="120"></canvas>
                                 <div class="chart-fallback" id="valuesFallback" style="display: none; padding: 20px; color: #666;">
@@ -2204,23 +2204,23 @@ ${fullReport.advice}
                     <h3>你的职业路径地图</h3>
                     <div class="career-path-content">
                         <div class="path-item" style="margin-bottom: 20px; padding: 15px; background: rgba(0, 184, 148, 0.05); border-radius: 8px;">
-                            <h4 style="color: #00B894; margin-bottom: 8px;">起步领域</h4>
+                            <h4 style="color: #729866; margin-bottom: 8px;">起步领域</h4>
                             <p style="color: #333; margin: 0;">${path.start}</p>
                         </div>
                         <div class="path-item" style="margin-bottom: 20px; padding: 15px; background: rgba(0, 184, 148, 0.05); border-radius: 8px;">
-                            <h4 style="color: #00B894; margin-bottom: 8px;">精通路径</h4>
+                            <h4 style="color: #729866; margin-bottom: 8px;">精通路径</h4>
                             <p style="color: #333; margin: 0;">${path.master}</p>
                         </div>
                         <div class="path-item" style="margin-bottom: 20px; padding: 15px; background: rgba(0, 184, 148, 0.05); border-radius: 8px;">
-                            <h4 style="color: #00B894; margin-bottom: 8px;">跨界可能</h4>
+                            <h4 style="color: #729866; margin-bottom: 8px;">跨界可能</h4>
                             <p style="color: #333; margin: 0;">${path.cross}</p>
                         </div>
                         <div class="path-item" style="margin-bottom: 20px; padding: 15px; background: rgba(0, 184, 148, 0.05); border-radius: 8px;">
-                            <h4 style="color: #00B894; margin-bottom: 8px;">新兴风口</h4>
+                            <h4 style="color: #729866; margin-bottom: 8px;">新兴风口</h4>
                             <p style="color: #333; margin: 0;">${path.trend}</p>
                         </div>
                         <div class="values-tip" style="padding: 15px; background: linear-gradient(135deg, #e8f4fd, #f0f9ff); border-radius: 8px;">
-                            <h4 style="color: #00B894; margin-bottom: 8px;">基于你价值观的特别提示</h4>
+                            <h4 style="color: #729866; margin-bottom: 8px;">基于你价值观的特别提示</h4>
                             <p style="color: #333; margin: 0;">${path.valuesTip}</p>
                         </div>
                     </div>
@@ -2239,21 +2239,21 @@ ${fullReport.advice}
                 <div class="professional-advice">
                     <div class="advice-title">行动建议</div>
                     <div class="action-plan-content">
-                        <div class="action-category" style="margin-bottom: 20px; padding: 20px; background: rgba(255, 255, 255, 0.8); border-radius: 8px; border-left: 4px solid #00B894;">
+                        <div class="action-category" style="margin-bottom: 20px; padding: 20px; background: rgba(255, 255, 255, 0.8); border-radius: 8px; border-left: 4px solid #729866;">
                             <h4 style="color: #333; margin-bottom: 12px; font-size: 16px; font-weight: 600;">🚀 立即行动 (下周开始)</h4>
                             <ul class="advice-list" style="color: #333;">
                                 ${plan.immediate.map(action => `<li style="margin-bottom: 8px;font-size: 13px;">${action}</li>`).join('')}
                             </ul>
                         </div>
                         
-                        <div class="action-category" style="margin-bottom: 20px; padding: 20px; background: rgba(255, 255, 255, 0.8); border-radius: 8px; border-left: 4px solid #00B894;">
+                        <div class="action-category" style="margin-bottom: 20px; padding: 20px; background: rgba(255, 255, 255, 0.8); border-radius: 8px; border-left: 4px solid #729866;">
                             <h4 style="color: #333; margin-bottom: 12px; font-size: 16px; font-weight: 600;">📈 持续投资 (未来半年)</h4>
                             <ul class="advice-list" style="color: #333;">
                                 ${plan.investment.map(action => `<li style="margin-bottom: 8px;font-size: 13px;">${action}</li>`).join('')}
                             </ul>
                         </div>
                         
-                        <div class="action-category" style="padding: 20px; background: rgba(255, 255, 255, 0.8); border-radius: 8px; border-left: 4px solid #00B894;">
+                        <div class="action-category" style="padding: 20px; background: rgba(255, 255, 255, 0.8); border-radius: 8px; border-left: 4px solid #729866;">
                             <h4 style="color: #333; margin-bottom: 12px; font-size: 16px; font-weight: 600;">🎯 长远布局 (职业发展)</h4>
                             <p style="color: #333; margin: 0; line-height: 1.6;font-size: 13px;">${plan.longterm}</p>
                         </div>
@@ -2863,7 +2863,7 @@ if (!document.querySelector('#report-components-styles')) {
             padding: 20px;
             margin-bottom: 16px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            border-left: 4px solid #00B894;
+            border-left: 4px solid #729866;
         }
 
         .dimension-header {
@@ -2894,7 +2894,7 @@ if (!document.querySelector('#report-components-styles')) {
         .dimension-score-display .score {
             font-size: 20px;
             font-weight: bold;
-            color: #00B894;
+            color: #729866;
             display: block;
         }
 

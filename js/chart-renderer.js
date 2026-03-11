@@ -76,7 +76,7 @@ class ChartRenderer {
      */
     drawDataPolygon(ctx, centerX, centerY, radius, dimensions, angleStep) {
         ctx.fillStyle = 'rgba(0, 184, 148, 0.3)'; // 主题绿色，30%透明度
-        ctx.strokeStyle = '#00B894'; // 主题绿色
+        ctx.strokeStyle = '#729866'; // 主题绿色
         ctx.lineWidth = 2;
         ctx.beginPath();
 
@@ -98,7 +98,7 @@ class ChartRenderer {
         ctx.stroke();
 
         // 绘制数据点
-        ctx.fillStyle = '#00B894';
+        ctx.fillStyle = '#729866';
         for (let i = 0; i < dimensions.length; i++) {
             const angle = i * angleStep - Math.PI / 2;
             const valueRadius = radius * (dimensions[i].score / 100);
@@ -341,7 +341,7 @@ class ChartRenderer {
 
         // 绘制数据多边形
         ctx.fillStyle = 'rgba(0, 184, 148, 0.3)';
-        ctx.strokeStyle = '#00B894';
+        ctx.strokeStyle = '#729866';
         ctx.lineWidth = 2;
         ctx.beginPath();
 
@@ -360,7 +360,7 @@ class ChartRenderer {
         ctx.stroke();
 
         // 绘制数据点
-        ctx.fillStyle = '#00B894';
+        ctx.fillStyle = '#729866';
         for (let i = 0; i < dimensions.length; i++) {
             const angle = i * angleStep - Math.PI / 2;
             const maxScore = 12;
@@ -531,7 +531,7 @@ class ChartRenderer {
             const isCore = index < 2; // 前两个是核心价值观
             
             // 绘制背景圆
-            ctx.fillStyle = isCore ? '#00B894' : '#E0E0E0';
+            ctx.fillStyle = isCore ? '#729866' : '#E0E0E0';
             ctx.beginPath();
             ctx.arc(pos.x, pos.y, 25, 0, 2 * Math.PI);
             ctx.fill();
