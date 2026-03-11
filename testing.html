@@ -866,7 +866,7 @@
         .option-text {
             flex: 1;
             font-size: 15px;
-            color: #333;
+            color: #7F6346;
             font-weight: 500;
             line-height: 1.4;
         }
@@ -955,7 +955,7 @@
         .sort-item .option-text {
             flex: 1;
             font-size: 15px;
-            color: #333;
+            color: #7F6346;
             line-height: 1.4;
         }
 
@@ -985,13 +985,18 @@
 
         .nav-btn {
             flex: 1;
-            padding: 14px;
+            padding: 0;
             border: none;
             border-radius: 10px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            display: flex;           /* 添加flex布局 */
+            align-items: center;     /* 垂直居中 */
+            justify-content: center; /* 水平居中 */
+            height: 100%;            /* 占满父容器高度 */
+            line-height: 1;          /* 确保行高正常 */
         }
 
         .prev-btn {
@@ -1013,7 +1018,7 @@
         }
 
         .next-btn {
-            background:#729866; /* 修改：更新渐变 */
+            background:#729866;
             color: white;
         }
 
