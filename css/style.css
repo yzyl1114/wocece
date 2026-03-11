@@ -8,7 +8,7 @@
 :root {
     --bg-color: #F3EDE0;   
     --text-color: #7F6346;
-    --border-color:#E7D7BD;
+    --border-color:#FCFAF0;
 }
 
 body {
@@ -157,7 +157,7 @@ body {
 }
 
 .tab[data-category="standard"] {
-    background: #E7D7BD;
+    background: #FCFAF0;
     color: #7F6346;  /* 专业标签文字颜色深一些，因为背景较浅 */
 }
 
@@ -176,7 +176,7 @@ body {
 }
 
 .tab[data-category="standard"].active {
-    border-color: #C9B49A;  /* #E7D7BD 的深色版本 */
+    border-color: #C9B49A;  /* #FCFAF0 的深色版本 */
 }
 
 /* 移动端适配 */
