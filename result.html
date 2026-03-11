@@ -24,7 +24,15 @@
     <div class="container">
         <!-- 结果头部 - 由模板动态渲染 -->
         <section class="result-header" id="resultHeader">
-            <!-- 动态渲染 -->
+            <div class="header-nav">
+                <div class="back-btn" onclick="window.location.href='index.html'">
+                    <span class="back-arrow">←</span>
+                    <span class="back-text">返回</span>
+                </div>
+                <div class="header-title">测试结果</div>
+                <div class="header-placeholder"></div>
+            </div>
+            <!-- 动态渲染的内容会追加在这里 -->
         </section>
 
         <!-- 趣味测试报告容器 -->
@@ -169,8 +177,10 @@
 
         /* 结果头部样式 */
         .result-header {
-            background: white;
+            background: transparent;
             color: #333;
+            position: relative;
+            padding-top: 0;
             padding: 30px 20px;
             text-align: center;
             border-radius: 0 0 20px 20px;
