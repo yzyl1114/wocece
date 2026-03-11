@@ -2270,8 +2270,8 @@ body {
         bottom: 20px;
         left: 50%;
         transform: translateX(-50%);
-        width: calc(750px - 40px); /* 减去左右padding */
-        background: white;
+        width: calc(750px - 40px);
+        background: transparent;
     }
 }
 
