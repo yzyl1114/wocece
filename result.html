@@ -125,7 +125,7 @@
                         <p style="color: #666; margin-bottom: 25px;">${message || '请刷新页面或重新进行测试'}</p>
                         <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
                             <button onclick="location.reload()" 
-                                    style="background: linear-gradient(135deg, #00B894, #00CEC9); color: white; border: none; 
+                                    style="background: #729866; color: white; border: none; 
                                         padding: 12px 24px; border-radius: 6px; cursor: pointer;">
                                 刷新页面
                             </button>
@@ -169,8 +169,8 @@
 
         /* 结果头部样式 */
         .result-header {
-            background: linear-gradient(135deg, #00B894, #00CEC9); /* 修改：更新渐变 */
-            color: white;
+            background: white;
+            color: #333;
             padding: 30px 20px;
             text-align: center;
             border-radius: 0 0 20px 20px;
@@ -278,7 +278,7 @@
 
         .dimension-progress {
             height: 100%;
-            background: linear-gradient(90deg, #00B894, #00CEC9); /* 修改：更新渐变 */
+            background: #729866;
             border-radius: 3px;
             transition: width 1s ease;
         }
@@ -329,13 +329,13 @@
         }
 
         .action-btn.primary {
-            background: linear-gradient(135deg, #00B894, #00CEC9); /* 修改：更新渐变 */
+            background: #729866;
             color: white;
         }
 
         .action-btn.secondary {
             background: white;
-            color: #729866;
+            color: #333;
             border: 2px solid #729866;
         }
 
@@ -374,12 +374,6 @@
             gap: 12px;
             transition: all 0.3s ease;
             cursor: pointer;
-            border: 1px solid var(--border-color);
-        }
-
-        .recommendations .test-list-item:hover {
-            transform: translateX(4px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
         .recommendations .test-thumb {
@@ -415,7 +409,7 @@
         }
 
         .recommendations .small-btn {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: #729866;
             color: white;
             border: none;
             padding: 6px 12px;
@@ -425,11 +419,6 @@
             white-space: nowrap;
             transition: all 0.3s ease;
             font-weight: 500;
-        }
-
-        .recommendations .small-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(0, 184, 148, 0.3);
         }
 
         /* 专业评估样式 */
@@ -727,7 +716,7 @@
 
         /* 专业建议样式 */
         .professional-advice {
-            background: linear-gradient(135deg, #00B894, #00CEC9); /* 修改：更新渐变 */
+            background: #729866;
             color: white;
             padding: 20px;
             border-radius: 10px;
@@ -851,7 +840,7 @@
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #00B894, #00CEC9); /* 修改：更新渐变 */
+            background: #729866;
             color: white;
             display: flex;
             align-items: center;
