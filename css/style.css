@@ -345,6 +345,8 @@ body {
     max-width: 750px;
     margin: 0 auto;
     z-index: 1000;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.05);  /* 添加轻微上阴影 */
+    border-top: 1px solid rgba(127, 99, 70, 0.1);  /* 添加浅色上边框 */
 }
 
 .nav-item {
@@ -357,6 +359,11 @@ body {
     transition: all 0.3s ease;
     padding: 5px 10px;
     border-radius: 10px;
+}
+
+.nav-item.active {
+    color: #729866;  /* 选中状态文字颜色改为绿色 */
+    background: rgba(114, 152, 102, 0.1);  /* 添加浅绿色背景 */
 }
 
 .nav-icon {
@@ -775,8 +782,8 @@ body {
     color: #7F6346;
     font-size: 12px;
     line-height: 1.6;
-    padding-bottom: 80px;  /* 保持这个值，为底部导航留出空间 */
-    margin-bottom: 0;      /* 移除之前添加的 margin-bottom */
+    padding-bottom: 70px;
+    margin-bottom: 0;
 }
 
 /* 容器底部留白调整 */
@@ -2262,16 +2269,19 @@ body {
         background: transparent;
         margin: 0 auto;
     }
-    
+
     .bottom-nav {
         max-width: 750px;
-        border-radius: 0 0 12px 12px;
+        width: calc(750px - 40px);  /* 固定宽度计算 */
+        border-radius: 12px;  /* 改为12px圆角 */
         position: fixed;
         bottom: 20px;
         left: 50%;
-        transform: translateX(-50%);
-        width: calc(750px - 40px);
-        background: transparent;
+        transform: translateX(-50%);  /* 水平居中 */
+        background: white;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        border-top: 1px solid rgba(127, 99, 70, 0.1);
+        margin: 0 auto;  /* 确保居中 */
     }
 }
 
