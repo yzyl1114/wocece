@@ -6,7 +6,7 @@
 }
 
 :root {
-    --bg-color: #F0EAD9;   
+    --bg-color: #F3EDE0;   
     --text-color: #7F6346;
     --border-color:#E7D7BD;
 }
@@ -2241,7 +2241,7 @@ body {
         display: block;
         justify-content: initial;
         align-items: initial;
-        background: #F0EAD9;
+        background: #F3EDE0;
         padding: 20px;
         max-width: none !important;
         margin: 0 !important;
