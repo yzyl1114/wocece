@@ -233,7 +233,7 @@ body {
 
 .test-content {
     padding: 10px;
-    background: transparent;
+    background: rgba(249, 246, 232, 0.5);
 }
 
 .test-title {
