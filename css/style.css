@@ -2258,39 +2258,40 @@ body {
         justify-content: initial;
         align-items: initial;
         background: white;
-        padding: 20px;
+        padding: 0;
         max-width: none !important;
         margin: 0 !important;
         min-height: 100vh;
-        height: auto;
+        height: 100vh;
         overflow-y: auto;
     }
     
     .container {
         max-width: 750px;
         width: 100%;
-        min-height: auto;
+        min-height: 100vh;  /* 最小高度占满视口 */
         height: auto;
         max-height: none;
-        border-radius: 12px;
+        border-radius: 0;
         overflow: visible;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         background: transparent;
         margin: 0 auto;
+        padding: 0 15px;  /* 保留左右内边距用于内容 */
     }
 
     .bottom-nav {
         max-width: 750px;
-        width: calc(750px - 40px);  /* 固定宽度计算 */
-        border-radius: 12px;  /* 改为12px圆角 */
+        width: 100%;  /* 改为100%跟随容器宽度 */
+        border-radius: 0;
         position: fixed;
-        bottom: 20px;
+        bottom: 0;
         left: 50%;
         transform: translateX(-50%);  /* 水平居中 */
         background: white;
         box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
         border-top: 1px solid rgba(127, 99, 70, 0.1);
-        margin: 0 auto;  /* 确保居中 */
+        margin: 0;
     }
 }
 
@@ -2299,15 +2300,28 @@ body {
     body {
         display: block;
         padding: 0;
+        margin: 0;
+        min-height: 100vh;
+        height: 100vh;
         overflow-y: auto;
     }
     
     .container {
         max-width: 100%;
-        height: auto;
+        width: 100%;
         min-height: 100vh;
+        height: auto;
         border-radius: 0;
         box-shadow: none;
         overflow: visible;
+        padding: 0 15px;  /* 只保留左右内边距 */
+        margin: 0;
+    }
+
+    .bottom-nav {
+        border-radius: 0;  /* 移动端也移除圆角 */
+        width: 100%;
+        left: 0;
+        transform: none;  /* 移动端不需要居中变换 */
     }
 }
