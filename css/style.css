@@ -210,10 +210,6 @@ body {
     background: none !important;  /* 强制透明 */
 }
 
-.featured-tests .test-card .test-title {
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);  /* 添加文字阴影 */
-}
-
 .test-card {
     background: transparent;
     border-radius: 10px;
