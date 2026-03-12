@@ -207,7 +207,11 @@ body {
 
 .featured-tests .test-card .test-content {
     padding-bottom: 15px;
-    background: rgba(249, 246, 232, 0.2);
+    background: transparent;
+}
+
+.featured-tests .test-card .test-title {
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);  /* 添加文字阴影 */
 }
 
 .test-card {
