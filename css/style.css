@@ -1001,7 +1001,7 @@ body {
 
 /* 专业建议卡片 */
 .professional-advice {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); /* 修改：更新渐变 */
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     color: white;
     padding: 20px;
     border-radius: 10px;
