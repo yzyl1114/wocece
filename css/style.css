@@ -360,13 +360,25 @@ body {
     background: rgba(114, 152, 102, 0.1);  /* 添加浅绿色背景 */
 }
 
+/* 底部导航图标样式 */
 .nav-icon {
-    font-size: 20px;
-    margin-bottom: 2px;
+    width: 24px;
+    height: 24px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.nav-item.active .nav-icon {
-    transform: scale(1.1);
+.nav-icon-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: all 0.3s ease;
+}
+
+.nav-item.active .nav-icon-img {
+    transform: scale(1.1);  /* 选中时稍微放大 */
 }
 
 /* Toast提示 */
