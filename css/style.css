@@ -76,13 +76,11 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 8px; /* 圆角 */
-    padding: 6px; /* 内边距 */
 }
 
 .header-icon img {
-    width: 20px;
-    height: 20px;
+    width: 32px;
+    height: 32px;
     object-fit: contain;
 }
 
