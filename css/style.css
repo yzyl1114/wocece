@@ -352,7 +352,7 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     padding: 8px 16px;
-    border-radius: 30px;
+    border-radius: 10px;
 }
 
 .nav-item.active {
