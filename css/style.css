@@ -207,7 +207,7 @@ body {
 
 .featured-tests .test-card .test-content {
     padding-bottom: 15px;
-    background: none;
+    background: none !important;  /* 强制透明 */
 }
 
 .featured-tests .test-card .test-title {
