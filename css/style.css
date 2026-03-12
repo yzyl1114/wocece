@@ -95,11 +95,11 @@ body {
 
 /* 搜索区域 */
 .search-section {
-    background: #E7DFCD;
-    padding: 15px;
+    background: transparent;
+    padding: 15px 0;
     margin: 10px 0;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border-radius: 0;
+    box-shadow: none;
 }
 
 .search-box {
@@ -116,6 +116,12 @@ body {
     border-radius: 25px;
     font-size: 14px;
     outline: none;
+    transition: border-color 0.3s ease;
+}
+
+/* 输入框获得焦点时的样式 */
+.search-input:focus {
+    border-color: #729866;  /* 点击输入时边框变为绿色 */
 }
 
 /* 分类标签 */
