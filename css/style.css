@@ -84,15 +84,14 @@ body {
 }
 
 .header-icon img {
-    width: 20px;  /* 图标实际显示尺寸 */
-    height: 20px; /* 图标实际显示尺寸 */
+    width: 20px;
+    height: 20px;
     object-fit: contain;
-    filter: brightness(0) invert(1); /* 使图标变为白色 */
 }
 
 /* 图标位置 */
 .share-icon {
-    right: 60px; /* 距离右侧60px */
+    right: 60px;
 }
 
 .feedback-icon {
