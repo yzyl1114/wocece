@@ -112,7 +112,7 @@ body {
 .search-input {
     flex: 1;
     padding: 12px 15px;
-    border: 1px solid var(--border-color);
+    border: 2px solid #E7D7BD;;
     border-radius: 25px;
     font-size: 14px;
     outline: none;
@@ -130,18 +130,18 @@ body {
     gap: 15px;
     margin: 20px 0 25px 0;
     overflow-x: visible;
-    padding: 0;           /* 修改：移除左右内边距 */
+    padding: 0;
     justify-content: flex-start;
-    flex-wrap: wrap;      /* 新增：允许换行，避免需要横向滚动 */
+    flex-wrap: wrap;
 }
 
 .tab {
-    padding: 8px 80px;  /* 稍微增加上下内边距，更舒适 */
+    padding: 8px 80px;
     border: 2px solid transparent;
     border-radius: 40px;
     cursor: pointer;
     white-space: nowrap;
-    font-size: 15px;  /* 稍微增大字体 */
+    font-size: 15px;
     font-weight: 500;
     transition: all 0.3s ease;
     color: white;
