@@ -164,7 +164,7 @@
         body {
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%); /* 修改：更新背景渐变 */
+            background: linear-gradient(135deg, #F8FDFB 0%, #F0F9F7 100%);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
             color: var(--text-color);
@@ -187,7 +187,7 @@
         .header-nav {
             display: flex;
             align-items: center;
-            justify-content: flex-start;  /* 改为左对齐 */
+            justify-content: flex-start;
             padding: 15px;
             background: transparent;
             border-bottom: 1px solid rgba(127, 99, 70, 0.1);
@@ -200,9 +200,9 @@
             gap: 4px;
             cursor: pointer;
             padding: 8px 0;
-            color: #7F6346;  /* 使用与测试页相同的文字颜色 */
+            color: #7F6346;
             font-size: 16px;
-            font-weight: 500;  /* 增加字重，与测试页一致 */
+            font-weight: 500; 
             transition: opacity 0.3s ease;
         }
 
@@ -213,19 +213,18 @@
         .back-arrow {
             font-size: 20px;
             line-height: 1;
-            color: #7F6346;  /* 箭头使用相同颜色 */
+            color: #7F6346;
         }
 
         .back-text {
             font-size: 16px;
-            font-weight: 500;  /* 与测试页返回按钮字重一致 */
+            font-weight: 500;
         }
 
         .header-placeholder {
-            flex: 1;  /* 占满剩余空间，保持左对齐 */
+            flex: 1;
         }
 
-        /* 确保动态渲染的内容在导航栏下方且没有多余内边距 */
         .result-header > *:not(.header-nav) {
             padding: 10px 20px 20px;
             text-align: center;
@@ -278,7 +277,7 @@
         .analysis-section h3, .dimensions-section h3 {
             color: #333;
             margin-bottom: 15px;
-            border-left: 4px solid #729866; /* 修改：更新颜色 */
+            border-left: 4px solid #729866;
             padding-left: 10px;
         }
 
@@ -286,7 +285,7 @@
             line-height: 1.8;
             color: #666;
             text-align: left;
-            text-indent: 0 !important; /* 移除首行缩进 */
+            text-indent: 0 !important;
         }
 
         /* 维度项目基础样式 */
@@ -393,7 +392,7 @@
             border: 2px solid #729866;
         }
 
-        /* 如果只有一个按钮，让它居中显示 */
+        /* 居中显示 */
         .result-actions:has(button:only-child) {
             justify-content: center;
         }
