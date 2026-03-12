@@ -586,6 +586,7 @@
             display: flex;
             align-items: center;
             padding: 15px;
+            border-radius: 0;  /* 移除圆角 */
             background: #729866;
             min-height: 60px;
         }
@@ -839,21 +840,21 @@
                 justify-content: center;
                 align-items: flex-start;
                 background: white;
-                padding: 20px;
+                padding: 0;
                 min-height: 100vh;
             }
 
             .page-container {
                 max-width: 750px;
                 width: 100%;
-                min-height: auto;
-                border-radius: 12px;
+                min-height: 100vh;  /* 从 auto 改为 100vh */
+                border-radius: 0;  /* 从 12px 改为 0 */
                 box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
                 overflow: hidden;
             }
 
             .navbar {
-                border-radius: 12px 12px 0 0;
+                border-radius: 0;
             }
 
             .test-cover {
@@ -861,7 +862,7 @@
             }
 
             .page-footer {
-                border-radius: 0 0 12px 12px;
+                border-radius: 0;
             }
         }
 

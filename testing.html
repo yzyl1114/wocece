@@ -1091,16 +1091,16 @@
         /* 移动端保持全宽 */
         @media (max-width: 768px) {
             body {
-                display: block; /* 移动端恢复默认布局 */
+                display: block;
                 justify-content: initial;
                 align-items: initial;
-                padding: 0; /* 确保移动端没有内边距 */
+                padding: 0;
             }
             .container {
                 max-width: 100%;
                 box-shadow: none;
                 height: 100vh;
-                border-radius: 0; /* 移动端移除圆角 */
+                border-radius: 0;
             }
         }
 
@@ -1111,16 +1111,17 @@
                 justify-content: center;
                 align-items: center;
                 background: white;
-                padding: 20px;
+                padding: 0;
                 max-width: none !important; /* 新增 */
             }
             
             .container {
-                height: 90vh;
-                max-height: 90vh;
-                border-radius: 12px; /* 添加圆角 */
+                height: 100vh;
+                max-height: 100vh;
+                border-radius: 0;
                 overflow: hidden;
                 box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                margin: 0;
             }
         }
 
