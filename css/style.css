@@ -237,7 +237,7 @@ body {
 
 .test-content {
     padding: 10px;
-    background: rgba(249, 246, 232, 0.5);
+    /* background: rgba(249, 246, 232, 0.5); */
 }
 
 .test-title {
